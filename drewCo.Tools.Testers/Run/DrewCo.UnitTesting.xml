@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>drewCo.UnitTesting</name>
+    </assembly>
+    <members>
+        <member name="T:drewCo.MVVM.UnitTesting.Check">
+            <summary>
+            Provides an additional series of condition check, like that of <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.Assert"/> in the MSTest framework.
+            </summary>
+        </member>
+        <member name="M:drewCo.MVVM.UnitTesting.Check.Contains``1(System.Collections.Generic.IList{``0},System.Func{``0,System.Boolean})">
+            <summary>
+            Tells us if the given list contains an item based on the predicate.
+            </summary>
+        </member>
+        <member name="M:drewCo.MVVM.UnitTesting.Check.AreEquivalent(System.Object,System.Object)">
+            <summary>
+            Make sure that the two object graphs are equivalent.
+            </summary>
+        </member>
+        <member name="M:drewCo.MVVM.UnitTesting.Check.IsType``1(System.Object)">
+            <summary>
+            Make sure that the given target is of type 'T'
+            </summary>
+        </member>
+        <member name="M:drewCo.MVVM.UnitTesting.Check.AreEqual``1(``0,``0,System.Func{``0,``0,System.Boolean})">
+            <summary>
+            This is kind of a quick and dirty way to compare a bunch of properties on two instances of an object.
+            </summary>
+        </member>
+        <member name="M:drewCo.MVVM.UnitTesting.Check.FileExists(System.String)">
+            <summary>
+            Makes sure that the given file exists.
+            </summary>
+        </member>
+        <member name="M:drewCo.MVVM.UnitTesting.Check.FileCount(System.Int32,System.String)">
+            <summary>
+            Checks to make sure that the correct number of files exist in the given directory that also match the filter!
+            </summary>
+            <param name="expectedCount"></param>
+            <param name="directory"></param>
+        </member>
+        <member name="M:drewCo.MVVM.UnitTesting.Check.FileDoesNotExist(System.String)">
+            <summary>
+            Makes sure that the file does not exist.
+            </summary>
+        </member>
+        <member name="M:drewCo.MVVM.UnitTesting.Check.DirectoryExists(System.String)">
+            <summary>
+            Makes sure that the given directory exists.
+            </summary>
+        </member>
+        <member name="M:drewCo.MVVM.UnitTesting.Check.DirectoryDoesNotExist(System.String)">
+            <summary>
+            Makes sure that the given directory exists.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:drewCo.MVVM.UnitTesting.Check.DirectoryIsEmpty(System.String)" -->
+        <member name="M:drewCo.MVVM.UnitTesting.Check.AllAreEqualTo(System.Object,System.Object[])">
+            <summary>
+            Ensures that all objects are equal to the <paramref name="expected"/> object.
+            _TEST:
+            </summary>
+        </member>
+        <member name="M:drewCo.MVVM.UnitTesting.Check.AllAreNotEqual(System.Object[])">
+            <summary>
+            Ensures that all objects in <paramref name="items"/> are not equal to each other  For example:
+            A,B,C -> A != B, B != C, C != A
+            </summary>
+        </member>
+        <member name="M:drewCo.MVVM.UnitTesting.Check.ThrowsException(System.Type,System.Action)">
+            <summary>
+            Makes sure that the given chunk of code, '<paramref name="operation"/>' throws the expected exception.
+            This is useful in that you don't have to write multiple test cases w/ the 'ExpectedException' attribute.
+            </summary>
+        </member>
+        <member name="T:drewCo.UnitTesting.ObjectComparator`1">
+            <summary>
+            Object comparitors are super handy as they allow for reflection based comparisons on objects of similar type.
+            You probably won't ever use one outside of a testing context however...
+            SHARE: This is super useful for all kinds of testing scenarios.  Therefore it belongs in shared space.
+            TODO: We need some type of non-generic base class.
+            </summary>
+        </member>
+        <member name="F:drewCo.UnitTesting.ObjectComparator`1.PrivateFields">
+            <summary>
+            Special fields that are designated by the user.
+            </summary>
+        </member>
+        <member name="F:drewCo.UnitTesting.ObjectComparator`1.FilteredTypes">
+            <summary>
+            These are all types that are not appropriate for comparisons!
+            </summary>
+        </member>
+        <member name="M:drewCo.UnitTesting.ObjectComparator`1.AddPrivateFieldComparer(System.String)">
+            <summary>
+            Users may use this call during their setup operations to provide additional fields to be compared.
+            </summary>
+        </member>
+        <member name="M:drewCo.UnitTesting.ObjectComparator`1.AddComparisonRoutine``1(System.Func{``0,``0,drewCo.UnitTesting.ObjectCompareResult})">
+            <summary>
+            This is how we add custom type comparators to the process.
+            </summary>
+            <typeparam name="TCompObject">The type of object that is to be compared.</typeparam>
+        </member>
+        <member name="M:drewCo.UnitTesting.ObjectComparator`1.ComplexCompare(`0,`0,System.Type)">
+            <summary>
+            This is meant to be a very exhaustive comparison.  It uses reflection and all of that good stuff to compare all of the
+            properties that it can on the objects in question.
+            </summary>
+        </member>
+        <member name="M:drewCo.UnitTesting.ObjectComparator`1.MakeComparison(System.Object,System.Object,System.String,System.Type)">
+            <param name="allowDefaults">
+            Should default values for the given item be considered OK for comparison?  This helps to
+            ensure that we are doing really exhaustive tests for all properties.  Very useful when comparing save/load objects.
+            </param>
+        </member>
+        <member name="M:drewCo.UnitTesting.ObjectComparator`1.GetTypeDefault(System.Object)">
+            <summary>
+            returns the default value for the given object.  Reference types will return 'null'
+            SHARE: This looks like something that could be used in other scenarios.
+            </summary>
+        </member>
+        <member name="T:drewCo.UnitTesting.ObjectInspector">
+            <summary>
+            Responsible for deep inspection of objects and their equality.
+            The notion is that even the most complex type can be broken down into a collection of simple value types.
+            </summary>
+        </member>
+        <member name="F:drewCo.UnitTesting.ObjectInspector.PrivateMemberListeners">
+            <summary>
+            Each type can have one or more private members that we can include in the inspection.
+            We don't do it automatically because of the fact that we will wind up looking at
+            backing members for auto-props, etc...
+            </summary>
+        </member>
+        <member name="F:drewCo.UnitTesting.ObjectInspector.SrcRefCache">
+            <summary>
+            We use the reference caches to make sure that the reference trees are preserved when we do comparisons.
+            This is important, as the graph of an object, is as useful / important as the data contained within.
+            </summary>
+        </member>
+        <member name="M:drewCo.UnitTesting.ObjectInspector.CheckReferenceGraph(System.Object,System.Object)">
+            <summary>
+            Makes sure that the items in question match their graph position.
+            The theory is that if the graphs are correct, then the order of the referenced items will also be the same.
+            </summary>
+        </member>
+        <member name="M:drewCo.UnitTesting.ObjectInspector.EvaluateNulls(System.Object,System.Object,System.String,drewCo.UnitTesting.InspectionReport)">
+            <summary>
+            Evaluates the input objects for nulls + handles the various conditions.
+            </summary>
+            <returns>A boolean value indicating whether the caller should continue evaluation or not.</returns>
+        </member>
+        <member name="M:drewCo.UnitTesting.ObjectInspector.AddTypeFilter``1">
+            <summary>
+            Adds the given type to the list of filtered types.
+            This type will no longer be inspected in this instance of ObjectInspector.
+            </summary>
+        </member>
+        <member name="M:drewCo.UnitTesting.ObjectInspector.AddTypeComparer``1(System.Func{``0,``0,System.Boolean})">
+            <summary>
+            Allows us to provide a custom comparison routine for certain types.
+            </summary>
+            <remarks>
+            Use this feature sparingly.  It is typically reserved for instance comparisons that cannot normally be performed
+            with <see cref="T:drewCo.UnitTesting.ObjectInspector"/>
+            </remarks>
+        </member>
+        <member name="T:drewCo.UnitTesting.InspectionReport">
+            <summary>
+            Describes the result of an inspection.
+            </summary>
+        </member>
+        <member name="P:drewCo.UnitTesting.InspectionReport.InspectionComplete">
+            <summary>
+            Indicates that the inspection of the objects in question is complete.
+            This is important to know because of strange conditions that can pop up during recursive compares....
+            </summary>
+        </member>
+        <member name="P:drewCo.UnitTesting.InspectionReport.Success">
+            <summary>
+            Indicates that we have a positive matching flag, and hte inspection was completed correctly.
+            </summary>
+        </member>
+        <member name="P:drewCo.UnitTesting.InspectionReport.MemberName">
+            <summary>
+            Name of the member being inspected.
+            </summary>
+        </member>
+        <member name="P:drewCo.UnitTesting.InspectionReport.Message">
+            <summary>
+            Typically this is used to indicate errors that may have occured during inspections.
+            </summary>
+        </member>
+        <member name="T:drewCo.UnitTesting.TestTools">
+            <summary>
+            Provides many useful functions for looking into object, comparing values, etc.
+            </summary>
+        </member>
+        <member name="M:drewCo.UnitTesting.TestTools.GetPrivateValue(System.Object,System.String)">
+            <summary>
+            Gets the value of the given private member, resolving it by name!
+            </summary>
+        </member>
+    </members>
+</doc>

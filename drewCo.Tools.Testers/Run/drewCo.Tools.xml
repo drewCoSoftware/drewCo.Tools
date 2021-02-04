@@ -1,0 +1,1355 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>drewCo.Tools</name>
+    </assembly>
+    <members>
+        <member name="T:drewCo.Tools.ArrayHelpers">
+            <summary>
+            Helps out with array related tasks.  Computations, element, and size manipulations.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ArrayHelpers.Redim(System.Array,System.Int32)">
+            <summary>
+            This works like 'redim preserve' from VB.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ArrayHelpers.GetDims(System.Array)">
+            <summary>
+            Returns an array of integers specifying the size of each dimension of an array.
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="M:drewCo.Tools.ArrayHelpers.GetSizes(System.Int32[])">
+            <summary>
+            Returns the composite sizes of the array dimensions.  Useful for computing the location of a given element number...
+            </summary>
+            <param name="dims"></param>
+        </member>
+        <member name="T:drewCo.Tools.DefaultValueAttribute">
+            <summary>
+            This is used when setting default values for XMLFile properties, etc.
+            These values are set upon object creation.
+            </summary>
+        </member>
+        <member name="P:drewCo.Tools.DefaultValueAttribute.UseNewInstace">
+            <summary>
+            Indicate that a new instance of the property type should be used.
+            Useful for populating lists, etc.
+            </summary>
+            <remarks>
+            If this is set to true, then the 'Value' property will be ignored.
+            </remarks>
+        </member>
+        <member name="T:drewCo.Tools.CSV.CSVColumnMap">
+            <summary>
+            Associates names to indexes, etc. for extracting data from a csv line.
+            </summary>
+        </member>
+        <member name="T:drewCo.Tools.CSV.CSVFile">
+            <summary>
+            Represents CSV data on disk.
+            </summary>
+        </member>
+        <member name="P:drewCo.Tools.CSV.CSVFile.Separator">
+            <summary>
+            Defines how each column is separated.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.CSV.CSVFile.GetNextLine(System.IO.StreamReader)">
+            <summary>
+            Get the next line of data from the file stream.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.CSV.CSVFile.AddLineFromData``1(``0)">
+            <summary>
+            Add a line to the file, using reflection to read source data from the given type.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.CSV.CSVLine.ParseLine(System.String,System.String)">
+            <summary>
+            Parse out the contents of the line, being sensitive to quoted fields.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.CSV.CSVLine.EndsWithQuote(System.String)">
+            <summary>
+            Checks to see if we start with a single, unescaped quote.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.CSV.CSVLine.StartWithQuote(System.String)">
+            <summary>
+            Checks to see if we start with a single, unescaped quote.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.CSV.CSVLine.CreateData``1">
+            <summary>
+            Create an instance of a type from this line.
+            Members with matching names will be populated from the CSV data.
+            </summary>
+        </member>
+        <member name="T:drewCo.Tools.ETimeInterval">
+            <summary>
+            Describes generic time intervals.
+            </summary>
+        </member>
+        <member name="T:drewCo.Tools.DTOMapper">
+            <summary>
+            Just a class to help us copy values between types.  In any mutli-tiered system, there are plenty of DTOs to keep things
+            isolated, but manual copying can be a real pain...
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.DTOMapper.CreateFrom(System.Type,System.Object,System.Boolean)">
+            <summary>
+            Creates an object of the given type, using <paramref name="copyFrom"/> as the property source.
+            </summary>
+            <param name="t"></param>
+            <param name="copyFrom"></param>
+            <returns></returns>
+        </member>
+        <member name="M:drewCo.Tools.DTOMapper.CopyProperty``2(System.String,``0,``1)">
+            <summary>
+            Copy a single property from source to target by name.  If there is no matching property with the same name and
+            type then nothing will happen.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.DTOMapper.CopyProperties(System.Type,System.Type,System.Object,System.Object,System.Boolean)">
+            <summary>
+            Non-Generic version of CopyProperties(TFrom, TTo)
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.DTOMapper.CopyMembers``2(``0,``1,System.Boolean)">
+            <summary>
+            Automatically copies properties of the same name and type from one object to another...
+            If nulls are allowed, and either item is null, no action will be taken.
+            </summary>
+            <param name="allowNulls">Allows the <param name="from"/> and <paramref name="to"/> to be null.</param>
+        </member>
+        <member name="M:drewCo.Tools.DTOMapper.AreCompatibleLists(drewCo.Tools.DataMember,drewCo.Tools.DataMember,System.Type@,System.Type@)">
+            <summary>
+            Determines if both property types are IList instances of the same type.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.DTOMapper.CleanInputStrings``1(``0)">
+            <summary>
+            When sending data across the internet, it is a good idea to cleanup your strings to prevent XSS and injection attacks.
+            This function will find all of the public string properties on a type, and make sure that they are clean for sending.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.DTOMapper.CreateCopy``2(``0)">
+            <summary>
+            Creates a copy of TTo, cloning compatible properties from <param name="from"/>
+            </summary>
+        </member>
+        <member name="T:drewCo.Tools.DataMember">
+            <summary>
+            Represents a data member, either a property or a field.
+            This is abstract member SET/GET during DTOMapper copying.
+            </summary>
+        </member>
+        <member name="T:drewCo.Tools.ExceptionDetail">
+            <summary>
+            This class is mean to be used as a way to formalize exception data so that it can be stored and analyzed for later use.
+            It was originally provided as an expansion to the Exception -> XML code that was used in various bug reporting applications.
+            </summary>
+        </member>
+        <member name="P:drewCo.Tools.ExceptionDetail.InnerExceptions">
+            <summary>
+            This is used in cases where the source is an aggregate exception or similar.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ExceptionDetail.SaveExceptionData(System.Exception,System.String,System.Boolean)">
+            <summary>
+            Saves the exception data to disk, in the specified directory using sequential file names.
+            </summary>
+            <remarks>
+            If the exception directory doesn't exist, it will be created.
+            </remarks>
+            <param name="noThrow">
+            Any internal exceptions generated by this function will be swallowed, and it will return 'null'.
+            Otherwise, the exception will be thrown.
+            </param>
+        </member>
+        <member name="T:drewCo.Tools.Gopher">
+            <summary>
+            This is a simple service locator that we use for singletons.
+            </summary>
+        </member>
+        <member name="F:drewCo.Tools.Gopher.LogFunc">
+            <summary>
+            Pointer to a generic logging function that takes a message, and message category (as an int) code.
+            </summary>
+        </member>
+        <member name="T:drewCo.Tools.ReflectionTools">
+            <summary>
+            Filled with many helpful reflection based operations and manipulations.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.CreateInstance``1">
+            <summary>
+            Create an instance of the given type, using the default constructor.  
+            Non public constructors will also be invoked.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.CreateInstance(System.Type)">
+            <summary>
+            Create an instance of the given type, using the default constructor.  
+            Non public constructors will also be invoked.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.IsSubclassOf(System.Type,System.Type)">
+            <summary>
+            Tells if the given type (<paramref name="t"/>) is a subclass of <paramref name="parentType"/>
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetMethod(System.Type,System.String)">
+            <summary>
+            Gets the method with the given name on the given type.
+            Throws an exception if there is more than one method with that name.
+            </summary>
+            <returns>The matching method, or null if none exists.</returns>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetMethod(System.Type,System.String,System.Type[])">
+            <summary>
+            Gets the method with the given name, and argument types.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetAssemblyTypes``1">
+            <summary>
+            Get all of the types defined in the given type's assembly.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.FixOptionalArgs(System.Object[],System.Reflection.MethodInfo)">
+            <summary>
+            Given the set of input arguments, this will adjust them in terms of the given method.
+            Basically, this will find missing optional args, and fill them in as needed.
+            </summary>
+            <param name="args"></param>
+            <param name="toFollow"></param>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetPropertyName``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Gets the name of the property, as determined by its expression.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetPropertyName(System.Linq.Expressions.Expression)">
+            <summary>
+            Gets the name of the property listed in the expression.
+            Nesting is ignored, and only the final name will appear, i.e. -> loc.Person.Name.Middle = "Middle"
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetPropertyInfo``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Gets reflection information about the given property.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetFieldInfo(System.Type,System.String,System.Boolean)">
+            <summary>
+            Attempts to resolve the field given the type and field name.
+            Returns null if the field in question can't be found.
+            _TEST: We need to make sure that this will locate private members.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetFieldInfo``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Gets reflection information about the given field.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.Convert(System.Type,System.Object)">
+            <summary>
+            Converts the given input object into the given type.
+            </summary>
+            <remarks>
+            Only widening and 'ToString' operations are available at this time.
+            </remarks>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.Convert``1(System.String)">
+            <summary>
+            Converts the given string input into the target return type.
+            TODO: Should we just use the object based version ??  I think that might be a good idea.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetPropertyInfo(System.Linq.Expressions.Expression)">
+            <summary>
+            Get a PropertyInfo object assocaited with the given general expression.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetPropertyInfo(System.Linq.Expressions.MemberExpression)">
+            <summary>
+            Get a PropertyInfo object assicted with the given member expression.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetPropertyValue(System.Object,System.Linq.Expressions.Expression)">
+            <summary>
+            Returns the current value of the given property on the target.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.IsNumericType(System.Type)">
+            <summary>
+            This will tell us if we have a numeric type or not.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetNestedPropertyName(System.Linq.Expressions.Expression)">
+            <summary>
+            Gets the name of the property listed in the expression.
+            Nesting is preserved so the entire path will appear, i.e. -> loc.Person.Name.Middle = "Person.Name.Middle"
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetNestedPropertyValue(System.Object,System.Linq.Expressions.Expression)">
+            <summary>
+            Returns the current value of the given property on the target.
+            This is slower than finding simple properties, but will work for simple / nested cases.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetPropertyInfo(System.Type,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Gets the property info from the <paramref name="sourceType"/> using a string based property path.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetPropertyInfo(System.Type,System.String,System.Boolean)">
+            <summary>
+            Attempts to resolve the property given the type and property name.
+            Returns null if the property in question can't be found.
+            _TEST: We need to make sure that this will locate private members.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.IsOfBaseType(System.Type,System.Type)">
+            <summary>
+            Tells us if the given type is the base type, or derived from it.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.ResolveAssembly(System.String)">
+            <summary>
+            Resovles an assembly from the given name.  The name can be simple, ala: "MyLib" or fully qualified.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.ResolveType(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Resolves a type from the current app domain based on the name.
+            </summary>
+            <remarks>
+            This function can be very slow as it will search assemblies in the domain in sequential order.
+            Searches are case sensitive.
+            Namespaces aren't taken into consideration.  If there is a conflicting name, the first name will be returned.
+            </remarks>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.AddDomainAssembly(System.Reflection.Assembly)">
+            <summary>
+            Add an assembly that the type resolver can use to search when resolving types.
+            </summary>
+            <param name="asm"></param>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.AddTypeLookup(System.String,System.Type)">
+            <summary>
+            Add a lookup entry for the type resolver.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetAllTypeMembers(System.Type,System.Boolean)">
+            <summary>
+            Returns all of the properties + fields as 'TypeMember' instances.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetTypeMember(System.Type,System.String,System.Boolean)">
+            <summary>
+            Returns an instance of <see cref="T:drewCo.Tools.TypeMember"/> that is defined on the given type, with matching name.
+            </summary>
+            <returns>Null if no match can be found.</returns>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.ResolveSetterAndGetter(System.Reflection.PropertyInfo,System.Reflection.MethodInfo@,System.Reflection.MethodInfo@,System.Boolean)">
+            <summary>
+            Resolves both the getter and setter for the given property.
+            Throws an exception if both items can't be found!
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetAttributes``1(System.Reflection.Assembly)">
+            <summary>
+            Finds and returns all attributes on all of the given types in an assembly.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetTypesWithAttribute``1(System.Reflection.Assembly)">
+            <summary>
+            Returns all of the given types that have the <typeparamref name="TAttr"/> attribute set upon them.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetAssemblyGUID(System.Reflection.Assembly)">
+            <summary>
+            Gets the GUID of the current (calling) assembly, or an optionally supplied assembly.
+            </summary>
+            <returns>A string representing the GUID of the given assembly, or null if none has been defined.</returns>
+            TODO: This and methods of related functionality should be pushed off to 'AssemblyHelpers' or something like that....
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetAssemblyVersion(System.Reflection.Assembly)">
+            <summary>
+            Get a formatted version string of the calling or supplied assembly in the form '1.2.3.4'
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetFullPropertyName(System.Linq.Expressions.Expression)">
+            <summary>
+            Gets the name of the property listed in the expression.
+            Nesting is preserved so the entire path will appear, i.e. -> loc.Person.Name.Middle = "Person.Name.Middle"
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetEmbeddedStream(System.String,System.Reflection.Assembly)">
+            <summary>
+            Extracts an embedded resource from the given assembly, returning it as a Stream.  If your resource is in a sub-folder, 
+            use the 'folder.name' convention or it won't be located by this function.
+            </summary>
+            <param name="asm">The assembly to search in.  If this is null, the currently executing assembly will be used.</param>
+            <remarks>
+            Dispose the resulting stream when you are done using it!
+            </remarks>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetEmbeddedString(System.String,System.Reflection.Assembly)">
+            <summary>
+            Returns the entire contents of the given resource as an ASCII string.
+            </summary>
+            <remarks>
+            Be careful when using this with resources that are large in size.
+            </remarks>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetEmbeddedXML(System.String,System.Reflection.Assembly)">
+            <summary>
+            Locates the embedded resource and attempts to load it as XML data and return it as an XDocument.
+            </summary>
+            <param name="asm">The assembly to search in.  If this is null, the currently executing assembly will be used.</param>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.HasAttribute``1(System.Reflection.FieldInfo)">
+            <summary>
+            Find and return all of the properties that have the given attribute.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.HasAttribute``1(System.Reflection.PropertyInfo)">
+            <summary>
+            Find and return all of the properties that have the given attribute.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.HasInterface``1(System.Type)">
+            <summary>
+            Determines if the given type has the interface <typeparamref name="TInterface"/>
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.Populate``1(System.Collections.Generic.IEnumerable{System.Tuple{System.String,System.Object}})">
+            <summary>
+            Creates an instance of, and populates members of T based on the passed list of property values.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetTypesWithInterface``1(System.Reflection.Assembly)">
+            <summary>
+            Returns all of the types in the assembly that implement <typeparam name="TInterface"/>
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetAttributesOnProperties``2">
+            <summary>
+            Returns all of the properties that have the given <typeparamref name="TAttr"/> attribute applied.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetAttributeOnType``1(System.Type,System.Reflection.Assembly)">
+            <summary>
+            This will return all of the attributes that match <typeparamref name="TAttr"/> on the given type.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetAttributeOnType``2(System.Reflection.Assembly)">
+            <summary>
+            This will return all of the attributes that match <typeparamref name="TAttr"/> on the given type.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetAttributesAndTypes``1(System.Reflection.Assembly)">
+            <summary>
+            Finds and returns all of the attribute objects marked with <typeparamref name="TAttr"/> and their associated types.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetPropertiesWithAttribute``2(``0)">
+            <summary>
+            Find and return all of the properties that have the given attribute.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetMethods(System.Type,System.String)">
+            <summary>
+            Return all of the methods with the given name on the given type.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.IsSimpleType(System.Type)">
+            <summary>
+            For our purposes, we define a 'simple' type as something that is a primitive or a string.
+            String is included because it is routinely treated like a primitive, even though it is actually a reference type.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetEmbeddedResource(System.String,System.Reflection.Assembly)">
+            <summary>
+            Extracts an embedded resource from the given assembly, returning it as a Stream.  If your resource is in a sub-folder, 
+            use the 'folder.name' convention or it won't be located by this function.
+            </summary>
+            <param name="asm">The assembly to search in.  If this is null, the currently executing assembly will be used.</param>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.GetEmbeddedString(System.String,System.Reflection.Assembly,System.Text.Encoding)">
+            <summary>
+            Locates the embeded resource, and returns it as a string.  Useful for reading in bits of text, etc.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.ReflectionTools.ParseEnum``1(System.String)">
+            <summary>
+            Attempts to resolve an enum value from the given string (case insensitive)
+            It will also return default values if the given name is null or empty.
+            </summary>
+        </member>
+        <member name="T:drewCo.Tools.TypeMember">
+            <summary>
+            Representative of a member of a type (field or property), and its value.
+            </summary>
+        </member>
+        <member name="P:drewCo.Tools.TypeMember.IsReadonly">
+            <summary>
+            Determines if the member is readonly or not.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.TypeMember.SetValue(System.Object,System.Object)">
+            <summary>
+            Sets the value on the given target.
+            </summary>
+            <returns>A reference to the target, in case of setting 'struct' values.  Normally passing structs
+            will make a copy of them, and so without another copy it just doesn't work...</returns>
+        </member>
+        <member name="T:drewCo.Tools.EMemberScope">
+            <summary>
+            A generalized version of 'BindingFlags' that both win32/winRT callers can use.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.EZReader.Read``1(System.IO.Stream)">
+            <summary>
+            Generic read function.
+            </summary>
+            <remarks>NOT OPTIMIZED!</remarks>
+        </member>
+        <member name="M:drewCo.Tools.EZReader.ReadList``1(System.IO.Stream,System.Func{System.IO.Stream,``0})">
+            <summary>
+            Read the list of data, using the given read function for the elements.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.EZReader.CastFloat(System.UInt32)">
+            <summary>
+            Bitwise typecast for saving to disk!
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.EZReader.CastDouble(System.UInt64)">
+            <summary>
+            Bitwise typecast for saving to disk!
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.EZWriter.WriteLazyList``1(System.IO.Stream,System.Collections.Generic.List{``0},System.Action{System.IO.Stream,``0})">
+            <summary>
+            Lazy lists are used in certain serialization scenarios where read speed is important, or all data doesn't need to be 
+            loaded initially.
+            </summary>
+            <remarks>
+            At time of writing, there is no C# support for lazy lists, or their readback.  We provided these tools solely for C#
+            writing and C++ reading.
+            </remarks>
+        </member>
+        <member name="M:drewCo.Tools.EZWriter.WriteBytes(System.IO.Stream,System.Byte,System.Int32)">
+            <summary>
+            Write the byte with 'val' to the stream 'count' times.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.EZWriter.WriteList``1(System.IO.Stream,System.Collections.Generic.List{``0},System.Action{System.IO.Stream,``0})">
+            <summary>
+            Write the list of data, using the given write function for the elements.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.EZWriter.Write``1(System.IO.Stream,System.Collections.Generic.List{``0})">
+            <summary>
+            Write the list of the given type to the stream.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.EZWriter.RawString(System.IO.Stream,System.String,System.Int32)">
+            <summary>
+            Writes a raw string to the given stream, no length information is encoded.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.EZWriter.CastUint32(System.Single)">
+            <summary>
+            Bitwise typecast for saving to disk!
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.EZWriter.CastUint64(System.Double)">
+            <summary>
+            Bitwise typecast for saving to disk!
+            </summary>
+        </member>
+        <member name="T:drewCo.Tools.FileTools">
+            <summary>
+            This class provides basic helper routines that have to do with the file system.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.CleanupPath(System.String)">
+            <summary>
+            Remove illegal characters and spaces from a path name.
+            </summary>
+            <remarks>
+            12.11.2020 - Not all illegal characters are removed at this time.
+            </remarks>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.ChangeExtension(System.String,System.String)">
+            <summary>
+            Change the extension of the given file path to the new extension.  Supply an empty string to remove the existing extension.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.CreateBackup(System.String)">
+            <summary>
+            Backs up the file at the given path, returning the path of the new file.
+            Exceptions will be thrown if the file doesn't exist, you don't have permissions, etc.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.ReadAllBytes(System.String)">
+            <summary>
+            Read all of the bytes from the file at the given path.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.WriteAllBytes(System.String,System.Byte[])">
+            <summary>
+            Read all of the bytes from the file at the given path.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.GetAppDir">
+            <summary>
+            Returns the directory that the application resides in.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.GetLocalDir(System.String[])">
+            <summary>
+            Returns a folder local to the appdir.  Extra paths can be omitted to get just the AppDir.
+            If the folder doesn't exist, it will be created.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.SetReadonly(System.String,System.Boolean)">
+            <summary>
+            Set the reaonly flag on the given file.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.UpdateWriteTime(System.String,System.Nullable{System.DateTime})">
+            <summary>
+            Updated the write time of the file at the given path, using DateTime.Now as a default.  If the file doesn't exist, then
+            nothing will happen.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.DeleteExistingFile(System.String)">
+            <summary>
+            If the given file exists, this will delete it!
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.DeleteExistingDirectory(System.String)">
+            <summary>
+            If the given directory exists, this will make an attempt to delete it.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.CreateDirectory(System.String,System.Boolean)">
+            <summary>
+            Makes a new directory for us, optionally clearing it out if it already exists.
+            </summary>
+            <remarks>
+            This will create nested directories.
+            </remarks>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.EmptyDirectory(System.String)">
+            <summary>
+            Empty the contents of the given directory, without deleting it.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.InterpretPath(System.String)">
+            <summary>
+            This is supposed to detect environment variables, etc. in paths and interpret them.
+            If a relative path is given, it will be fully qualified.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.GrantAccess(System.String,System.Security.Principal.SecurityIdentifier)">
+            <summary>
+            Grants access to the given file.
+            </summary>
+            <param name="grantTo">The identity that you wish to grant access to.  If omitted 'everyone'
+            will be used in its place.</param>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.GetDriveFeespace(System.String)">
+            <summary>
+            Returns the number of free bytes in the given volume.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.GetDriveTotalSize(System.String)">
+            <summary>
+            Returns the total amount of space that a drive can possibly have.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.GetAssemblyResource(System.String,System.Boolean)">
+            <summary>
+            Technically not a 'file' function, but useful all the same.  Use the resource name (foldername.resourcename) format
+            to get a stream from the currently executing assembly.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.CreateDirectory(System.String[])">
+            <summary>
+            Creates directories at one or more locations as specified by the input array.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.CopyDirectory(System.String,System.String,System.String)">
+            <summary>
+            Copy the directory, and its contents to the target directory.
+            </summary>
+            <remarks>
+            For this initial version, we will copy subdirectories, and only overwrite existing files that are NEWER
+            than the source files.  This is because this feature was developed in order to provide specific functionality
+            for some test cases.
+            </remarks>
+            TODO: Some kind of way to have items in an 'exclusion' filter...?  Maybe...?
+        </member>
+        <member name="M:drewCo.Tools.FileTools.MoveFile(System.String,System.String,System.Boolean)">
+            <summary>
+            Moves a file to a new location, optionally replacing any existing file.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.NormalizeFilepath(System.String)">
+            <summary>
+            Fixes up a file path to remove backtracks, trailing slashes, etc.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.FileTools.GetRelativePath(System.String,System.String)">
+            <summary>
+            Computes a relative path, from source to comparison.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:drewCo.Tools.FileTools.GetCommonRootDir(System.String,System.String,System.Boolean)" -->
+        <member name="M:drewCo.Tools.IDeepCopy`1.DeepCopy">
+            <summary>
+            
+            Create a deep copy of the class.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:drewCo.Tools.Impersonator.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Attempts to impersonate the user with the provided credentials.  This class should be used with the 'using' statement.
+            Check the 'IsImpersonating' property to determine if initialization was successful.  Error messages may also be provided
+            through the 'ErrMsg' property.
+            </summary>
+            <remarks>
+            If a name or password is not provided, then the class will not attempt to impersonate.
+            </remarks>
+        </member>
+        <member name="M:drewCo.Tools.Impersonator.StopImpersonating">
+            <summary>
+            Ensures that existing security tokens + impersonations don't go hanging around.
+            </summary>
+        </member>
+        <member name="T:drewCo.Tools.PerfLog">
+            <summary>
+            A simple tool that can be used to make inline performance measurements.
+            It is intended to be used inside of a using block.  Make a surrounds snippet for even easier usage!
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.RandomTools.RandomizeCase(System.String)">
+            <summary>
+            Randomize the casing of a string.  This will randomly change uppercase characters to lowercase, and vice-versa.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.RandomTools.GetNumberString(System.Int32)">
+            <summary>
+            Returns a random string of the given length that only contains numbers.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.RandomTools.GetAlphaNumericString(System.Int32)">
+            <summary>
+            Returns a random alphabet string of the given length.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.RandomTools.GetAlphaString(System.Int32)">
+            <summary>
+            Returns a random alphabet string of the given length.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.RandomTools.FiftyFifty">
+            <summary>
+            Has a fifty-fifty chance of returning true.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.RandomTools.FiftyFifty_NoLock">
+            <summary>
+            Non locking version for internal functions.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.RandomTools.GetRandomCharString(System.Int32)">
+            <summary>
+            Returns a string that is composed of random characters (0-255)
+            </summary>
+        </member>
+        <member name="T:drewCo.Tools.Sentinel">
+            <summary>
+            Acts as a simple re-entrancy sentinel.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.Sentinel.CancelWork">
+            <summary>
+            Sets the working flag to false.  This will make the work code reentrant again.  Can be used in scenarios where you want
+            to limit reentrancy, without blocking it altogether.  Use sparingly.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.DeCamelCase(System.String)">
+            <summary>
+            Breaks a camel cased string into its constituent words.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.GetUniqueString(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Generates a unique string, based on the list of existing strings.
+            </summary>
+            <remarks>This will use a counter to create a unique string.  It may have poor performance depending on the list
+            of existing strings, and how their contents.</remarks>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.GetHash(System.String)">
+            <summary>
+            Compute a hash for the given string.  This should be compatible with the C++ version. (LPCWSTR)
+            </summary>
+            <remarks>
+            Null strings will return 0, and an empty string will return 5381.
+            </remarks>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.AlphaNumericStrCompare_NoCase(System.String,System.String)">
+            <summary>
+            Case insensitive string comparison.  May not work for all cultures.  Suitable for fast sorting of alphanumeric strings
+            only.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.ApplyMask(System.String,System.String)">
+            <summary>
+            Formats the input string with the given mask.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.ToBase64String(System.String)">
+            <summary>
+            Converts the given string to base64 format.
+            </summary>
+            <remarks>
+            Assumes UTF8 encoding.
+            </remarks>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.FromBase64String(System.String)">
+            <summary>
+            Converts the given string from the base64 format.
+            </summary>
+            <remarks>
+            Assumes UTF8 encoding for the output string.
+            </remarks>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.ConvertToString(System.Xml.Linq.XDocument,System.Text.Encoding)">
+            <summary>
+            Returns a document as a string that follows the given encoding rules.
+            </summary>
+            <param name="encoding">Optional.  If omitted, the system will default to UTF-8</param>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.Unquote(System.String)">
+            <summary>
+            Takes a quoted string, and returns the data that is inside of the quotes.
+            </summary>
+            <remarks>
+            This function assumes that there is only one set of quotes.  It won't do anything fancy.
+            </remarks>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.ExtractParenthesisData(System.String)">
+            <summary>
+            Looks for a closed set of parenthesis in a string, and will extract the data between them.
+            Returns null if parens are not present or mis-matched.  WILL NOT take nesting into account.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.GetInnerString(System.String,System.Char,System.Char)">
+            <summary>
+            Extracts the inner string from one that is enclosed in the given open/close pair.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.SplitEqualityExpression(System.String,System.Boolean)">
+            <summary>
+            Splits an equality expression into left and right parts.
+            An equality expressions is something like ' x = y '
+            </summary>
+            <returns>
+            An array of strings with index 0 representing the left side, and index 1 representing the right.
+            Will return null if the expression has no equality character.
+            </returns>
+            <remarks>
+            This will successively split expressions with multiple left / right components.
+            x = y = z --> 0 = x, 1 = y = z
+            </remarks>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.EscapeXml(System.String)">
+            <summary>
+            Escapes all special XML entities in a string.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.UnescapeXml(System.String)">
+            <summary>
+            Unescapes all special XML entities in a string.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.AddLine(System.String,System.String)">
+            <summary>
+            Adds a single line + formatting characters onto a string for you.  Useful for creating large chunks of text data.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.GetTypeFromString(System.String,System.Int32@,System.Boolean,System.Boolean)">
+            <summary>
+            Given the string, this will attempt to give us a 'Type' representation of it.  Naturally it only works for the basic
+            data types.  It will attempt to find type representations fro the SQL types too.
+            </summary>
+            <param name="dataLength">If this is a SQL type, this is the length, for example VARCHAR(32) --> length = 32</param>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.IsNumeric(System.String)">
+            <summary>
+            Determines if a string is a number, or not.
+            TODO: Some kind of perf/value test on this would be cool!
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.IsInteger(System.String)">
+            <summary>
+            Determines if the string is an integer.
+            TODO: Some kind of perf/value test on this would be cool!
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.ToInt32(System.String,System.Int32)">
+            <summary>
+            Handles conversion of a string to an int32.  Takes care of empty strings and null values, etc.  You may provide your
+            own default value if the string cannot be converted.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.GetTypeFromString(System.String)">
+            <summary>
+            Used when we odont' care about the data length.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.GetSQLTypeFromString(System.String,System.Int32@)">
+            <summary>
+            Attempts to interpret the input string as a type from SQL.
+            Returns null if the input string is not recognized.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.GetSQLTypeFromString(System.String)">
+            <summary>
+            When we dont' care about the length of the data, use this...
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.ToSecureString(System.String)">
+            <summary>
+            Creates a new secure string for us, without requiring that we do all of that goofy character appending and what-not.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.EncodeSpecialXMLCharacters(System.String)">
+            <summary>
+            Some characters can't be represented in XML documents, so they must be encoded.  (Spaces, hashes, etc.)
+            Not all of the speical characters are supported at this time.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.DecodeSpecialXMLCharacters(System.String)">
+            <summary>
+            Decode the special characters.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.IsAlphabetic(System.String)">
+            <summary>
+            Tells us if our string contains only alphabetic characters.  Case insensitive.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.IsAlphaNumeric(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Tells us if our strings contain alphanumeric characters, as well as the underscore character.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.AllCharactersMatch(System.String,System.String)">
+            <summary>
+            This is the fastest version of the character matching pattern, but it requires a non-regex string.
+            All other versions are obsolete, since using a regex string is technically wrong + lead to misleading results.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.UnpadLeft(System.String,System.Char,System.Int32)">
+            <summary>
+            Removes any padding characters from the left side of the given string.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.StringTools.Right(System.String,System.Int32)">
+            <summary>
+            Returns all of the characters from the right side of the string.
+            </summary>
+        </member>
+        <member name="T:drewCo.Tools.CustomStringWriter">
+            <summary>
+            Acts like a normal StringWriter, but allows you to provide your own encoding.
+            </summary>
+        </member>
+        <member name="T:drewCo.Tools.XMLFile`1">
+            <summary>
+            Encapsulates a simple set of XML save/load operations.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:drewCo.Tools.XMLFile`1.Save(System.String,System.Boolean)">
+            <summary>
+            Saves the file data to the given path.  Existing files will be overwritten.
+            </summary>
+            <param name="filePath_">The path to write the file to.</param>
+            <param name="createDir">Optionally create the directory that the file is to be written to, if it doesn't already
+            exist.</param>
+        </member>
+        <member name="M:drewCo.Tools.XMLTools.SerializeFragment``1(``0)">
+            <summary>
+            Serialize the given data to an XML fragment.
+            </summary>
+        </member>
+        <member name="M:drewCo.Tools.XMLTools.DeserializeFragment``1(System.Xml.Linq.XElement)">
+            <summary>
+            Deserialize the given XElement into the corresponding type.
+            </summary>
+            <remarks>
+            At this time, this function will only deserialize attributes defined on the fragment.  Child elements
+            will be ignored.
+            </remarks>
+        </member>
+        <member name="T:drewCo.Curations.DefaultDictionary`2">
+            <summary>
+            Like a normal dictionary, but will provide a default value in place of 'KeyNotFoundExceptions' being thrown.
+            Optionally, you may provide a function that will supply a default value for a given key.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.DefaultDictionary`2.#ctor">
+            <summary>
+            New instances of TKey will be created for default instances.
+            </summary>
+            <remarks>Creating a new instance as a default will not work for types that don't have a default constructor.</remarks>
+        </member>
+        <member name="T:drewCo.Curations.DiffGram`1">
+            <summary>
+            Describes the differences and intersections between two IEnumerable<typeparamref name="T"/> instances.
+            </summary>
+        </member>
+        <member name="T:drewCo.Curations.DisposingList`1">
+            <summary>
+            Like a normal list, but disposes items when they are removed.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.DisposingList`1.#ctor(System.Collections.Generic.IList{`0})">
+            <summary>
+            Create a disposing list from a normal source list.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.DisposingList`1.Dispose">
+            <summary>
+            Clear the list, effectively disposing each item contained within.
+            </summary>
+        </member>
+        <member name="T:drewCo.Curations.Extensions.IEnumHelperExtensions">
+            <summary>
+            Exposes the helper functions as extension methods for those who prefer this technique.
+            </summary>
+        </member>
+        <member name="T:drewCo.Curations.ExternalReadonlyList`1">
+            <summary>
+            This is a special list that can be used internally in a class for simple things like add/remove/etc.
+            It has the special feature of internally tracking a readonly collection that can then be used and exposed outside
+            of the containing class.
+            The purpose it to reduce a lot of boilerplate that is normally associated with this type of feature.
+            </summary>
+        </member>
+        <member name="T:drewCo.Curations.ItemsChangedEventArgs">
+            <summary>
+            Useed to indicate when items are added / removed from an EZList instance.  Because of a giant fail on the part of MS,
+            we can't raise proper collection changed notifications.  We can only use 'Reset', or suffer an access violation in XAML
+            components.
+            </summary>
+        </member>
+        <member name="T:drewCo.Curations.EZList`1">
+            <summary>
+            A simple extension of List(of T) that supports change notification.
+            </summary>
+        </member>
+        <member name="E:drewCo.Curations.EZList`1.ItemsRemoved">
+            <summary>
+            Use this to overcome the stupid CollectionChanged flaw.
+            </summary>
+        </member>
+        <member name="T:drewCo.Curations.ICollectionHelper">
+            <summary>
+            Provides useful manipulations for ICollections.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.ICollectionHelper.GetRandomEntry``1(System.Collections.Generic.ICollection{``0})">
+            <summary>
+            Returns a random entry from the given list.
+            </summary>
+            <param name="src"></param>
+            <returns></returns>
+        </member>
+        <member name="M:drewCo.Curations.ICollectionHelper.AddNonNull``1(System.Collections.Generic.ICollection{``0},``0)">
+            <summary>
+            Adds an object to the given collection as long as it is not null.
+            _TEST:
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.ICollectionHelper.GetOrAddItem``1(System.Collections.Generic.ICollection{``0},``0)">
+            <summary>
+            If the given item exists in the source collection, a reference to it will be returned.
+            If not, it will be added to the source collection.
+            _TEST: DEmonstrate this cool functionality.  Both found, and add cases!
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.ICollectionHelper.AddUnique``1(System.Collections.Generic.ICollection{``0},``0)">
+            <summary>
+            Adds a new item to the collection, but only if it doesn't already exist.
+            FUTURE: Some way to have a custom equality evaluation, like that of the item listed in 'IEnumHelpers'
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.ICollectionHelper.MergeInto``1(System.Collections.Generic.ICollection{``0},System.Collections.Generic.ICollection{``0})">
+            <summary>
+            Merges the elements of <paramref name="from"/> into <paramref name="mergeTo"/>
+            <paramref name="mergeTo"/> Will be modified.
+            _TEST:
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.ICollectionHelper.MergeUniqueInto``1(System.Collections.Generic.ICollection{``0},System.Collections.Generic.ICollection{``0})">
+            <summary>
+            Like that of 'MergeInto' but only includes unique items from <paramref name="from"/>
+            _TEST:
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.IEnumHelper.ComputeDiff``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,System.Boolean})">
+            <remarks>
+            It is well known at this time that this algorithm is very inefficient.  It does produce correct
+            results however, so improvements can be made later in known test cases....
+            </remarks>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:drewCo.Curations.IEnumHelper.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})" -->
+        <member name="M:drewCo.Curations.IEnumHelper.IndexOf``1(System.Collections.Generic.IList{``0},System.Predicate{``0})">
+            <summary>
+            Returns the first matching index of the item that meets the given criteria.
+            </summary>
+        </member>
+        <member name="T:drewCo.Curations.IListHelper">
+            <summary>
+            Provides useful manipulations for ILists.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.IListHelper.Last``1(System.Collections.Generic.IList{``0},System.Int32)">
+            <summary>
+            Get the last-n number of items in a list.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.IListHelper.Replace``1(System.Collections.Generic.IList{``0},System.Int32,``0)">
+            <summary>
+            Swaps the given index in the given list, replacing it with the new value.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.IListHelper.Partition``1(System.Collections.Generic.IList{``0},System.Predicate{``0})">
+            <summary>
+            Partitions the given list, splitting each element into lists based on the result of the given predicate.
+            </summary>
+        </member>
+        <member name="T:drewCo.Curations.MultiDictionary`3">
+            <summary>
+            Like a normal dictionary, but with a natural key instead of a single one.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.MultiDictionary`3.ContainsKey1(`0)">
+            <summary>
+            Check to see if the first key is used in this instance.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.MultiDictionary`3.ContainsKey2(`1)">
+            <summary>
+            Check to see if the second key is used in this instance.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.MultiDictionary`3.ValidateAddKey(`0,`1)">
+            <summary>
+            Makes sure that the key we are trying to add is indeed valid!
+            Also is responsible for adding the 'key1' list into the system.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.MultiDictionary`3.Remove(`0,`1)">
+            <summary>
+            Removes items from the dictionary.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.MultiDictionaryHelper.GetValuePath``2(drewCo.Curations.MultiDictionary{``0,``0,``1},``0,``0)">
+            <summary>
+            Returns an array of values that correspond to the 'path' of keys through the collection.
+            For example let's say you have a dictionary like so: (x,y -> 1) | (y,z -> 2)
+            and you want the path of values from x -> z.  Normally this won't produce any value since the key (x,z) is technically
+            not in place.  However, this function will find the path, returning (1,2) because (x,y (1)) and (y, z (2)) [x->y->z = (1,2)]
+            </summary>
+        </member>
+        <member name="F:drewCo.Curations.ObjectPool.UNLIMITED">
+            <summary>
+            Indicated that an unlimited number of items can be used in the pool.
+            This may cause problems if you aren't careful.  
+            </summary>
+        </member>
+        <member name="T:drewCo.Curations.ObjectPool`1">
+            <summary>
+            Maintains a pool of objects so that they can be reused instead of allocated / deallocated all of the time.
+            </summary>
+        </member>
+        <member name="F:drewCo.Curations.ObjectPool`1._MaxItems">
+            <summary>
+            The maximum number of items allowed in the pool.
+            </summary>
+        </member>
+        <member name="P:drewCo.Curations.ObjectPool`1.HasAvailableItem">
+            <summary>
+            Indicates that one or items may be available for reuse.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.ObjectPool`1.AddItem(`0)">
+            <summary>
+            Manually add an item that is to be used in the pool.
+            DO NOT add the same item twice, or you will get an exception.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.ObjectPool`1.GetNextAvailable(System.Func{`0})">
+            <summary>
+            Gets the next available item.  If no item are available, an alternate generator function can be used to provide one or an
+            exception will be thrown.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.ObjectPool`1.ReleaseItem(`0)">
+            <summary>
+            Marks the item as being available for reuse.
+            </summary>
+        </member>
+        <member name="T:drewCo.Curations.PairDictionary`2">
+            <summary>
+            This is a lot like a normal dictionary, but both the keys, and the values must be unique.
+            From there we are allowed to look up the keys that are associated with values, etc.
+            </summary>
+        </member>
+        <member name="P:drewCo.Curations.PairDictionary`2.Count">
+            <summary>
+            The total number of pairs stored in the ditionary.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.PairDictionary`2.Key(`1)">
+            <summary>
+            Returns the key for the corresponding value.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.PairDictionary`2.Value(`0)">
+            <summary>
+            Returns the value for the corresponding key.
+            </summary>
+        </member>
+        <member name="T:drewCo.Curations.SuperList`1">
+            <summary>
+            It's like a normal list, but has events for when items are added or removed.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.SuperList`1.Shuffle">
+            <summary>
+            Randomizes the order of the items in the list.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.SuperList`1.GetRandom(System.Boolean)">
+            <summary>
+            Gets a random entry from the list, optionally removing it at the same time.
+            </summary>
+        </member>
+        <member name="T:drewCo.Curations.SuperObserver`1">
+            <summary>
+            Like a normal observable collection, but with features that make them easier to work with.
+            </summary>
+        </member>
+        <member name="M:drewCo.Curations.SuperObserver`1.AddRange(System.Collections.Generic.IEnumerable{`0},System.Boolean)">
+            <summary>
+            Allows you to add a range of items to the collection, alternately avoiding notification calls on a per item basis.
+            </summary>
+            <param name="input"></param>
+            <param name="suspendNotification">Optional parameter to suspend notification of each item added.  If true, a single
+            notification will be fired upon completion.</param>
+        </member>
+        <member name="M:drewCo.MathTools.Geometry.LineSegment.Intersects(drewCo.MathTools.Geometry.Circle)">
+            <summary>
+            Does this line segment intersect with the given circle?
+            </summary>
+        </member>
+        <member name="M:drewCo.MathTools.Geometry.PolygonTools.IsPointInPolygon(System.Collections.Generic.List{drewCo.MathTools.Vector2},drewCo.MathTools.Vector2)">
+            <summary>
+            Given a polygon, as represented by a set of points, this will tell us if <paramref name="point"/> is contained within it.
+            </summary>
+            <remarks>
+            This code was originally by Bob Stein.  I lifted it from a C-Listing online at;
+            http://www.linuxjournal.com/article/2029
+            I have modified to use floating points and stuff like that.  Thanks Bob!
+            </remarks>
+        </member>
+        <member name="M:drewCo.MathTools.Geometry.PolygonTools.Overlaps(drewCo.MathTools.Geometry.LineSegment,System.Collections.Generic.List{drewCo.MathTools.Geometry.LineSegment})">
+            <summary>
+            Tells us if the given line segment overlaps (intersects with) the polygon, which is represented by a list
+            of line segments.
+            </summary>
+        </member>
+        <member name="T:drewCo.MathTools.Geometry.Rectangle">
+            <summary>
+            It is a rectangle!
+            </summary>
+            <remarks>
+            Rectangles are assumed to be axis aligned.
+            </remarks>
+        </member>
+        <member name="M:drewCo.MathTools.Geometry.Rectangle.#ctor(System.Double,System.Double,System.Double,System.Double)">
+            <param name="x">The center, X coordinate</param>
+            <param name="y">The center, Y coordinate</param>
+            <param name="width"></param>
+            <param name="height"></param>
+        </member>
+        <member name="P:drewCo.MathTools.Geometry.Rectangle.X">
+            <summary>
+            Center-X
+            </summary>
+        </member>
+        <member name="P:drewCo.MathTools.Geometry.Rectangle.Y">
+            <summary>
+            Center-Y
+            </summary>
+        </member>
+        <member name="M:drewCo.MathTools.Geometry.Rectangle.Contains(drewCo.MathTools.Geometry.LineSegment)">
+            <summary>
+            Is the given line segment entirely inside of the rectangle?
+            NOTE: 'Intersects' will also be true when this function is true.
+            </summary>
+        </member>
+        <member name="M:drewCo.MathTools.Quadratic.SolveQuadratic(System.Double,System.Double,System.Double)">
+            <summary>
+            Solves the quadratic formula, returning the roots (one root for same value) or null if there is no solution.
+            </summary>
+            <remarks>
+            We return a null, because we don't support complex numbers when the discriminant is less than zero.
+            </remarks>
+        </member>
+        <member name="M:drewCo.MathTools.Vector2.Rotate(System.Double)">
+            <summary>
+            Rotate this vector around the origin.
+            </summary>
+        </member>
+        <member name="M:drewCo.MathTools.Vector2.Cross(drewCo.MathTools.Vector2,drewCo.MathTools.Vector2)">
+            <summary>
+            Get the cross product of two vectors.
+            </summary>
+        </member>
+        <member name="M:drewCo.MathTools.Vector2.Perpendicular(System.Double)">
+            <summary>
+            Compute a vector, perpendicular to this one, rotated by the given direction.
+            </summary>
+            <param name="dir">
+            The direction that the perpendicular vector should be, relative to this one.  1 = LEFT, -1 = RIGHT.
+            This corresponds to rotation angles on the cartesian plane.
+            </param>
+            <remarks>
+            Weird stuff will happen with zero vectors, or if the directions isn't 1.0 or -1.0
+            </remarks>
+        </member>
+        <member name="T:drewCo.DataSource">
+            <summary>
+            Represents an abstracted source of data.  Basically members on a class, either fields or properties.
+            </summary>
+        </member>
+    </members>
+</doc>

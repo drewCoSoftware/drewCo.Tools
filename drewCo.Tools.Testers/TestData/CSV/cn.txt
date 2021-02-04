@@ -1,0 +1,1 @@
+- WE now have a concept of 'SoundFormat' in resmill for the sound + music files.  I don't think that I am going to fully support it in the game engine, but we are using the data to filter out WAV files from the music section.  We just don't export it if it is a WAV file.
