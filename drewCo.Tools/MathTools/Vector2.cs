@@ -70,6 +70,23 @@ namespace drewCo.MathTools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
+    public override int GetHashCode()
+    {
+      return X.GetHashCode() ^ Y.GetHashCode();
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public override bool Equals(object obj)
+    {
+      if (obj != null)
+      {
+        Vector2 other = (Vector2)obj;
+        return other == this;
+      }
+      return false;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
     public static bool operator ==(Vector2 p1, Vector2 p2)
     {
       return p1.X == p1.X && p1.Y == p2.Y;
@@ -157,8 +174,6 @@ namespace drewCo.MathTools
       double res = Math.Acos(v.X);
 
       return Math.Atan(v.Y / v.X);
-
-      return res;
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
@@ -173,6 +188,19 @@ namespace drewCo.MathTools
       }
 
       Vector2 res = new Vector2(X / len, Y / len);
+      return res;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public Vector2 ScaleTo(double newLength)
+    {
+      double len = Length();
+      if (len == 0.0d)
+      {
+        return new Vector2();
+      }
+
+      Vector2 res = new Vector2(X / len, Y / len) * newLength;
       return res;
     }
 
