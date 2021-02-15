@@ -13,31 +13,67 @@ namespace drewCo.MathTools.Geometry
   public class Polygon
   {
     // NOTE: I think that I can just make points / segments the readonly collections we see below.
-    private List<Vector2> _Points = null;
+    private List<Vector2> _Vertices = null;
     private List<LineSegment> _Segments = null;
 
     public ReadOnlyCollection<Vector2> Vertices { get; private set; }
     public ReadOnlyCollection<LineSegment> Sides { get; private set; }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public Polygon(IList<Vector2> points_)
+    public Polygon(IList<Vector2> vertices_)
     {
-      _Points = new List<Vector2>();
-      _Points.AddRange(points_);
-      Vertices = new ReadOnlyCollection<Vector2>(_Points);
+      _Vertices = new List<Vector2>();
+      _Vertices.AddRange(vertices_);
+
+      // Make sure that verts are always in clockwise order.
+      // This allows us to compute vertex angles and do other math consistently.
+      if (!IsClockwise(_Vertices))
+      {
+        _Vertices.Reverse();
+      }
+
+
+      Vertices = new ReadOnlyCollection<Vector2>(_Vertices);
 
       // TODO: Make sure that our vertex order is always counter-clock (the same direction of 2d rotation angles).
       // If not, sort them!
       // Compose the segments.
       _Segments = new List<LineSegment>();
-      int len = _Points.Count;
+      int len = _Vertices.Count;
       for (int i = 0; i < len; i++)
       {
         int nextIndex = (i + 1) % len;
-        _Segments.Add(new LineSegment(_Points[i], _Points[nextIndex]));
+        _Segments.Add(new LineSegment(_Vertices[i], _Vertices[nextIndex]));
       }
 
       Sides = new ReadOnlyCollection<LineSegment>(_Segments);
+    }
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Tells us if the ordering of the points is clockwise or not.
+    /// </summary>
+    public static bool IsClockwise(IList<Vector2> points)
+    {
+      // This was taken from some code on the internet....
+      double sum = 0;
+      for (int i = 0; i < points.Count - 1; i++)
+      {
+        double part = ComputeAreaPart(points[i].X, points[i].Y, points[i + 1].X, points[i + 1].Y);
+        sum += part;
+      }
+
+      // And the final piece.
+      sum += ComputeAreaPart(points[points.Count - 1].X, points[points.Count - 1].Y, points[0].X, points[0].Y);
+      return sum < 0;
+
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    private static double ComputeAreaPart(double x1, double y1, double x2, double y2)
+    {
+      return (x2 - x1) * (y1 + y2);
     }
 
 
