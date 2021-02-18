@@ -71,6 +71,15 @@ namespace drewCo.MathTools.Geometry
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
+    public static void MakeClockwise(List<Vector2> points)
+    {
+      if (!IsClockwise(points))
+      {
+        points.Reverse();
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
     private static double ComputeAreaPart(double x1, double y1, double x2, double y2)
     {
       return (x2 - x1) * (y1 + y2);

@@ -111,6 +111,7 @@
     <Compile Include="MathTools\Geometry\Rectangle.cs" />
     <Compile Include="MathTools\Quadratic.cs" />
     <Compile Include="MathTools\Vector2.cs" />
+    <Compile Include="ObjectInspector.cs" />
     <Compile Include="ReflectionTools\DataSource.cs" />
     <Compile Include="ReflectionTools\ReflectionTools.cs" />
     <Compile Include="Serialization\EZReader.cs" />
