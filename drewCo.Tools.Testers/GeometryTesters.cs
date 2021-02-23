@@ -52,7 +52,7 @@ namespace drewCo.Tools.Testers
         // Contained x-set
         new LineSegment(-0.5d, -3.0d, 0.5d, -2.0d)
       };
-    
+
 
       foreach (var line in intersecting)
       {
@@ -62,18 +62,6 @@ namespace drewCo.Tools.Testers
       {
         Assert.IsFalse(line.Intersects(rect), $"The line segment ({line.P1.X}, {line.P1.Y})-({line.P2.X}, {line.P2.Y}) should NOT intersect with our rectangle!");
       }
-
-
-      // Try our other version.....
-      foreach (var line in intersecting)
-      {
-        Assert.IsTrue(line.IntersectsEx(rect), $"The line segment ({line.P1.X}, {line.P1.Y})-({line.P2.X}, {line.P2.Y}) should intersect with our rectangle! [ex]");
-      }
-      foreach (var line in notIntersecting)
-      {
-        Assert.IsFalse(line.IntersectsEx(rect), $"The line segment ({line.P1.X}, {line.P1.Y})-({line.P2.X}, {line.P2.Y}) should NOT intersect with our rectangle! [ex]");
-      }
-
 
       // Load test..
       return;
@@ -98,20 +86,6 @@ namespace drewCo.Tools.Testers
         var sw = Stopwatch.StartNew();
         for (int i = 0; i < MAX; i++)
         {
-          foreach (var line in intersecting)
-          {
-            bool res = line.IntersectsEx(rect);
-            ++count;
-          }
-        }
-        Console.WriteLine($"V2 (intersecting) Execution took: {sw.Elapsed.TotalSeconds:f3} [{count}]");
-      }
-
-      {
-        long count = 0;
-        var sw = Stopwatch.StartNew();
-        for (int i = 0; i < MAX; i++)
-        {
           foreach (var line in notIntersecting)
           {
             bool res = line.Intersects(rect);
@@ -120,19 +94,8 @@ namespace drewCo.Tools.Testers
         }
         Console.WriteLine($"V1 (not intersecting) Execution took: {sw.Elapsed.TotalSeconds:f3} [{count}]");
       }
-      {
-        long count = 0;
-        var sw = Stopwatch.StartNew();
-        for (int i = 0; i < MAX; i++)
-        {
-          foreach (var line in notIntersecting)
-          {
-            bool res = line.IntersectsEx(rect);
-            ++count;
-          }
-        }
-        Console.WriteLine($"V1 (not intersecting) Execution took: {sw.Elapsed.TotalSeconds:f3} [{count}]");
-      }
+
+
     }
 
 

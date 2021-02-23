@@ -35,17 +35,13 @@ namespace drewCo.MathTools.Geometry
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public bool IntersectsEx(Rectangle r)
-    {
-      return r.IntersectsEx(this);
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------
     public bool Intersects(LineSegment other)
     {
+     
       // NOTE: Try this too....
       // https://gamedev.stackexchange.com/questions/111100/intersection-of-a-line-and-a-rectangle
 
+      // NOTE: I wonder if this kind of apporach can be applied to segment -> rectangle code.
       Vector2 p = this.P1;
       Vector2 p2 = this.P2;
       Vector2 q = other.P1;

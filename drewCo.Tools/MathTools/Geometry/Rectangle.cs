@@ -103,7 +103,7 @@ namespace drewCo.MathTools.Geometry
     /// The idea is that we consider the rectangle as a set of points, and the line segment as a set of points.
     /// If there is any overlap in those sets, then we have an intersection.
     /// </summary>
-    public bool IntersectsEx(LineSegment segment)
+    public bool Intersects(LineSegment segment)
     {
       // Check to see if x overlaps left or right side, or is contained.
       //double otherX  = X + Width;
@@ -129,12 +129,6 @@ namespace drewCo.MathTools.Geometry
           // No x-overlap, no possible intersection.
           return false;
         }
-        //else
-        //{
-        //  // Left side overlap in x.
-        //  xIntersect = X;
-        //}
-
       }
       else
       {
@@ -262,30 +256,6 @@ namespace drewCo.MathTools.Geometry
       //  bool res = yIntersect >= Y && yIntersect <= (Y + Height);
       //  return res;
       //}
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------
-    public bool Intersects(LineSegment segment)
-    {
-      if (this.Contains(segment.P1) || this.Contains(segment.P2))
-      {
-        return true;
-      }
-
-      // NOTE: Another way entirely is to determine where the segment overlaps the rectangle in the x-axis.  From there, it is a matter
-      // of pluggin that x-value into the segment function to see if the resulting y-coordinate is in the y-range of the rectangle.
-
-      // NOTE: This is the most basic way to do this.  I thint that there is a calculus way that will compute it even faster,
-      // but I don't have the math chops to figure that out just yet.
-      foreach (var s in Sides)
-      {
-        if (segment.Intersects(s))
-        {
-          return true;
-        }
-      }
-      return false;
-
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
