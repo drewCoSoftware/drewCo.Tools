@@ -29,6 +29,18 @@ namespace drewCo.MathTools.Geometry
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
+    public bool Intersects(Rectangle r)
+    {
+      return r.Intersects(this);
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public bool IntersectsEx(Rectangle r)
+    {
+      return r.IntersectsEx(this);
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
     public bool Intersects(LineSegment other)
     {
       // NOTE: Try this too....
