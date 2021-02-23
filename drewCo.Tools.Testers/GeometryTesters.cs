@@ -76,7 +76,9 @@ namespace drewCo.Tools.Testers
 
 
       // Load test..
-      const long MAX = (long)10e5;
+      return;
+
+      const long MAX = (long)10e6;
       {
         long count = 0;
         var sw = Stopwatch.StartNew();
