@@ -96,6 +96,19 @@ namespace drewCo.MathTools.Geometry
       return cornerDist <= circleRadius;
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Does the given point intersect (is it inside of) this rectangle?
+    /// </summary>
+    public bool Intersects(Vector2 v)
+    {
+      bool res = v.X >= this.X && 
+                 v.X <= this.X + this.Width && 
+                 v.Y >= this.Y && 
+                 this.Y <= this.Y + this.Height;
+      return res;
+
+    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
