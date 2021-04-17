@@ -3,3 +3,5 @@
 # Don't include built stuff....
 bin/
 obj/
+
+.nupkg
