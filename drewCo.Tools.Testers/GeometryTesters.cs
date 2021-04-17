@@ -14,12 +14,20 @@ namespace drewCo.Tools.Testers
   [TestClass]
   public class GeometryTesters
   {
+    const long MAX_TEST_COUNT = (long)10e6;
 
 
     // --------------------------------------------------------------------------------------------------------------------------
     [TestMethod]
-    public void CanDetectLineSegmentIntersectingWithRectangle()
+    public void CanDetectRectangleToSegmentIntersection()
     {
+
+      // Some other trouble cases...
+      {
+        Rectangle r = new Rectangle(0.0d, 0.0d, 100.0d, 100.0d);
+        LineSegment s = new LineSegment(-20.0d, 9.0d, 5.0d, 34.0d);
+        Assert.IsTrue(r.Intersects(s), "There should be an intersect!");
+      }
 
       var rect = new Rectangle(-1.0d, -1.0d, 2.0d, 2.0d);
 
@@ -44,6 +52,40 @@ namespace drewCo.Tools.Testers
         new LineSegment(-0.5d, -0.5d, 0.5d, 0.5d)
       };
 
+
+
+      foreach (var line in intersecting)
+      {
+        Assert.IsTrue(line.Intersects(rect), $"The line segment ({line.P1.X}, {line.P1.Y})-({line.P2.X}, {line.P2.Y}) should intersect with our rectangle!");
+      }
+
+
+
+      // Load test...
+      return;
+
+      long count = 0;
+      var sw = Stopwatch.StartNew();
+      for (int i = 0; i < MAX_TEST_COUNT; i++)
+      {
+        foreach (var line in intersecting)
+        {
+          bool res = line.Intersects(rect);
+          ++count;
+        }
+      }
+      Console.WriteLine($"V1 (intersecting) Execution took: {sw.Elapsed.TotalSeconds:f3} [{count}]");
+
+
+
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    [TestMethod]
+    public void CanDetectNonRectangleToSegmentIntersection()
+    {
+      var rect = new Rectangle(-1.0d, -1.0d, 2.0d, 2.0d);
+
       var notIntersecting = new[] {
         // Partial overlap in x-set.
         new LineSegment(-3.0d, -3.0d, 0.0d, -2.0d),
@@ -52,49 +94,25 @@ namespace drewCo.Tools.Testers
         // Contained x-set
         new LineSegment(-0.5d, -3.0d, 0.5d, -2.0d)
       };
-
-
-      foreach (var line in intersecting)
-      {
-        Assert.IsTrue(line.Intersects(rect), $"The line segment ({line.P1.X}, {line.P1.Y})-({line.P2.X}, {line.P2.Y}) should intersect with our rectangle!");
-      }
       foreach (var line in notIntersecting)
       {
         Assert.IsFalse(line.Intersects(rect), $"The line segment ({line.P1.X}, {line.P1.Y})-({line.P2.X}, {line.P2.Y}) should NOT intersect with our rectangle!");
       }
 
-      // Load test..
       return;
 
-      const long MAX = (long)10e6;
+      // Load Test.
+      long count = 0;
+      var sw = Stopwatch.StartNew();
+      for (int i = 0; i < MAX_TEST_COUNT; i++)
       {
-        long count = 0;
-        var sw = Stopwatch.StartNew();
-        for (int i = 0; i < MAX; i++)
+        foreach (var line in notIntersecting)
         {
-          foreach (var line in intersecting)
-          {
-            bool res = line.Intersects(rect);
-            ++count;
-          }
+          bool res = line.Intersects(rect);
+          ++count;
         }
-        Console.WriteLine($"V1 (intersecting) Execution took: {sw.Elapsed.TotalSeconds:f3} [{count}]");
       }
-
-      {
-        long count = 0;
-        var sw = Stopwatch.StartNew();
-        for (int i = 0; i < MAX; i++)
-        {
-          foreach (var line in notIntersecting)
-          {
-            bool res = line.Intersects(rect);
-            ++count;
-          }
-        }
-        Console.WriteLine($"V1 (not intersecting) Execution took: {sw.Elapsed.TotalSeconds:f3} [{count}]");
-      }
-
+      Console.WriteLine($"V1 (not intersecting) Execution took: {sw.Elapsed.TotalSeconds:f3} [{count}]");
 
     }
 
