@@ -16,6 +16,24 @@ namespace drewCo.Tools.Testers
   {
     const long MAX_TEST_COUNT = (long)10e6;
 
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This solves a case where a 
+    /// </summary>
+    [TestMethod]
+    public void CanDetectPolygonThatContainsRectangle()
+    {
+      // This is a pretty trivial case, but gets the point across.  A small rectangle is inside of a large one.
+      // Both can ultimately be represented as polygons, so we use that code path.
+      const double SIZE = 50.0d;
+      var polygon = new Rectangle(-SIZE, -SIZE, SIZE * 2.0d, SIZE * 2.0d).ToPolygon();
+
+      const double SIZE_2 = SIZE * 0.5d;
+      var rect = new Rectangle(-SIZE, -SIZE, SIZE_2 * 2.0d, SIZE_2 * 2.0d);
+
+      Assert.IsTrue(polygon.Contains(rect));
+    }
+
 
     // --------------------------------------------------------------------------------------------------------------------------
     [TestMethod]
@@ -23,6 +41,12 @@ namespace drewCo.Tools.Testers
     {
 
       // Some other trouble cases...
+      {
+        Rectangle r = new Rectangle(112.5, 37.5, 37.5, 37.5);
+        LineSegment s = new LineSegment(100, 21, 213, 86);
+        Assert.IsTrue(r.Intersects(s), "There should be an intersect!");
+      }
+
       {
         Rectangle r = new Rectangle(0.0d, 0.0d, 100.0d, 100.0d);
         LineSegment s = new LineSegment(-20.0d, 9.0d, 5.0d, 34.0d);
