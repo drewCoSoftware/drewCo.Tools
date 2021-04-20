@@ -9,7 +9,26 @@ namespace drewCo.MathTools.Geometry
 {
 
   // ============================================================================================================================
-  public class Polygon
+  /// <summary>
+  /// Allows the size of a shape to be changed by dynamically scaling it.
+  /// </summary>
+  /// <remarks>
+  /// This interface may change to a generic version to create a scaled copy vs. changing the existing instance.
+  /// </remarks>
+  interface ICanScale
+  {
+    void Scale(double scale);
+    void Scale(double scaleX, double scaleY);
+  }
+
+  // ============================================================================================================================
+  interface IBoundingBox2D
+  {
+    Rectangle GetAABB();
+  }
+
+  // ============================================================================================================================
+  public class Polygon : IBoundingBox2D
   {
     // NOTE: I think that I can just make points / segments the readonly collections we see below.
     // --> true.  There is no need to modify the vertices / segments collections.
@@ -31,13 +50,14 @@ namespace drewCo.MathTools.Geometry
       {
         _Vertices.Reverse();
       }
-
-
       Vertices = new ReadOnlyCollection<Vector2>(_Vertices);
 
-      // TODO: Make sure that our vertex order is always counter-clock (the same direction of 2d rotation angles).
-      // If not, sort them!
-      // Compose the segments.
+      RecomputeSegments();
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    private void RecomputeSegments()
+    {
       _Segments = new List<LineSegment>();
       int len = _Vertices.Count;
       for (int i = 0; i < len; i++)
@@ -45,10 +65,46 @@ namespace drewCo.MathTools.Geometry
         int nextIndex = (i + 1) % len;
         _Segments.Add(new LineSegment(_Vertices[i], _Vertices[nextIndex]));
       }
-
       Sides = new ReadOnlyCollection<LineSegment>(_Segments);
     }
 
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public Rectangle GetAABB()
+    {
+      double minX = double.MaxValue;
+      double maxX = double.MinValue;
+      double minY = double.MaxValue;
+      double maxY = double.MinValue;
+
+      foreach (var v in Vertices)
+      {
+        minX = Math.Min(minX, v.X);
+        maxX = Math.Max(maxX, v.X);
+        minY = Math.Min(minY, v.Y);
+        maxY = Math.Max(maxY, v.Y);
+      }
+
+      return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public void Scale(double scale)
+    {
+       Scale(scale, scale);
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public void Scale(double scaleX, double scaleY)
+    {
+      int len = Vertices.Count;
+      for (int i = 0; i < len; i++)
+      {
+        _Vertices[i] = new Vector2(_Vertices[i].X * scaleX, _Vertices[i].Y * scaleY);
+      }
+      Vertices = new ReadOnlyCollection<Vector2>(_Vertices);
+      RecomputeSegments();
+    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
