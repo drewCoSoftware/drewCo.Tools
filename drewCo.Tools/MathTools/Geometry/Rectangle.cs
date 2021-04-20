@@ -117,7 +117,7 @@ namespace drewCo.MathTools.Geometry
       bool res = v.X >= this.X &&
                  v.X <= this.X + this.Width &&
                  v.Y >= this.Y &&
-                 this.Y <= this.Y + this.Height;
+                 v.Y <= this.Y + this.Height;
       return res;
 
     }
