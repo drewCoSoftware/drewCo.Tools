@@ -28,15 +28,33 @@ namespace drewCo.MathTools.Geometry
   }
 
   // ============================================================================================================================
+  public struct PolygonVertex
+  {
+    public Vector2 Pos;
+
+    /// <summary>
+    /// Inscribed angle of the vertex.
+    /// Use double.nan if there isn't an angle (like a single point in space...)
+    /// </summary>
+    public double Angle;
+  }
+
+  // ============================================================================================================================
   public class Polygon : IBoundingBox2D
   {
     // NOTE: I think that I can just make points / segments the readonly collections we see below.
     // --> true.  There is no need to modify the vertices / segments collections.
-    private List<Vector2> _Vertices = null;
+    private List<PolygonVertex> _VerticesEx = null;
     private List<LineSegment> _Segments = null;
 
-    public ReadOnlyCollection<Vector2> Vertices { get; private set; }
+
+    public ReadOnlyCollection<PolygonVertex> VerticesEx { get; private set; }
     public ReadOnlyCollection<LineSegment> Sides { get; private set; }
+
+    // NOTE: These two are now kind of redundant.  We at least don't need the backing store for
+    // _Vertices, but we can deal with the memory issue some other time.
+    private List<Vector2> _Vertices = null;
+    public ReadOnlyCollection<Vector2> Vertices { get; private set; }
 
     // --------------------------------------------------------------------------------------------------------------------------
     public Polygon(IList<Vector2> vertices_)
@@ -51,6 +69,30 @@ namespace drewCo.MathTools.Geometry
         _Vertices.Reverse();
       }
       Vertices = new ReadOnlyCollection<Vector2>(_Vertices);
+
+      // We can compute the angles between the verts now.
+      _VerticesEx = new List<PolygonVertex>();
+      int len = vertices_.Count;
+      for (int i = 1; i <= len; i++)
+      {
+        // Compute the angle of this vertex.
+        int v1 = i - 1;
+        int v2 = i % len;
+        int v3 = (i + 1) % len;
+
+        Vector2 s1 = (vertices_[v1] - vertices_[v2]).Norm();
+        Vector2 s2 = (vertices_[v3] - vertices_[v2]).Norm();
+
+        double angle = Math.Acos(s1.Dot(s2));
+
+        _VerticesEx.Add(new PolygonVertex()
+        {
+          Pos = vertices_[v2],
+          Angle = angle
+        });
+      }
+      VerticesEx = new ReadOnlyCollection<PolygonVertex>(_VerticesEx);
+
 
       RecomputeSegments();
     }
@@ -91,7 +133,7 @@ namespace drewCo.MathTools.Geometry
     // --------------------------------------------------------------------------------------------------------------------------
     public void Scale(double scale)
     {
-       Scale(scale, scale);
+      Scale(scale, scale);
     }
 
     // --------------------------------------------------------------------------------------------------------------------------

@@ -1,4 +1,5 @@
-﻿using drewCo.MathTools.Geometry;
+﻿using drewCo.MathTools;
+using drewCo.MathTools.Geometry;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,42 @@ namespace drewCo.Tools.Testers
   public class GeometryTesters
   {
     const long MAX_TEST_COUNT = (long)10e6;
+    private const double EPSILON = 0.0000001;
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    [TestMethod]
+    public void CanComputePolygonAngles()
+    {
+
+      // Let's try for a triangle.  Any old triangle should do....
+      var triangleVerts = new[] {
+        new Vector2(0,0),
+        new Vector2(0,10),
+        new Vector2(10,0)
+      };
+      var trianglePoly = new Polygon(triangleVerts);
+
+      // This should add up to 180 degrees, or pi.
+      var verts = trianglePoly.VerticesEx;
+      double angleSum = (from x in verts select x.Angle).Sum();
+      Assert.AreEqual(Math.PI, angleSum, EPSILON);
+
+
+      var r = new Rectangle(0, 0, 10, 10);
+      Polygon p = r.ToPolygon();
+
+      const double HALF_PI = Math.PI * 0.5d;
+
+      // Each should be 90 degrees!
+      foreach (var v in p.VerticesEx)
+      {
+        Assert.AreEqual(v.Angle, HALF_PI, EPSILON);
+      }
+
+
+    }
+
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
