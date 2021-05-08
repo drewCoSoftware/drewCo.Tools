@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Any CPU\debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;IS_HELPERS_LIB, NET_40,IS_TOOLS_LIB</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Any CPU\debug\drewCo.Tools.xml</DocumentationFile>
@@ -136,6 +136,10 @@
     <None Include="drewCo.Tools.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>IF NOT EXIST "$(SolutionDir)lib\net472" md "$(SolutionDir)lib\net472"
+copy "$(TargetPath)" "$(SolutionDir)lib\net472\"$(TargetFileName)</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

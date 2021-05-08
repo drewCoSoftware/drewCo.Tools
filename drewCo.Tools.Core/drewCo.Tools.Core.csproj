@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>drewCo.Tools</RootNamespace>
+    <AssemblyName>drewCo.Tools</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,5 +43,9 @@
     <Folder Include="Attributes\" />
     <Folder Include="ReflectionTools\" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="IF NOT EXIST &quot;$(SolutionDir)lib\netcoreapp3.1&quot; md &quot;$(SolutionDir)lib\netcoreapp3.1&quot;&#xD;&#xA;copy $(TargetPath) $(SolutionDir)lib\netcoreapp3.1" />
+  </Target>
 
 </Project>
