@@ -15,11 +15,7 @@ namespace drewCo.Tools
   /// Just a class to help us copy values between types.  In any mutli-tiered system, there are plenty of DTOs to keep things
   /// isolated, but manual copying can be a real pain...
   /// </summary>
-#if IS_TOOLS_LIB
   public class DTOMapper
-#else
-  public class DTOMapper
-#endif
   {
 
 

@@ -43,13 +43,6 @@ namespace drewCo.MathTools
     public static Vector2 Zero { get { return new Vector2(0.0d, 0.0d); } }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public Vector2(Point p)
-    {
-      X = p.X;
-      Y = p.Y;
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------
     public void Set(double x, double y)
     {
       X = x;
@@ -95,13 +88,6 @@ namespace drewCo.MathTools
     public static bool operator !=(Vector2 p1, Vector2 p2)
     {
       return p1.X != p1.X || p1.Y != p2.Y;
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------
-    public static Vector2 operator +(Vector2 input, Point p)
-    {
-      Vector2 res = new Vector2(input.X + p.X, input.Y + p.Y);
-      return res;
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
@@ -213,11 +199,8 @@ namespace drewCo.MathTools
       return new Vector2(x, y);
     }
 
-    // --------------------------------------------------------------------------------------------------------------------------
-    public Point ToPoint()
-    {
-      return new Point(X, Y);
-    }
+
+
 
     // --------------------------------------------------------------------------------------------------------------------------
     public static Vector2 Rotate(double angle, Vector2 point, Vector2 center)
@@ -297,20 +280,28 @@ namespace drewCo.MathTools
       return $"{X}, {Y}";
     }
 
-  }
+#if !NETCOREAPP
+    // --------------------------------------------------------------------------------------------------------------------------
+    public Vector2(Point p)
+    {
+      X = p.X;
+      Y = p.Y;
+    }
 
-  // ============================================================================================================================
-  public static class Vector2Extensions
-  {
-    private const double EPSILON = 1e-10;
-    public static bool IsZero(this double d)
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static Vector2 operator +(Vector2 input, Point p)
     {
-      return Math.Abs(d) < EPSILON;
+      Vector2 res = new Vector2(input.X + p.X, input.Y + p.Y);
+      return res;
     }
-    public static bool IsZero(this float d)
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public Point ToPoint()
     {
-      return Math.Abs(d) < EPSILON;
+      return new Point(X, Y);
     }
+#endif
+
   }
 
 }

@@ -1,7 +1,6 @@
 ﻿// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 // Copyright ©2012-2018 Andrew A. Ritz, all rights reserved.
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,11 +22,7 @@ namespace drewCo.Tools
   /// <summary>
   /// Filled with many helpful reflection based operations and manipulations.
   /// </summary>
-#if IS_TOOLS_LIB
   public partial class ReflectionTools
-#else
-  internal static class ReflectionTools
-#endif
   {
 
 

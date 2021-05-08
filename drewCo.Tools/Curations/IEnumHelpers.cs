@@ -14,11 +14,7 @@ namespace drewCo.Curations
 {
 
   // ============================================================================================================================
-#if IS_TOOLS_LIB
   public static class IEnumHelper
-#else
-  internal static class IEnumHelper
-#endif
   {
 
     // This won't be ready until ReflectionTools is available.... (nuGet ??)
@@ -178,11 +174,7 @@ namespace drewCo.Curations
   /// <summary>
   /// Provides useful manipulations for ILists.
   /// </summary>
-#if IS_TOOLS_LIB
   public static class IListHelper
-#else
-  internal static class IListHelper
-#endif
   {
 
     // --------------------------------------------------------------------------------------------------------------------------

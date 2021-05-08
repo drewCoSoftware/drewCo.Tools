@@ -14,9 +14,7 @@ using System.Xml.Linq;
 using SysMath = System.Math;
 
 #if !NETFX_CORE
-
 using System.Security.Cryptography;
-
 #else
 
 using Windows.Security.Cryptography.Core;
@@ -28,11 +26,7 @@ using Windows.Security.Cryptography;
 namespace drewCo.Tools
 {
   // ============================================================================================================================
-#if IS_TOOLS_LIB
   public partial class StringTools
-#else
-  internal partial class StringTools
-#endif
   {
 
     // --------------------------------------------------------------------------------------------------------------------------

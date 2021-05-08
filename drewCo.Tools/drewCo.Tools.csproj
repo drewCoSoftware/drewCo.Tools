@@ -48,7 +48,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;IS_HELPERS_LIB, NET_40,IS_TOOLS_LIB</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>bin\x64\Debug\drewCo.Tools.xml</DocumentationFile>
     <NoWarn>1591,1572,1573</NoWarn>
@@ -115,6 +115,7 @@
     <Compile Include="MathTools\Geometry\Rectangle.cs" />
     <Compile Include="MathTools\Quadratic.cs" />
     <Compile Include="MathTools\Vector2.cs" />
+    <Compile Include="MathTools\Vector2Extensions.cs" />
     <Compile Include="ObjectInspector.cs" />
     <Compile Include="ReflectionTools\DataSource.cs" />
     <Compile Include="ReflectionTools\ReflectionTools.cs" />

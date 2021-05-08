@@ -16,11 +16,7 @@ namespace drewCo.Curations
   /// Like a normal dictionary, but will provide a default value in place of 'KeyNotFoundExceptions' being thrown.
   /// Optionally, you may provide a function that will supply a default value for a given key.
   /// </summary>
-#if IS_TOOLS_LIB
   public class DefaultDictionary<TKey, TValue> : Dictionary<TKey, TValue>
-#else
-  internal class DefaultDictionary<TKey, TValue> : Dictionary<TKey, TValue>
-#endif
   {
     private TValue Default = default(TValue);
     private Func<TKey, TValue> Generator = null;

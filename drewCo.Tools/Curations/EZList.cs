@@ -171,13 +171,11 @@ namespace drewCo.Curations
     public void Insert(int index, object value)
     {
       Insert(index, (T)value);
-      //      _List.Insert(index, (T)value);
     }
 
     public void Remove(object value)
     {
       Remove((T)value);
-      //      _List.Remove((T)value);
     }
 
     public void CopyTo(Array array, int index)

@@ -14,13 +14,8 @@ namespace drewCo.Curations
   /// <summary>
   /// Like a normal list, but disposes items when they are removed.
   /// </summary>
-#if IS_TOOLS_LIB
   public class DisposingList<T> : IList<T>, IDisposable
     where T : IDisposable
-#else
-  internal class DisposingList<T> : IList<T>, IDisposable
-    where T : IDisposable
-#endif
   {
     private List<T> List = new List<T>();
 

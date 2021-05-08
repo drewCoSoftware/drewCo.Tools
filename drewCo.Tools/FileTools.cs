@@ -34,13 +34,8 @@ namespace drewCo.Tools
 #if NETCOREAPP
   public static partial class FileTools
 #else
-#if IS_TOOLS_LIB
   public static partial class FileTools
-#else
-  internal static partial class FileTools
 #endif
-#endif
-
   {
 
     // --------------------------------------------------------------------------------------------------------------------------

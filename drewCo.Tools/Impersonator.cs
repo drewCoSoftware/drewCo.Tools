@@ -1,7 +1,6 @@
 ﻿//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 // Copyright ©2009-2014 Andrew A. Ritz, All Rights Reserved
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
 using System;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
@@ -10,11 +9,7 @@ using System.Security.Principal;
 namespace drewCo.Tools
 {
   // ============================================================================================================================
-#if IS_HELPERS_LIB
   public class Impersonator : IDisposable
-#else
-  internal class Impersonator : IDisposable
-#endif
   {
 
     #region WIN_API

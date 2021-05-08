@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\drewCo.Tools\ArrayHelpers.cs" Link="ArrayHelpers.cs" />
+    <Compile Include="..\drewCo.Tools\Attributes\DefaultValueAttribute.cs" Link="Attributes\DefaultValueAttribute.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\EZList.cs" Link="Curations\EZList.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\MultiDictionary.cs" Link="Curations\MultiDictionary.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\PairDictionary.cs" Link="Curations\PairDictionary.cs" />
+    <Compile Include="..\drewCo.Tools\DateTools.cs" Link="DateTools.cs" />
+    <Compile Include="..\drewCo.Tools\DTOMapper.cs" Link="DTOMapper.cs" />
+    <Compile Include="..\drewCo.Tools\ExceptionDetail.cs" Link="ExceptionDetail.cs" />
+    <Compile Include="..\drewCo.Tools\FileTools.cs" Link="FileTools.cs" />
+    <Compile Include="..\drewCo.Tools\Gopher.cs" Link="Gopher.cs" />
+    <Compile Include="..\drewCo.Tools\IDeepCopy.cs" Link="IDeepCopy.cs" />
+    <Compile Include="..\drewCo.Tools\JsonFile.cs" Link="JsonFile.cs" />
+    <Compile Include="..\drewCo.Tools\MathTools\Geometry\Circle.cs" Link="MathTools\Geometry\Circle.cs" />
+    <Compile Include="..\drewCo.Tools\MathTools\Geometry\LineSegment.cs" Link="MathTools\Geometry\LineSegment.cs" />
+    <Compile Include="..\drewCo.Tools\MathTools\Geometry\Polygon.cs" Link="MathTools\Geometry\Polygon.cs" />
+    <Compile Include="..\drewCo.Tools\MathTools\Geometry\Rectangle.cs" Link="MathTools\Geometry\Rectangle.cs" />
+    <Compile Include="..\drewCo.Tools\MathTools\Quadratic.cs" Link="MathTools\Quadratic.cs" />
+    <Compile Include="..\drewCo.Tools\MathTools\Vector2.cs" Link="MathTools\Vector2.cs" />
+    <Compile Include="..\drewCo.Tools\MathTools\Vector2Extensions.cs" Link="MathTools\Vector2Extensions.cs" />
+    <Compile Include="..\drewCo.Tools\ObjectInspector.cs" Link="ObjectInspector.cs" />
+    <Compile Include="..\drewCo.Tools\PerfLog.cs" Link="PerfLog.cs" />
+    <Compile Include="..\drewCo.Tools\RandomTools.cs" Link="RandomTools.cs" />
+    <Compile Include="..\drewCo.Tools\ReflectionTools\DataSource.cs" Link="ReflectionTools\DataSource.cs" />
+    <Compile Include="..\drewCo.Tools\ReflectionTools\ReflectionTools.cs" Link="ReflectionTools\ReflectionTools.cs" />
+    <Compile Include="..\drewCo.Tools\Sentinel.cs" Link="Sentinel.cs" />
+    <Compile Include="..\drewCo.Tools\StringTools.cs" Link="StringTools.cs" />
+    <Compile Include="..\drewCo.Tools\XMLFile.cs" Link="XMLFile.cs" />
+    <Compile Include="..\drewCo.Tools\XMLTools.cs" Link="XMLTools.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Curations\" />
+    <Folder Include="MathTools\Geometry\" />
+    <Folder Include="Attributes\" />
+    <Folder Include="ReflectionTools\" />
+  </ItemGroup>
+
+</Project>

@@ -11,11 +11,7 @@ namespace drewCo.Tools
   /// <summary>
   /// Acts as a simple re-entrancy sentinel.
   /// </summary>
-#if IS_TOOLS_LIB
   public class Sentinel
-#else
-  internal class Sentinel
-#endif
   {
     private object WorkLock = new object();
 

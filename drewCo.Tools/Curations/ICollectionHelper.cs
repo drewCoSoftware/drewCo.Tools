@@ -12,11 +12,7 @@ namespace drewCo.Curations
   /// <summary>
   /// Provides useful manipulations for ICollections.
   /// </summary>
-#if IS_TOOLS_LIB
   public static class ICollectionHelper
-#else
-  internal static class ICollectionHelper
-#endif
   {
     private static Random _RNG = null;
     private static Random RNG

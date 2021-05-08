@@ -16,11 +16,7 @@ namespace drewCo.Curations
   /// <summary>
   /// Like a normal dictionary, but with a natural key instead of a single one.
   /// </summary>
-#if IS_TOOLS_LIB
   public class MultiDictionary<TKey1, TKey2, TValue> : IEnumerable<TValue>
-#else
-  internal class MultiDictionary<TKey1, TKey2, TValue> : IEnumerable<TValue>
-#endif
   {
     private Dictionary<TKey1, List<Dictionary<TKey2, TValue>>> Data = new Dictionary<TKey1, List<Dictionary<TKey2, TValue>>>();
 

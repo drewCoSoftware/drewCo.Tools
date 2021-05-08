@@ -5,11 +5,7 @@ using System.Text;
 
 namespace drewCo.Tools.Curations
 {
-#if IS_TOOLS_LIB
   public static class IListHelpers
-#else
-  internal static class IListHelpers
-#endif
   {
 
     // --------------------------------------------------------------------------------------------------------------------------
