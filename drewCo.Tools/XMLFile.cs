@@ -15,9 +15,6 @@ using Windows.Storage;
 
 namespace drewCo.Tools
 {
-
-
-
   // ============================================================================================================================
   /// <summary>
   /// Encapsulates a simple set of XML save/load operations.
@@ -212,6 +209,17 @@ namespace drewCo.Tools
         return (T)res;
       }
 #endif
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public override string ToString()
+    {
+      XmlSerializer serial = new XmlSerializer(typeof(T));
+      using (var writer = new StringWriter())
+      {
+        serial.Serialize(writer, this);
+        return writer.ToString();
+      }
     }
 
     // --------------------------------------------------------------------------------------------------------------------------

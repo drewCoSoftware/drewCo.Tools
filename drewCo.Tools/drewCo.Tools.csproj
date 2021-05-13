@@ -132,9 +132,6 @@
     <Compile Include="XMLFile.cs" />
     <Compile Include="XMLTools.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="drewCo.Tools.nuspec" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>IF NOT EXIST "$(SolutionDir)lib\net472" md "$(SolutionDir)lib\net472"
