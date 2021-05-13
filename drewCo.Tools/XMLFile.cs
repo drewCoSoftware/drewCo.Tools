@@ -212,14 +212,34 @@ namespace drewCo.Tools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public override string ToString()
+    public string ToString(Encoding encoding)
     {
       XmlSerializer serial = new XmlSerializer(typeof(T));
-      using (var writer = new StringWriter())
+      using (var writer = new CustomStringWriter(encoding))
       {
         serial.Serialize(writer, this);
         return writer.ToString();
       }
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public override string ToString()
+    {
+      return ToString(Encoding.ASCII);
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static T FromString(string xmlData)
+    {
+      XmlSerializer serial = new XmlSerializer(typeof(T));
+      using (var stream = new CustomStringReader(xmlData, Encoding.ASCII))
+      {
+        object res = serial.Deserialize(stream);
+        (res as XMLFile<T>).FilePath = null;
+        (res as XMLFile<T>).IsLoaded = true;
+        return (T)res;
+      }
+
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
@@ -233,4 +253,31 @@ namespace drewCo.Tools
   }
 
 
+}
+
+// ============================================================================================================================
+class CustomStringReader : StringReader
+{
+  internal CustomStringReader(string s, Encoding encoding_)
+   : base(s)
+  {
+    this.UseEncoding = encoding_;
+  }
+
+  private Encoding UseEncoding;
+}
+
+// ============================================================================================================================
+class CustomStringWriter : StringWriter
+{
+  private Encoding UseEncoding;
+
+  // --------------------------------------------------------------------------------------------------------------------------
+  internal CustomStringWriter(Encoding encoding_)
+    : base()
+  {
+    UseEncoding = encoding_;
+  }
+
+  public override Encoding Encoding => UseEncoding;
 }

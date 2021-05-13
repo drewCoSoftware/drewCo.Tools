@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>drewCo.Tools</id>
-    <version>1.0.1.0</version>
+    <version>1.0.1.1</version>
     <title>drewCo.Tools</title>
     <authors>Andrew A. Ritz</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -10,7 +10,7 @@
     <!--<projectUrl>http://project_url_here_or_delete_this_line/</projectUrl>
     <iconUrl>http://icon_url_here_or_delete_this_line/</iconUrl>-->
     <description>A useful set of utility code.</description>
-    <releaseNotes>Initial nuget package version.</releaseNotes>
+    <releaseNotes>Some new features in XMLFile.</releaseNotes>
     <copyright>2021 Andrew A. Ritz</copyright>
     <!--<tags>Tag1 Tag2</tags>-->
     <dependencies>
@@ -18,7 +18,7 @@
       <group targetFramework=".NETCoreApp3.1"></group>
     </dependencies>
 
-    <repository type="git" url="https://github.com/drewCoSoftware/drewCo.Tools" branch="main" commit="4e1b833e5f897f2ec837e5804f44a0b540281ead" />
+    <repository type="git" url="https://github.com/drewCoSoftware/drewCo.Tools" branch="main" commit="d8bf6ffdbfa99b8eec6bf759720f831afcef651d" />
 
   </metadata>
 </package>
