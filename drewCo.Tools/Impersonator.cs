@@ -6,13 +6,17 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Security.Principal;
 
+// This code is not netcore compatible!
+#if !NETCOREAPP
+
 namespace drewCo.Tools
 {
+
   // ============================================================================================================================
   public class Impersonator : IDisposable
   {
 
-    #region WIN_API
+#region WIN_API
 
     private const int LOGON32_PROVIDER_DEFAULT = 0;
     private const int LOGON32_LOGON_INTERACTIVE = 2;
@@ -23,13 +27,13 @@ namespace drewCo.Tools
     [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
     private extern static bool CloseHandle(IntPtr handle);
 
-    #endregion
+#endregion
 
     private IntPtr token = IntPtr.Zero;
     private WindowsImpersonationContext impersonated;
     private readonly string _ErrMsg = "";
 
-    #region Properties
+#region Properties
 
     public bool IsImpersonating
     {
@@ -41,7 +45,7 @@ namespace drewCo.Tools
       get { return _ErrMsg; }
     }
 
-    #endregion
+#endregion
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -100,3 +104,5 @@ namespace drewCo.Tools
     }
   }
 }
+
+#endif

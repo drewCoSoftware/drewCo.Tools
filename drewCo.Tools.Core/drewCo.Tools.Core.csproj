@@ -1,24 +1,45 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>drewCo.Tools</RootNamespace>
     <AssemblyName>drewCo.Tools</AssemblyName>
   </PropertyGroup>
-
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="IF NOT EXIST &quot;$(SolutionDir)lib\netcoreapp3.1&quot; md &quot;$(SolutionDir)lib\netcoreapp3.1&quot;&#xD;&#xA;copy $(TargetPath) $(SolutionDir)lib\netcoreapp3.1" />
+  </Target>
   <ItemGroup>
     <Compile Include="..\drewCo.Tools\ArrayHelpers.cs" Link="ArrayHelpers.cs" />
     <Compile Include="..\drewCo.Tools\Attributes\DefaultValueAttribute.cs" Link="Attributes\DefaultValueAttribute.cs" />
+    <Compile Include="..\drewCo.Tools\CSV\CSVColumnMap.cs" Link="CSV\CSVColumnMap.cs" />
+    <Compile Include="..\drewCo.Tools\CSV\CSVFile.cs" Link="CSV\CSVFile.cs" />
+    <Compile Include="..\drewCo.Tools\CSV\CSVLine.cs" Link="CSV\CSVLine.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\DefaultDictionary.cs" Link="Curations\DefaultDictionary.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\DiffGram.cs" Link="Curations\DiffGram.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\DisposingList.cs" Link="Curations\DisposingList.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\EHelper.cs" Link="Curations\EHelper.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\Extensions.cs" Link="Curations\Extensions.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\ExternalReadonlyList.cs" Link="Curations\ExternalReadonlyList.cs" />
     <Compile Include="..\drewCo.Tools\Curations\EZList.cs" Link="Curations\EZList.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\EZListSerializers.cs" Link="Curations\EZListSerializers.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\ICollectionHelper.cs" Link="Curations\ICollectionHelper.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\IEnumHelpers.cs" Link="Curations\IEnumHelpers.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\IListHelpers.cs" Link="Curations\IListHelpers.cs" />
     <Compile Include="..\drewCo.Tools\Curations\MultiDictionary.cs" Link="Curations\MultiDictionary.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\MultiDictionaryHelper.cs" Link="Curations\MultiDictionaryHelper.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\ObjectPool.cs" Link="Curations\ObjectPool.cs" />
     <Compile Include="..\drewCo.Tools\Curations\PairDictionary.cs" Link="Curations\PairDictionary.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\SuperList.cs" Link="Curations\SuperList.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\SuperObserver.cs" Link="Curations\SuperObserver.cs" />
     <Compile Include="..\drewCo.Tools\DateTools.cs" Link="DateTools.cs" />
     <Compile Include="..\drewCo.Tools\DTOMapper.cs" Link="DTOMapper.cs" />
     <Compile Include="..\drewCo.Tools\ExceptionDetail.cs" Link="ExceptionDetail.cs" />
-    <Compile Include="..\drewCo.Tools\FileTools.cs" Link="FileTools.cs" />
     <Compile Include="..\drewCo.Tools\Gopher.cs" Link="Gopher.cs" />
-    <Compile Include="..\drewCo.Tools\IDeepCopy.cs" Link="IDeepCopy.cs" />
-    <Compile Include="..\drewCo.Tools\JsonFile.cs" Link="JsonFile.cs" />
     <Compile Include="..\drewCo.Tools\MathTools\Geometry\Circle.cs" Link="MathTools\Geometry\Circle.cs" />
     <Compile Include="..\drewCo.Tools\MathTools\Geometry\LineSegment.cs" Link="MathTools\Geometry\LineSegment.cs" />
     <Compile Include="..\drewCo.Tools\MathTools\Geometry\Polygon.cs" Link="MathTools\Geometry\Polygon.cs" />
@@ -27,25 +48,27 @@
     <Compile Include="..\drewCo.Tools\MathTools\Vector2.cs" Link="MathTools\Vector2.cs" />
     <Compile Include="..\drewCo.Tools\MathTools\Vector2Extensions.cs" Link="MathTools\Vector2Extensions.cs" />
     <Compile Include="..\drewCo.Tools\ObjectInspector.cs" Link="ObjectInspector.cs" />
-    <Compile Include="..\drewCo.Tools\PerfLog.cs" Link="PerfLog.cs" />
-    <Compile Include="..\drewCo.Tools\RandomTools.cs" Link="RandomTools.cs" />
     <Compile Include="..\drewCo.Tools\ReflectionTools\DataSource.cs" Link="ReflectionTools\DataSource.cs" />
     <Compile Include="..\drewCo.Tools\ReflectionTools\ReflectionTools.cs" Link="ReflectionTools\ReflectionTools.cs" />
+    <Compile Include="..\drewCo.Tools\Serialization\EZReader.cs" Link="Serialization\EZReader.cs" />
+    <Compile Include="..\drewCo.Tools\Serialization\EZWriter.cs" Link="Serialization\EZWriter.cs" />
+    <Compile Include="..\drewCo.Tools\FileTools.cs" Link="FileTools.cs" />
+    <Compile Include="..\drewCo.Tools\IDeepCopy.cs" Link="IDeepCopy.cs" />
+    <Compile Include="..\drewCo.Tools\Impersonator.cs" Link="Impersonator.cs" />
+    <Compile Include="..\drewCo.Tools\PerfLog.cs" Link="PerfLog.cs" />
+    <Compile Include="..\drewCo.Tools\RandomTools.cs" Link="RandomTools.cs" />
     <Compile Include="..\drewCo.Tools\Sentinel.cs" Link="Sentinel.cs" />
     <Compile Include="..\drewCo.Tools\StringTools.cs" Link="StringTools.cs" />
     <Compile Include="..\drewCo.Tools\XMLFile.cs" Link="XMLFile.cs" />
     <Compile Include="..\drewCo.Tools\XMLTools.cs" Link="XMLTools.cs" />
   </ItemGroup>
-
   <ItemGroup>
-    <Folder Include="Curations\" />
-    <Folder Include="MathTools\Geometry\" />
-    <Folder Include="Attributes\" />
-    <Folder Include="ReflectionTools\" />
+    <Folder Include="Attributes" />
+    <Folder Include="CSV" />
+    <Folder Include="Curations" />
+    <Folder Include="MathTools\Geometry" />
+    <Folder Include="MathTools" />
+    <Folder Include="ReflectionTools" />
+    <Folder Include="Serialization" />
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="IF NOT EXIST &quot;$(SolutionDir)lib\netcoreapp3.1&quot; md &quot;$(SolutionDir)lib\netcoreapp3.1&quot;&#xD;&#xA;copy $(TargetPath) $(SolutionDir)lib\netcoreapp3.1" />
-  </Target>
-
 </Project>
