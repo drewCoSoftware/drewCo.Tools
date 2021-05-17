@@ -14,24 +14,16 @@ namespace drewCo.Curations
   /// </summary>
   public static class ICollectionHelper
   {
-    private static Random _RNG = null;
-    private static Random RNG
-    {
-      get { return _RNG ?? (_RNG = new Random()); }
-    }
-
+    private static Random RNG = new Random();
 
     // TODO: 12.14.2011
     // A cool function that will let us remove / filter data in a source list based on data in the comparison list.
     // A condition (FUNC<T>) would also be a nice option instead of a straight match.
 
-
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
-    /// Returns a random entry from the given list.
+    /// Returns a random entry from the given collection.
     /// </summary>
-    /// <param name="src"></param>
-    /// <returns></returns>
     public static T GetRandomEntry<T>(ICollection<T> src)
     {
       if (src.Count < 1) { throw new InvalidOperationException("Source collection must have at least one entry!"); }
@@ -57,7 +49,7 @@ namespace drewCo.Curations
     /// <summary>
     /// If the given item exists in the source collection, a reference to it will be returned.
     /// If not, it will be added to the source collection.
-    /// _TEST: DEmonstrate this cool functionality.  Both found, and add cases!
+    /// _TEST: Demonstrate this cool functionality.  Both found, and add cases!
     /// </summary>
     public static T GetOrAddItem<T>(ICollection<T> src, T item)
     {
@@ -74,6 +66,7 @@ namespace drewCo.Curations
     /// Adds a new item to the collection, but only if it doesn't already exist.
     /// FUTURE: Some way to have a custom equality evaluation, like that of the item listed in 'IEnumHelpers'
     /// </summary>
+    /// <remarks>A HashSet is probably a better choice instead of a function like this.</remarks>
     public static void AddUnique<T>(ICollection<T> src, T item)
     {
       if (src.Contains(item)) { return; }
@@ -97,7 +90,6 @@ namespace drewCo.Curations
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
     /// Like that of 'MergeInto' but only includes unique items from <paramref name="from"/>
-    /// _TEST:
     /// </summary>
     public static void MergeUniqueInto<T>(ICollection<T> mergeTo, ICollection<T> from)
     {
@@ -107,17 +99,6 @@ namespace drewCo.Curations
       }
     }
 
-
-    //// --------------------------------------------------------------------------------------------------------------------------
-    //public static List<T> Copy<T>(IList<T> src)
-    //{
-    //  List<T> res = new List<T>();
-    //  foreach (var item in src)
-    //  {
-    //    res.Add(DTOMapper
-    //  }
-    //  throw new NotImplementedException();
-    //}
 
   }
 

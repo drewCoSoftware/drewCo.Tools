@@ -103,8 +103,6 @@
     <Compile Include="Curations\MultiDictionaryHelper.cs" />
     <Compile Include="Curations\ObjectPool.cs" />
     <Compile Include="Curations\PairDictionary.cs" />
-    <Compile Include="Curations\SuperList.cs" />
-    <Compile Include="Curations\SuperObserver.cs" />
     <Compile Include="DateTools.cs" />
     <Compile Include="DTOMapper.cs" />
     <Compile Include="ExceptionDetail.cs" />

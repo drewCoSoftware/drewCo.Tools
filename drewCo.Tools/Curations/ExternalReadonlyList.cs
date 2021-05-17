@@ -18,18 +18,17 @@ namespace drewCo.Curations
   /// This is a special list that can be used internally in a class for simple things like add/remove/etc.
   /// It has the special feature of internally tracking a readonly collection that can then be used and exposed outside
   /// of the containing class.
-  /// The purpose it to reduce a lot of boilerplate that is normally associated with this type of feature.
+  /// The purpose it to reduce a lot of boilerplate that is normally associated with this type of pattern.
   /// </summary>
   public class ExternalReadonlyList<T> : IList<T>
   {
+    private List<T> Internal = new List<T>();
 
     private ReadOnlyCollection<T> _External = null;
     public ReadOnlyCollection<T> External
     {
       get { return _External ?? (_External = new ReadOnlyCollection<T>(Internal)); }
     }
-
-    private List<T> Internal = new List<T>();
 
     // --------------------------------------------------------------------------------------------------------------------------
     public ExternalReadonlyList()

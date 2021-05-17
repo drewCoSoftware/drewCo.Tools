@@ -4,6 +4,7 @@
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
+using drewCo.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,38 +18,37 @@ namespace drewCo.Curations
   public static class IEnumHelper
   {
 
-    // This won't be ready until ReflectionTools is available.... (nuGet ??)
-    //// --------------------------------------------------------------------------------------------------------------------------
-    //public static bool AllUnique<T>(IEnumerable<T> list, Expression<Func<T, object>> prop = null)
-    //{
-    //  int max = list.Count();
-    //  int dCount = -1;
-    //  if (prop == null)
-    //  {
-    //    dCount = list.Distinct().Count();
-    //  }
-    //  else
-    //  {
-    //    dCount = DistinctBy(list, prop).Count();
-    //  }
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static bool AllUnique<T>(IEnumerable<T> list, Expression<Func<T, object>> prop = null)
+    {
+      int max = list.Count();
+      int dCount = -1;
+      if (prop == null)
+      {
+        dCount = list.Distinct().Count();
+      }
+      else
+      {
+        dCount = DistinctBy(list, prop).Count();
+      }
 
-    //  return max == dCount;
-    //}
+      return max == dCount;
+    }
 
 
-    //// --------------------------------------------------------------------------------------------------------------------------
-    //public static IEnumerable<T> DistinctBy<T>(IEnumerable<T> list, Expression<Func<T, object>> prop)
-    //{
-    //  List<object> found = new List<object>(list.Count());
-    //  foreach (var item in list)
-    //  {
-    //    object val = ReflectionTools.GetPropertyValue(item, prop);
-    //    if (found.Contains(val)) { continue; }
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static IEnumerable<T> DistinctBy<T>(IEnumerable<T> list, Expression<Func<T, object>> prop)
+    {
+      List<object> found = new List<object>(list.Count());
+      foreach (var item in list)
+      {
+        object val = ReflectionTools.GetPropertyValue(item, prop);
+        if (found.Contains(val)) { continue; }
 
-    //    found.Add(item);
-    //    yield return item;
-    //  }
-    //}
+        found.Add(item);
+        yield return item;
+      }
+    }
 
 
 
@@ -138,7 +138,7 @@ namespace drewCo.Curations
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
-    /// Determines if any item item within the <see cref="IEnumerable<T>"/> meets the given criteria.
+    /// Determines if any item item within the <see cref="IEnumerable&lt;T&gt;"/> meets the given criteria.
     /// </summary>
     public static bool Contains<T>(IEnumerable<T> searchIn, Func<T, bool> criteria)
     {
