@@ -1,9 +1,6 @@
 ﻿// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 // Copyright (c)2010-2014 Andrew A. Ritz, all rights reserved.
-// This code is released under the ms-pl (Microsoft Public License)
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-
 using drewCo.Tools;
 using System;
 using System.Collections.Generic;
