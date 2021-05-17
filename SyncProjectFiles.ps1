@@ -13,10 +13,10 @@ function Get-Relpath($from, $to)
     Set-Location $from
     $relative = Resolve-Path $to -Relative
 
-    Write-Output $relative
-
     #restore the location...
     Set-Location $oldLocation
+
+    return $relative
 }
 
 function AddAttribute($xml, $node, $name, $value) 
@@ -53,105 +53,108 @@ function RemoveEmptyNodes($xml, $xpath)
 
 }
 
-# Sync the library projects.
+# Syncs the files listed in the source project (dotnet) to the destination project (netcore)
+function Sync-Dotnet-Netcore {
 
-# open the .net project file as XML.
-$srcDir = (Get-Location).Path + "\drewCo.Tools"
-$destDir = (Get-Location).Path  + "\drewCo.Tools.Core"
+    Param (
+        [Parameter(Mandatory=$true)]
+        [String]$SourceProject,
+        [Parameter(Mandatory=$true)]
+        [String]$DestinationProject
+    )
 
-[xml]$srcXml = Get-Content -Path "./drewCo.Tools/drewCo.Tools.csproj"
-
-$nsMgr = New-Object -TypeName "System.Xml.XmlNamespaceManager" -ArgumentList $srcXml.NameTable
-$msBuildNs = "http://schemas.microsoft.com/developer/msbuild/2003"
-$nsMgr.AddNamespace("msb", $msBuildNs)
-
-
-$root =  $srcXml.DocumentElement # .SelectSingleNode( SelectSingleNode("Project")
-$srcFiles = $root.SelectNodes("msb:ItemGroup/msb:Compile/@Include", $nsMgr)
+    $srcDir = (Get-Item $SourceProject).DirectoryName
+    $destDir = (Get-Item $DestinationProject).DirectoryName
+    $relDir = Get-Relpath $destDir $srcDir
 
 
-# Now that we have our input files, we can update the target project XML...
-$destPath = "./drewCo.Tools.Core/drewCo.Tools.Core.csproj"
-[xml]$dest = Get-Content -Path $destPath
+    # Open the .net project file.
+    [xml]$srcXml = Get-Content -Path  $SourceProject
 
-RemoveNodesFromDoc $dest "/Project/ItemGroup/Compile"
-RemoveNodesFromDoc $dest "/Project/ItemGroup/Folder"
+    $nsMgr = New-Object -TypeName "System.Xml.XmlNamespaceManager" -ArgumentList $srcXml.NameTable
+    $msBuildNs = "http://schemas.microsoft.com/developer/msbuild/2003"
+    $nsMgr.AddNamespace("msb", $msBuildNs)
 
 
-# Find + remove empty itemgroup nodes.....
-RemoveEmptyNodes $dest "/Project/ItemGroup"
+    $root =  $srcXml.DocumentElement
+    $srcFiles = $root.SelectNodes("msb:ItemGroup/msb:Compile/@Include", $nsMgr)
 
-# Now we can recreate the files + folders in the destination project.
-$targetFiles = $dest.CreateElement("ItemGroup")
-$folderList = New-Object Collections.Generic.List[string]
 
-$relDir = Get-Relpath $destDir $srcDir
+    # Now that we have our input files, we can update the target project XML...
+    [xml]$dest = Get-Content -Path $DestinationProject
 
-$srcFiles | ForEach-Object {
+    RemoveNodesFromDoc $dest "/Project/ItemGroup/Compile"
+    RemoveNodesFromDoc $dest "/Project/ItemGroup/Folder"
 
-    $folderName = Split-Path $_.Value
 
-    # The items in the 'properties' folder will be ignored.
-    # Including this data in a .netcore project has bad consequences.
-    if ($folderName -eq "Properties") { 
-        return
-    }
+    # Find + remove empty itemgroup nodes.....
+    RemoveEmptyNodes $dest "/Project/ItemGroup"
 
-    # Collect unique folder names.
-    if ($folderName -ne "") {
-        if (!$folderList.Contains($folderName)) {
-            $folderList.Add($folderName)
+    # Now we can recreate the files + folders in the destination project.
+    $targetFiles = $dest.CreateElement("ItemGroup")
+    $folderList = New-Object Collections.Generic.List[string]
+
+    $srcFiles | ForEach-Object {
+
+        $folderName = Split-Path $_.Value
+
+        # The items in the 'properties' folder will be ignored.
+        # Including this data in a .netcore project has bad consequences.
+        if ($folderName -eq "Properties") { 
+            return
         }
+
+        # Collect unique folder names.
+        if ($folderName -ne "") {
+            if (!$folderList.Contains($folderName)) {
+                $folderList.Add($folderName)
+            }
+        }
+
+        # check it for a path (folder) -> append to our list of folders if new.
+        # include it in the target files...
+        $compileNode = $dest.CreateElement("Compile")
+
+
+        # We need to compute the relative paths correctly.....
+        $relPath = "$relDir\" + $_.Value
+
+        AddAttribute $dest $compileNode "Include" $relPath
+        AddAttribute $dest $compileNode "Link" $_.Value
+
+        $targetFiles.AppendChild($compileNode)
     }
 
-    # check it for a path (folder) -> append to our list of folders if new.
-    # include it in the target files...
-    $compileNode = $dest.CreateElement("Compile")
+    $dest.Project.AppendChild($targetFiles)
 
 
-    # We need to compute the relative paths correctly.....
-    $relPath = "$relDir\" + $_.Value
+    $targetFolders = $dest.CreateElement("ItemGroup")
+    $folderList | ForEach-Object -Process {
+       $folderNode = $dest.CreateElement("Folder")
+       AddAttribute $dest $folderNode "Include" $_ 
 
-    AddAttribute $dest $compileNode "Include" $relPath
-    AddAttribute $dest $compileNode "Link" $_.Value
+       $targetFolders.AppendChild($folderNode)
 
-    $targetFiles.AppendChild($compileNode)
+       # Create + git-add any missing folders.
+       $folderDir = "$destDir\" + $_
+       if ((Path-Exists($folderDir)) -eq $false)
+       {
+            New-Item -Path $folderDir -ItemType "Directory"
+            git add $folderDir
+       }
+
+    }
+    $dest.Project.AppendChild($targetFolders)
+
+
+
+
+    $dest.Save($DestinationProject)
+
+
 }
 
-$dest.Project.AppendChild($targetFiles)
+Sync-Dotnet-Netcore "./drewCo.Tools/drewCo.Tools.csproj" "./drewCo.Tools.Core/drewCo.Tools.Core.csproj"
 
-
-$targetFolders = $dest.CreateElement("ItemGroup")
-$folderList | ForEach-Object -Process {
-   $folderNode = $dest.CreateElement("Folder")
-   AddAttribute $dest $folderNode "Include" $_ 
-
-   $targetFolders.AppendChild($folderNode)
-
-   # Create + git-add any missing folders.
-   $folderDir = "$destDir\" + $_
-   if ((Path-Exists($folderDir)) -eq $false)
-   {
-        New-Item -Path $folderDir -ItemType "Directory"
-        git add $folderDir
-   }
-
-}
-$dest.Project.AppendChild($targetFolders)
-
-
-
-
-$dest.Save($destPath)
-
-
-
-# read the contents (the files?)
-# squirt all of that stuff into a NEW netcore project file...?
-
-
-
-
-
-
-#Sync the test projects.
+#NOTE: We can enable this AFTER we convert the source project to NUnit
+#Sync-Dotnet-Netcore "./drewCo.Tools.Testers/drewCo.Tools.Testers.csproj" "./drewCo.Tools.Core.Testers/drewCo.Tools.Core.Testers.csproj"
