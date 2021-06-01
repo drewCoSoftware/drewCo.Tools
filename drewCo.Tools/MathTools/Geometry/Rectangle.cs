@@ -16,7 +16,7 @@ namespace drewCo.MathTools.Geometry
   /// <remarks>
   /// Rectangles are assumed to be axis aligned.
   /// </remarks>
-  public class Rectangle
+  public class Rectangle : IIntersectsRect
   {
     // --------------------------------------------------------------------------------------------------------------------------
     /// <param name="x">The center, X coordinate</param>
@@ -72,6 +72,30 @@ namespace drewCo.MathTools.Geometry
 
     public LineSegment[] Sides { get; private set; }
 
+
+    // ------------------------------------------------------------------------------------------------    
+    public bool Intersects(Rectangle rect)
+    {
+      double myRight = this.X + this.Width;
+      double right = rect.X + rect.Width;
+
+      // X-Bounds.
+      if (rect.X > myRight) { return false; }
+      if (right < this.X) { return false; }
+
+
+      double myTop = this.Y + this.Height;
+      double top = rect.Y + this.Height;
+
+      // Y-Bounds
+      if (rect.Y > myTop) { return false; }
+      if (top < this.Y) { return false; }
+
+      // The boundaries are OK, so this rect must be intersecting.
+      // We could also use the 'SetsOverlap' function on the x and y axes to determine this result.
+      return true;
+
+    }
 
     // ------------------------------------------------------------------------------------------------    
     // Special thanks:
@@ -189,4 +213,15 @@ namespace drewCo.MathTools.Geometry
     }
 
   }
+
+
+  // ============================================================================================================================
+  /// <summary>
+  /// Simple interface to test rectangle intersection.
+  /// </summary>
+  public interface IIntersectsRect
+  {
+    bool Intersects(Rectangle rect);
+  }
+
 }

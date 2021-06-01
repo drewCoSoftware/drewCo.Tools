@@ -5,7 +5,7 @@ namespace drewCo.MathTools.Geometry
 
   // ============================================================================================================================
   [DebuggerDisplay("({X},{Y}) : {Radius}")]
-  public class Circle
+  public class Circle : IIntersectsRect
   {
     public double X { get; set; }
     public double Y { get; set; }

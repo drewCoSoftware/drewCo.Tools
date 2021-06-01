@@ -9,7 +9,7 @@ namespace drewCo.MathTools.Geometry
 
   // ============================================================================================================================
   [DebuggerDisplay("({P1.X},{P1.Y}) - ({P2.X},{P2.Y})")]
-  public struct LineSegment
+  public struct LineSegment : IIntersectsRect
   {
     public Vector2 P1 { get; set; }
     public Vector2 P2 { get; set; }

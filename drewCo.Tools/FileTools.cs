@@ -852,7 +852,7 @@ namespace drewCo.Tools
     /// Option to throw an expcetion if the given paths have different roots (i.e. different disks).
     /// If false, the function will return null instead of throwing the exception.
     /// </param>
-    /// <returns>The common root of the given paths, or null if one doesn't exist AND <paramref name="throwOnDifferentRoots" == false/></returns>
+    /// <returns>The common root of the given paths, or null if one doesn't exist AND <paramref name="throwOnDifferentRoots"/> == false</returns>
     public static string GetCommonRootDir(string srcPath, string compPath, bool throwOnDifferentRoots = true)
     {
       if (!Path.IsPathRooted(srcPath) || !Path.IsPathRooted(compPath))

@@ -40,7 +40,7 @@ namespace drewCo.MathTools.Geometry
   }
 
   // ============================================================================================================================
-  public class Polygon : IBoundingBox2D
+  public class Polygon : IBoundingBox2D, IIntersectsRect
   {
     // NOTE: I think that I can just make points / segments the readonly collections we see below.
     // --> true.  There is no need to modify the vertices / segments collections.
@@ -266,6 +266,12 @@ namespace drewCo.MathTools.Geometry
       return (x2 - x1) * (y1 + y2);
     }
 
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public bool Intersects(Rectangle rect)
+    {
+      return rect.Intersects(this);
+    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     public bool Intersects(LineSegment segment)

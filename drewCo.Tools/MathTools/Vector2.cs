@@ -255,19 +255,21 @@ namespace drewCo.MathTools
     /// </remarks>
     public Vector2 Perpendicular(double dir)
     {
+      // NOTE: The original math is left here just so we can see how the simplified version
+      // was determined.
       // We can just do a rotation, +/- 90degress since we want the perpendicular.
       // This allows us all kinds of shortcuts.
       //double rx = px * Math.Cos(angle) - py * Math.Sin(angle);
       //double ry = py * Math.Cos(angle) + px * Math.Sin(angle);
 
-      double sinA = dir; // * -1.0d;        // This is always +/- sin(pi/2) or +/- 1
-      double cosA = 0;                  // This is always zero. 
+      //double sinA = dir; // * -1.0d;        // This is always +/- sin(pi/2) or +/- 1
+      // double cosA = 0;                  // This is always zero. 
       //double rx = px * cosA - py * sinA;
       //double ry = py * cosA + px * sinA;
 
-      // Even simpler....
-      double rx = -Y * sinA;
-      double ry = X * sinA;
+      // Simplified.
+      double rx = -Y * dir;
+      double ry = X * dir;
 
       Vector2 res = new Vector2(rx, ry);
       return res;
