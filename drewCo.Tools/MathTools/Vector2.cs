@@ -104,7 +104,21 @@ namespace drewCo.MathTools
       return res;
     }
 
+
     // --------------------------------------------------------------------------------------------------------------------------
+    /// <returns>The Hadamard or Schur product of two vectors.</returns>
+    /// <remarks>https://en.wikipedia.org/wiki/Hadamard_product_(matrices)</remarks>
+    public Vector2 HadamardProduct(Vector2 other)
+    {
+      var res = new Vector2(X * other.X, Y * other.Y);
+      return res;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Peform a dot product one two vectors.
+    /// </summary>
+    /// <returns>The dot product of two vectors.</returns>
     public static double operator *(Vector2 l, Vector2 r)
     {
       return l.Dot(r);
@@ -116,6 +130,29 @@ namespace drewCo.MathTools
       Vector2 res = new Vector2(input.X * scale, input.Y * scale);
       return res;
     }
+    
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static Vector2 operator *(double scale, Vector2 input)
+    {
+      Vector2 res = new Vector2(input.X * scale, input.Y * scale);
+      return res;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static Vector2 operator /(Vector2 input, double scale)
+    {
+      Vector2 res = new Vector2(input.X / scale, input.Y / scale);
+      return res;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static Vector2 operator /(double scale, Vector2 input)
+    {
+      Vector2 res = new Vector2(input.X / scale, input.Y / scale);
+      return res;
+    }
+
+
 
     // --------------------------------------------------------------------------------------------------------------------------
     public static Vector2 operator -(Vector2 input)
