@@ -34,8 +34,6 @@
     <Compile Include="..\drewCo.Tools\Curations\MultiDictionaryHelper.cs" Link="Curations\MultiDictionaryHelper.cs" />
     <Compile Include="..\drewCo.Tools\Curations\ObjectPool.cs" Link="Curations\ObjectPool.cs" />
     <Compile Include="..\drewCo.Tools\Curations\PairDictionary.cs" Link="Curations\PairDictionary.cs" />
-    <Compile Include="..\drewCo.Tools\Curations\SuperList.cs" Link="Curations\SuperList.cs" />
-    <Compile Include="..\drewCo.Tools\Curations\SuperObserver.cs" Link="Curations\SuperObserver.cs" />
     <Compile Include="..\drewCo.Tools\DateTools.cs" Link="DateTools.cs" />
     <Compile Include="..\drewCo.Tools\DTOMapper.cs" Link="DTOMapper.cs" />
     <Compile Include="..\drewCo.Tools\ExceptionDetail.cs" Link="ExceptionDetail.cs" />
