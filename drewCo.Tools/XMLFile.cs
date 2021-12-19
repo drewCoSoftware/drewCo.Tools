@@ -149,7 +149,7 @@ namespace drewCo.Tools
 #if NETFX_CORE
     private async Task InternalSave()
 #else
-    private void InternalSave()
+    protected virtual void InternalSave()
 #endif
     {
 
