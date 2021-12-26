@@ -74,6 +74,7 @@
     <Compile Include="ArrayHelpersTesters.cs" />
     <Compile Include="CSVTesters.cs" />
     <Compile Include="GeometryTesters.cs" />
+    <Compile Include="MultiDictionaryTesters.cs" />
     <Compile Include="VectorTesters.cs" />
     <Compile Include="WineDataTypes.cs" />
     <Compile Include="DTOMapperTesters.cs" />

@@ -1,5 +1,5 @@
 ﻿// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// Copyright (c)2010-2014 Andrew A. Ritz, all rights reserved. 
+// Copyright (c)2010-2021 Andrew A. Ritz, all rights reserved. 
 //
 // MultiDictionary.cs
 // Code to provide Dictionary like objects that use a natural keys instead of single keys.
@@ -35,6 +35,21 @@ namespace drewCo.Curations
     }
 
     #endregion
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public bool TryGetValue(TKey1 key1, TKey2 key2, out TValue value)
+    {
+      value = default(TValue);
+
+      if (KeyExists(key1, key2))
+      {
+        value = this[key1, key2];
+        return true;
+      }
+
+      return false;
+    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     public void Clear()
