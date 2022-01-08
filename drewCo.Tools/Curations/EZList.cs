@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Collections;
-
+using System.ComponentModel;
 
 namespace drewCo.Curations
 {
@@ -46,7 +46,7 @@ namespace drewCo.Curations
   /// <summary>
   /// A simple extension of List(of T) that supports change notification.
   /// </summary>
-  public class EZList<T> : IList, IList<T>, INotifyCollectionChanged
+  public class EZList<T> : IList, IList<T>, INotifyCollectionChanged, INotifyPropertyChanged
   {
     public event NotifyCollectionChangedEventHandler CollectionChanged;
 
@@ -59,13 +59,17 @@ namespace drewCo.Curations
     /// Use this to overcome the stupid CollectionChanged flaw.
     /// </summary>
     public event EventHandler<ItemsChangedEventArgs> ItemsAdded;
+    public event PropertyChangedEventHandler PropertyChanged;
 
     private object _SyncRoot = new object();
     private List<T> _List = new List<T>();
 
     public T this[int index] { get { return _List[index]; } set { _List[index] = value; } }
 
-    public int Count => _List.Count;
+    public int Count { get { return _List.Count; } }
+
+
+    // public int Count => _List.Count;
     public bool IsReadOnly => false;
     public bool IsFixedSize => false;
     public bool IsSynchronized => true;
@@ -73,18 +77,31 @@ namespace drewCo.Curations
 
     object IList.this[int index] { get { return _List[index]; } set { _List[index] = (T)value; } }
 
+    // --------------------------------------------------------------------------------------------------------------------------
+    private void NotifyChange(string propertyName)
+    {
+      if (PropertyChanged != null)
+      {
+        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
     public void Add(T item)
     {
       _List.Add(item);
+      NotifyChange(nameof(Count));
       if (CollectionChanged != null)
       {
         CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, _List.Count - 1));
       }
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
     public void Clear()
     {
       _List.Clear();
+      NotifyChange(nameof(Count));
 
       if (CollectionChanged != null)
       {
@@ -92,21 +109,25 @@ namespace drewCo.Curations
       }
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
     public bool Contains(T item)
     {
       return _List.Contains(item);
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
     public void CopyTo(T[] array, int arrayIndex)
     {
       _List.CopyTo(array, arrayIndex);
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
     public IEnumerator<T> GetEnumerator()
     {
       return _List.GetEnumerator();
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
     public int IndexOf(T item)
     {
       return _List.IndexOf(item);
@@ -121,6 +142,7 @@ namespace drewCo.Curations
         CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
       }
 
+      NotifyChange(nameof(Count));
       ItemsAdded?.Invoke(this, new ItemsChangedEventArgs(item));
     }
 
@@ -136,7 +158,9 @@ namespace drewCo.Curations
         CollectionChanged(this, args);
 
         ItemsRemoved?.Invoke(this, new ItemsChangedEventArgs(item));
+        NotifyChange(nameof(Count));
       }
+
       return res;
     }
 
@@ -149,10 +173,11 @@ namespace drewCo.Curations
       {
         // NOTE: The 'Remove' actions will cause access violations in downstream XAML components.
         // A special thanks goes out to MS for allowing this garbage to make it to production!
-        var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset); //new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, index);
+        var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
         CollectionChanged(this, args);
 
         ItemsRemoved?.Invoke(this, new ItemsChangedEventArgs(toRemove));
+        NotifyChange(nameof(Count));
       }
     }
 
@@ -174,7 +199,9 @@ namespace drewCo.Curations
       int index = _List.Count - 1;
 
       CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
+
       ItemsAdded?.Invoke(this, new ItemsChangedEventArgs(item));
+      NotifyChange(nameof(Count));
 
       return index;
     }
