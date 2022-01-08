@@ -1,5 +1,5 @@
 ﻿// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// Copyright (c)2017-2019 Andrew A. Ritz, all rights reserved.
+// Copyright (c)2017-2022 Andrew A. Ritz, all rights reserved.
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 using System;
@@ -55,6 +55,11 @@ namespace drewCo.Curations
     /// </summary>
     public event EventHandler<ItemsChangedEventArgs> ItemsRemoved;
 
+    /// <summary>
+    /// Use this to overcome the stupid CollectionChanged flaw.
+    /// </summary>
+    public event EventHandler<ItemsChangedEventArgs> ItemsAdded;
+
     private object _SyncRoot = new object();
     private List<T> _List = new List<T>();
 
@@ -107,6 +112,7 @@ namespace drewCo.Curations
       return _List.IndexOf(item);
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
     public void Insert(int index, T item)
     {
       _List.Insert(index, item);
@@ -115,8 +121,10 @@ namespace drewCo.Curations
         CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
       }
 
+      ItemsAdded?.Invoke(this, new ItemsChangedEventArgs(item));
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
     public bool Remove(T item)
     {
       bool res = _List.Remove(item);
@@ -132,6 +140,7 @@ namespace drewCo.Curations
       return res;
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
     public void RemoveAt(int index)
     {
       T toRemove = _List[index];
@@ -147,37 +156,54 @@ namespace drewCo.Curations
       }
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
     IEnumerator IEnumerable.GetEnumerator()
     {
       return _List.GetEnumerator();
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Returns the index of the new item.
+    /// </summary>
     public int Add(object value)
     {
-      this.Add((T)value);
-      return _List.Count - 1;
+      T item = (T)value;
+      this.Add(item);
+
+      int index = _List.Count - 1;
+
+      CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
+      ItemsAdded?.Invoke(this, new ItemsChangedEventArgs(item));
+
+      return index;
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
     public bool Contains(object value)
     {
       return _List.Contains((T)value);
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
     public int IndexOf(object value)
     {
       return _List.IndexOf((T)value);
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
     public void Insert(int index, object value)
     {
       Insert(index, (T)value);
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
     public void Remove(object value)
     {
       Remove((T)value);
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
     public void CopyTo(Array array, int index)
     {
       _List.CopyTo((T[])array, index);

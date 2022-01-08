@@ -952,6 +952,13 @@ namespace drewCo.UnitTesting
     public string Message { get; set; }
 
     private List<InspectionReport> _MemberReports = new List<InspectionReport>();
+    public ReadOnlyCollection<InspectionReport> MemberReports
+    {
+      get
+      {
+        return new ReadOnlyCollection<InspectionReport>(_MemberReports);
+      }
+    }
 
     public bool ThrowOnFail { get; private set; }
 
