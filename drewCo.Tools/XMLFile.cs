@@ -78,6 +78,14 @@ namespace drewCo.Tools
       PostSave();
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static T Deserialize(string xmlData)
+    {
+      XmlSerializer serial = new XmlSerializer(typeof(T));
+      StringReader reader = new StringReader(xmlData);
+      T res = (T)serial.Deserialize(reader);
+      return res;
+    }
 
     // --------------------------------------------------------------------------------------------------------------------------
 #if NETFX_CORE
