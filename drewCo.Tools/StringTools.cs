@@ -1,5 +1,5 @@
 ﻿//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// Copyright ©2009-2019 Andrew A. Ritz, All Rights Reserved
+// Copyright ©2009-2022 Andrew A. Ritz, All Rights Reserved
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 using System;
@@ -364,6 +364,20 @@ namespace drewCo.Tools
     }
 
 #endif
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Unlike ToString(), this allows for null objects.
+    /// </summary>
+    /// <param name="target"></param>
+    /// <remarks>
+    /// With newer versions of .NET object?.ToString() can be used instead of this function.
+    /// </remarks>
+    public static string AsString(object target)
+    {
+      return target == null ? null : target.ToString();
+    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -892,6 +906,19 @@ namespace drewCo.Tools
 
       return count;
     }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    ///<remarks>
+    /// Originally lifted from: http://stackoverflow.com/questions/4135317/make-first-letter-of-a-string-upper-case-for-maximum-performance#4135491
+    /// </remarks>
+    public static string FirstLetterToUpper(string str)
+    {
+      if (str == null) { return null; }
+      if (str.Length > 1) { return char.ToUpper(str[0]) + str.Substring(1); }
+      return str.ToUpper();
+    }
+
+
   }
 
 

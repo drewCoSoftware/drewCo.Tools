@@ -34,7 +34,7 @@ namespace drewCo.Tools
     [XmlIgnore]
 #endif
 
-    public string FilePath { get; private set; }
+    public string FilePath { get; protected set; }
 
     protected Sentinel Serializer = new Sentinel();
     protected bool IsLoaded = false;
@@ -49,7 +49,7 @@ namespace drewCo.Tools
 #if NETFX_CORE
     public async Task Save(string filePath_ = null, bool createDir = false)
 #else
-    public void Save(string filePath_ = null, bool createDir = false)
+    public virtual void Save(string filePath_ = null, bool createDir = false)
 #endif
     {
 #if NETFX_CORE

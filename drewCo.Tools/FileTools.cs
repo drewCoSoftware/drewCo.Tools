@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using System.Security.Principal;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 #if NETFX_CORE
 
@@ -37,6 +38,43 @@ namespace drewCo.Tools
   public static partial class FileTools
 #endif
   {
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Determines if the given path has illegal characters.
+    /// </summary>
+    public static bool HasIllegalCharacters(string path)
+    {
+      // https://stackoverflow.com/questions/2435894/net-how-do-i-check-for-illegal-characters-in-a-path
+      return (!string.IsNullOrEmpty(path) && path.IndexOfAny(System.IO.Path.GetInvalidPathChars()) >= 0);
+    }
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Tells us if a given file path is valid.
+    /// </summary>
+    /// <remarks>Doesn't work for all cases as it mostly just checks for invalid characters + lengths.</remarks>
+    public static bool IsValidPath(string path)
+    {
+      FileInfo fi = null;
+      try
+      {
+        fi = new System.IO.FileInfo(path);
+      }
+      catch (ArgumentException) { }
+      catch (System.IO.PathTooLongException) { }
+      catch (NotSupportedException) { }
+
+      if (fi == null) { return false; }
+      string name = Path.GetFileName(path);
+
+      char[] badChars = Path.GetInvalidFileNameChars();
+      if (name.Any(x => badChars.Contains(x))) { return false; }
+
+      return true;
+
+    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
