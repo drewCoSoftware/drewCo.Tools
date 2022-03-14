@@ -154,9 +154,6 @@ namespace drewCo.Tools
       return res;
     }
 
-
-
-
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
     /// Backs up the file at the given path, returning the path of the new file.
@@ -166,11 +163,7 @@ namespace drewCo.Tools
     {
       if (File.Exists(srcPath))
       {
-        string dir = Path.GetDirectoryName(srcPath);
-        string name = Path.GetFileNameWithoutExtension(srcPath);
-        string ext = Path.GetExtension(srcPath);
-
-        string newPath = GetSequentialFileName(dir, name, ext);
+        string newPath = GetSequentialFileName(srcPath);
         File.Copy(srcPath, newPath);
 
         return newPath;

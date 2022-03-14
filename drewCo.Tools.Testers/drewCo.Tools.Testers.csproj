@@ -79,7 +79,7 @@
     <Compile Include="WineDataTypes.cs" />
     <Compile Include="DTOMapperTesters.cs" />
     <Compile Include="ExceptionDetailsTester.cs" />
-    <Compile Include="FileHelperTesters.cs" />
+    <Compile Include="FileToolsTesters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadWriteTesters.cs" />
     <Compile Include="SentinelTesters.cs" />

@@ -13,24 +13,6 @@ namespace drewCo.Tools.Testers
   public class StringToolsTesters
   {
 
-    // --------------------------------------------------------------------------------------------------------------------------
-    [TestMethod]
-    public void CanGetSequentialFileNameFromExistingPath()
-    {
-      string myDir = Path.Combine(FileTools.GetAppDir(), "Sequential");
-      FileTools.CreateDirectory(myDir);
-      FileTools.EmptyDirectory(myDir);
-
-      string srcPath = Path.Combine(myDir, "TestSrcFile.txt");
-      File.WriteAllText(srcPath, "test data!");
-
-      string nextPath = FileTools.GetSequentialFileName(srcPath);
-      string nextDir = Path.GetDirectoryName(nextPath);
-      string nextName = Path.GetFileName(nextPath);
-
-      Assert.AreEqual(myDir, nextDir);
-      Assert.AreEqual(nextName, "TestSrcFile-0.txt");
-    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
