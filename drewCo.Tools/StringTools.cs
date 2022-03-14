@@ -151,11 +151,11 @@ namespace drewCo.Tools
     /// Null strings will return 0, and an empty string will return 5381.
     /// </remarks>
     // http://www.cse.yorku.ca/~oz/hash.html
-    public static uint GetHash(string str)
+    public static UInt64 GetHash(string str)
     {
       if (str == null) { return 0; }
 
-      uint hash = 5381;
+      UInt64 hash = 5381;
 
       foreach (var c in str)
       {
