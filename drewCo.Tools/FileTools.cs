@@ -414,6 +414,19 @@ namespace drewCo.Tools
       throw new InvalidOperationException("Sanity count failed!");
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Get a sequential file name from an existing file.
+    /// </summary>
+    public static string GetSequentialFileName(string path)
+    {
+      string dir = Path.GetDirectoryName(path);
+      string name = Path.GetFileNameWithoutExtension(path);
+      string ext = Path.GetExtension(path);
+
+      string res = GetSequentialFileName(dir, name, ext);
+      return res;
+    }
 
     // --------------------------------------------------------------------------------------------------------------------------
 #if NETFX_CORE

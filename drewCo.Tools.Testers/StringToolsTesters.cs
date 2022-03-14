@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,25 @@ namespace drewCo.Tools.Testers
   [TestClass]
   public class StringToolsTesters
   {
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    [TestMethod]
+    public void CanGetSequentialFileNameFromExistingPath()
+    {
+      string myDir = Path.Combine(FileTools.GetAppDir(), "Sequential");
+      FileTools.CreateDirectory(myDir);
+      FileTools.EmptyDirectory(myDir);
+
+      string srcPath = Path.Combine(myDir, "TestSrcFile.txt");
+      File.WriteAllText(srcPath, "test data!");
+
+      string nextPath = FileTools.GetSequentialFileName(srcPath);
+      string nextDir = Path.GetDirectoryName(nextPath);
+      string nextName = Path.GetFileName(nextPath);
+
+      Assert.AreEqual(myDir, nextDir);
+      Assert.AreEqual(nextName, "TestSrcFile-0.txt");
+    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
