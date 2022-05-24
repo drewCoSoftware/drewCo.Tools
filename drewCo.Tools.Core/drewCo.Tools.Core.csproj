@@ -38,6 +38,7 @@
     <Compile Include="..\drewCo.Tools\DTOMapper.cs" Link="DTOMapper.cs" />
     <Compile Include="..\drewCo.Tools\ExceptionDetail.cs" Link="ExceptionDetail.cs" />
     <Compile Include="..\drewCo.Tools\Gopher.cs" Link="Gopher.cs" />
+    <Compile Include="..\drewCo.Tools\JSONFile.cs" Link="JSONFile.cs" />
     <Compile Include="..\drewCo.Tools\MathTools\Geometry\Circle.cs" Link="MathTools\Geometry\Circle.cs" />
     <Compile Include="..\drewCo.Tools\MathTools\Geometry\LineSegment.cs" Link="MathTools\Geometry\LineSegment.cs" />
     <Compile Include="..\drewCo.Tools\MathTools\Geometry\Polygon.cs" Link="MathTools\Geometry\Polygon.cs" />
