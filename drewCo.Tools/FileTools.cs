@@ -135,7 +135,7 @@ namespace drewCo.Tools
         lastDot = path.Length;
       }
 
-      int lastSlash = path.LastIndexOf('\\');
+      int lastSlash = path.LastIndexOf(Path.DirectorySeparatorChar);
       if (lastSlash != -1)
       {
         directory = path.Substring(0, lastSlash);
@@ -150,7 +150,7 @@ namespace drewCo.Tools
     public static string AppendToFileName(string path, string toAppend)
     {
       GetFilePathParts(path, out string dir, out string name, out string ext);
-      string res = $"{dir}{(dir != null ? "\\" : null)}{name + toAppend}{ext}";
+      string res = $"{dir}{(dir != null ? new string(Path.DirectorySeparatorChar, 1) : null)}{name + toAppend}{ext}";
       return res;
     }
 
@@ -393,13 +393,13 @@ namespace drewCo.Tools
     {
       if (asNeeded)
       {
-        string res = baseDir + "\\" + dirName;
+        string res = Path.Combine(baseDir, dirName);
         if (!Directory.Exists(res)) { return res; }
       }
 
       for (int i = 0; i < sanityCount; i++)
       {
-        string res = baseDir + "\\" + dirName + "_" + i;
+        string res = Path.Combine(baseDir, dirName + "_" + i);
         if (!Directory.Exists(res)) { return res; }
       }
 
@@ -814,7 +814,7 @@ namespace drewCo.Tools
       }
       else
       {
-        if (path != null && !path.StartsWith("\\")) { path = "\\" + path; }
+        if (path != null && !path.StartsWith(new string(Path.DirectorySeparatorChar, 1))) { path = Path.DirectorySeparatorChar + path; }
         fullPath = Path.GetFullPath(relPath + path);
       }
       return fullPath;
@@ -829,8 +829,8 @@ namespace drewCo.Tools
       // This will basically compress any relative parts contained within the path, but
       // only if it is rooted.  We want to preserve the actual 'relative' path otherwise.
       if (Path.IsPathRooted(filepath)) { filepath = Path.GetFullPath(filepath); }
-      string result = filepath.TrimEnd(new[] { '\\' });
-      if (result.EndsWith(":")) { result += '\\'; }
+      string result = filepath.TrimEnd(new[] { Path.DirectorySeparatorChar });
+      if (result.EndsWith(":")) { result += Path.DirectorySeparatorChar; }
       return result;
     }
 
@@ -846,9 +846,9 @@ namespace drewCo.Tools
       string commonRoot = GetCommonRootDir(srcPath, compPath);
 
       // So we have to decide if we are moving 'forward' or 'backward' in the relationship....
-      string[] commonParts = commonRoot.Split('\\');
-      string[] srcParts = srcPath.Split('\\');
-      string[] compParts = compPath.Split('\\');
+      string[] commonParts = commonRoot.Split(Path.DirectorySeparatorChar);
+      string[] srcParts = srcPath.Split(Path.DirectorySeparatorChar);
+      string[] compParts = compPath.Split(Path.DirectorySeparatorChar);
 
       int searchIndex = commonParts.Length;
 
@@ -860,7 +860,7 @@ namespace drewCo.Tools
       {
         string res1 = compPath.Replace(commonRoot, string.Empty);
 
-        if (res1.StartsWith("\\")) { res1 = res1.Substring(1); }
+        if (res1.StartsWith(new string(Path.DirectorySeparatorChar, 1))) { res1 = res1.Substring(1); }
         return res1;
       }
 
@@ -869,13 +869,13 @@ namespace drewCo.Tools
         // We are moving 'backwards' in the relationship.
         for (int i = 0; i < srcParts.Length - commonParts.Length; i++)
         {
-          moveTo += "\\..";
+          moveTo += (Path.DirectorySeparatorChar + "..");
         }
 
         // Now we just build up whatever is left on the comparison path.
         for (int i = 0; i < compParts.Length - commonParts.Length; i++)
         {
-          moveTo += "\\" + compParts[commonParts.Length + i];
+          moveTo += (Path.DirectorySeparatorChar + compParts[commonParts.Length + i]);
         }
       }
       else
@@ -916,8 +916,8 @@ namespace drewCo.Tools
       }
 
       // OK, so now we have to get the difference in the paths somehow.....
-      string[] srcParts = srcPath.Split('\\');
-      string[] compParts = compPath.Split('\\');
+      string[] srcParts = srcPath.Split(Path.DirectorySeparatorChar);
+      string[] compParts = compPath.Split(Path.DirectorySeparatorChar);
 
       int count = 0;
       string commonRoot = string.Empty;
@@ -926,7 +926,7 @@ namespace drewCo.Tools
              count < compParts.Length &&
              srcParts[count] == compParts[count])
       {
-        commonRoot += (commonRoot != string.Empty ? "\\" : string.Empty);
+        commonRoot += (commonRoot != string.Empty ? new string(Path.DirectorySeparatorChar, 1) : string.Empty);
         commonRoot += srcParts[count];
         count++;
       };
