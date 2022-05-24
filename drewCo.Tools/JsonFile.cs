@@ -37,17 +37,27 @@ public class JsonFile<T>
   public static T Load(string filePath_)
   {
     string data = File.ReadAllText(filePath_);
+
+    T res = Parse(data);
+
+    res.FilePath = filePath_;
+    res.PostLoad();
+    return res;
+  }
+
+  // --------------------------------------------------------------------------------------------------------------------------
+  public static T Parse(string jsonData)
+  {
     var serializerOps = new JsonSerializerOptions()
     {
       AllowTrailingCommas = true,
     };
-    T res = JsonSerializer.Deserialize<T>(data, serializerOps);
+    T res = JsonSerializer.Deserialize<T>(jsonData, serializerOps);
     if (res == null)
     {
-      throw new InvalidOperationException("Could not deserialize type {typeof(T)} from json data!");
+      throw new InvalidOperationException($"Could not deserialize type {typeof(T)} from json data!");
     }
-    res.FilePath = filePath_;
-    res.PostLoad();
+
     return res;
   }
 }
