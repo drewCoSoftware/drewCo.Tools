@@ -29,11 +29,36 @@ namespace drewCo.Tools
   public partial class StringTools
   {
 
-    // --------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Breaks a camel cased string into its constituent words.
-    /// </summary>
-    public static string DeCamelCase(string input)
+        // --------------------------------------------------------------------------------------------------------------------------
+        public static int StrCompare(string x, string y)
+        {
+
+            int xLen = x.Length;
+            int yLen = y.Length;
+            int minLen = Math.Min(xLen, yLen);
+
+            int comp = 0;
+            int i = 0;
+            while (comp == 0 & i < minLen)
+            {
+                int xc = x[i];
+                int yc = y[i];
+                if ((uint)(xc - 'a') <= (uint)('z' - 'a')) xc -= 0x20;
+                if ((uint)(yc - 'a') <= (uint)('z' - 'a')) yc -= 0x20;
+
+
+                comp = xc - yc;
+                ++i;
+            }
+            if (comp == 0) { comp = xLen - yLen; }
+            return Math.Sign(comp);
+        }
+
+        // --------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Breaks a camel cased string into its constituent words.
+        /// </summary>
+        public static string DeCamelCase(string input)
     {
       // We need at least three characters to detect a case change.
       int len = input.Length;
@@ -330,28 +355,53 @@ namespace drewCo.Tools
 
 #if !NETFX_CORE
 
-    // --------------------------------------------------------------------------------------------------------------------------
-    public static string ComputeMD5(string input)
-    {
-      MD5 hash = MD5.Create();
-      // Convert the input string to a byte array and compute the hash. 
-      byte[] data = hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+        // --------------------------------------------------------------------------------------------------------------------------
+        public static string ComputeSHA1(string input)
+        {
+            using (SHA1Managed sha1 = new SHA1Managed())
+            {
+                var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(input));
+                var sb = new StringBuilder(hash.Length * 2);
 
+                foreach (byte b in hash)
+                {
+                    // can be "x2" if you want lowercase
+                    sb.Append(b.ToString("X2"));
+                }
+                return sb.ToString();
+            }
+        }
 
-      // Create a new Stringbuilder to collect the bytes 
-      // and create a string.
-      StringBuilder sBuilder = new StringBuilder();
+        // --------------------------------------------------------------------------------------------------------------------------
+        public static string ComputeSHA256(string text)
+        {
+            // Thanks to: https://stackoverflow.com/questions/12416249/hashing-a-string-with-sha256#12416380
+            byte[] bytes = Encoding.UTF8.GetBytes(text);
+            SHA256Managed hashstring = new SHA256Managed();
+            byte[] hash = hashstring.ComputeHash(bytes);
+            string res = string.Empty;
+            foreach (byte x in hash)
+            {
+                res += String.Format("{0:x2}", x);
+            }
+            return res;
+        }
 
-      // Loop through each byte of the hashed data  
-      // and format each one as a hexadecimal string. 
-      for (int i = 0; i < data.Length; i++)
-      {
-        sBuilder.Append(data[i].ToString("x2"));
-      }
+        // --------------------------------------------------------------------------------------------------------------------------
+        public static string ComputeMD5(string text)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(text);
+            var hashstring = MD5.Create();
+            byte[] hash = hashstring.ComputeHash(bytes);
 
-      // Return the hexadecimal string. 
-      return sBuilder.ToString();
-    }
+            StringBuilder sb = new StringBuilder(32);
+            foreach (byte x in hash)
+            {
+                sb.AppendFormat("{0:x2}", x);
+            }
+            return sb.ToString();
+        }
+
 #else
 
     public static string GetMd5Hash(string input)
@@ -366,15 +416,15 @@ namespace drewCo.Tools
 #endif
 
 
-    // --------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Unlike ToString(), this allows for null objects.
-    /// </summary>
-    /// <param name="target"></param>
-    /// <remarks>
-    /// With newer versions of .NET object?.ToString() can be used instead of this function.
-    /// </remarks>
-    public static string AsString(object target)
+        // --------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Unlike ToString(), this allows for null objects.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <remarks>
+        /// With newer versions of .NET object?.ToString() can be used instead of this function.
+        /// </remarks>
+        public static string AsString(object target)
     {
       return target == null ? null : target.ToString();
     }
