@@ -4,5 +4,6 @@
 bin/
 obj/
 
-.nupkg
-.nuspec
+**/.nupkg
+**/.nuspec
+nuget-build/

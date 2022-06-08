@@ -32,6 +32,44 @@ namespace drewCo.Tools.Testers
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
+    /// This shows that CSV file will properly escape values so that they can be read back in and preserve the data integrity.
+    /// This test case was provided to solve a problem where this wasn't the case.
+    /// </summary>
+    [TestMethod]
+    public void CanReadAndWriteCSVWithQuotedFields()
+    {
+      string HTML = "<html>" + Environment.NewLine + "\t<p>Dear Diary,</p>" + Environment.NewLine + "</html>";
+      var testValues = new[] {
+        "Column1",
+        "Something, Else!",
+        HTML
+      };
+
+      var file = new CSVFile(new[] { "Col1", "Other Data", "HTML" });
+      file.AddLine(testValues);
+
+
+      const string TEST_PATH = nameof(CanReadAndWriteCSVWithQuotedFields) + ".csv";
+      FileTools.DeleteExistingFile(TEST_PATH);
+      file.Save(TEST_PATH);
+
+
+      // Now we will read it back in....
+      // All of the data should be the same.
+      var checkFile = new CSVFile(TEST_PATH);
+      Assert.AreEqual(1, checkFile.Lines.Count, "There should be a single line in the input file!");
+
+      CSVLine line1 = checkFile.Lines[0];
+      for (int i = 0; i < line1.Values.Count; i++)
+      {
+        Assert.AreEqual(testValues[i], line1[i], $"Values at index: {i} do not match!");
+      }
+
+    }
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
     /// This test case was provided to solve a specific bug where column values of "" (two quotes in a row) were being parsed out
     /// as " (single quote) instead of an empty string.
     /// </summary>

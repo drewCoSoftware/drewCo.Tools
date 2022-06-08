@@ -242,7 +242,10 @@ namespace drewCo.Tools.CSV
 
       foreach (var l in Lines)
       {
-        string line = string.Join(Separator, l.Values);
+        var processedVals = from x in l.Values select "\"" + x.Replace("\"", "\"\"") + "\"";
+        // var processedVals = from x in l.Values select x;
+
+        string line = string.Join(Separator, processedVals);
         toWrite.Add(line);
       }
 
