@@ -354,9 +354,9 @@ namespace drewCo.Tools
     /// <summary>
     /// Gets the name of the property, as determined by its expression.
     /// </summary>
-    public static string GetPropertyName<TSource>(Expression<Func<TSource, object>> expression)
+    public static string GetPropertyName<TSource>(Expression<Func<TSource, object>> propExp)
     {
-      PropertyInfo info = GetPropertyInfo<TSource>(expression);
+      PropertyInfo info = GetPropertyInfo<TSource>(propExp);
       return info.Name;
     }
 
@@ -375,10 +375,10 @@ namespace drewCo.Tools
     /// <summary>
     /// Gets reflection information about the given property.
     /// </summary>
-    public static PropertyInfo GetPropertyInfo<TSource>(Expression<Func<TSource, object>> expression)
+    public static PropertyInfo GetPropertyInfo<TSource>(Expression<Func<TSource, object>> propExp)
     {
 
-      var lambda = expression as LambdaExpression;
+      var lambda = propExp as LambdaExpression;
       MemberExpression memberExpression = ResolveMemberExpression(lambda);
 
       if (memberExpression == null)
@@ -710,6 +710,15 @@ namespace drewCo.Tools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
+    public static object GetNestedPropertyValue<T>(object source, Expression<Func<T, object>> propExp)
+    {
+      string path = GetNestedPropertyName(propExp);
+      object res = GetNestedPropertyValue(source, path);
+      return res;
+    }
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
     public static object GetNestedPropertyValue(object source, string name)
     {
       string[] nameParts = name.Split('.');
@@ -859,7 +868,14 @@ namespace drewCo.Tools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public static void SetNestedPropertyValue(string propPath, object target, object value)
+    public static void SetNestedPropertyValue<TSource>(object target, Expression<Func<TSource, object>> propExp, object value)
+    {
+      string path = GetNestedPropertyName(propExp);
+      SetNestedPropertyValue(target, path, value);
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static void SetNestedPropertyValue(object target, string propPath, object value)
     {
       string[] pathParts = propPath.Split(new[] { '.' });
       SetNestedPropertyValue(target.GetType(), pathParts, 0, target, value);

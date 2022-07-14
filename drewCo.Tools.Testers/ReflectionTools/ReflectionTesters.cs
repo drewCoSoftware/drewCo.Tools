@@ -35,7 +35,6 @@ namespace drewCo.Tools.Testers
     public void CanGetAndSetNestedPropertyValue()
     {
       const string VAL_1 = "Value 1";
-      const string VAL_2 = "Value 2";
 
       var testInstance = new TypeWithNestedData();
       testInstance.TypeWithNull = new TypeWithNullable()
@@ -44,12 +43,19 @@ namespace drewCo.Tools.Testers
       };
 
       string propPath = $"{nameof(TypeWithNestedData.TypeWithNull)}.{nameof(TypeWithNullable.SomeName)}";
-      string check1 = ReflectionTools.GetNestedPropertyValue(testInstance, propPath);
-      string check2 = ReflectionTools.GetNestedPropertyValue(testInstance, x => x.TypeWithNull.SomeName);
+      string check1 = (string)ReflectionTools.GetNestedPropertyValue(testInstance, propPath);
+      string check2 = (string)ReflectionTools.GetNestedPropertyValue<TypeWithNestedData>(testInstance, x => x.TypeWithNull.SomeName);
       Assert.AreEqual(VAL_1, check1);
       Assert.AreEqual(VAL_1, check2);
 
-      throw new NotImplementedException("Complete this by testing the setters too!");
+      // Now show that we can set the values as well.
+      const string VAL_2 = "Value 2";
+      ReflectionTools.SetNestedPropertyValue(testInstance, propPath, VAL_2);
+      Assert.AreEqual(VAL_2, testInstance.TypeWithNull.SomeName);
+
+      const string VAL_3 = "Value 3";
+      ReflectionTools.SetNestedPropertyValue<TypeWithNestedData>(testInstance, x => x.TypeWithNull.SomeName, VAL_3);
+      Assert.AreEqual(VAL_3, testInstance.TypeWithNull.SomeName);
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
@@ -287,7 +293,7 @@ namespace drewCo.Tools.Testers
       Assert.AreNotEqual(TEST_COUNT, target.Nest1.Count);
 
 
-      ReflectionTools.SetNestedPropertyValue("Nest1.Count", target, TEST_COUNT);
+      ReflectionTools.SetNestedPropertyValue(target, "Nest1.Count", TEST_COUNT);
       Assert.AreEqual(TEST_COUNT, target.Nest1.Count);
     }
 

@@ -75,6 +75,9 @@
     <Compile Include="CSVTesters.cs" />
     <Compile Include="GeometryTesters.cs" />
     <Compile Include="MultiDictionaryTesters.cs" />
+    <Compile Include="ReflectionTools\ConverterTesters.cs" />
+    <Compile Include="ReflectionTools\ReflectionTesters.cs" />
+    <Compile Include="ReflectionTools\TestTypes.cs" />
     <Compile Include="VectorTesters.cs" />
     <Compile Include="WineDataTypes.cs" />
     <Compile Include="DTOMapperTesters.cs" />
