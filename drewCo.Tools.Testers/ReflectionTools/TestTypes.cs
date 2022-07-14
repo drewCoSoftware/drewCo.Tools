@@ -99,6 +99,7 @@ namespace ReflectionToolsTesters
   // ============================================================================================================================
   public class TypeWithNullable
   {
+    public string SomeName { get; set; }
     public int? NullOrInt { get; set; }
   }
 }

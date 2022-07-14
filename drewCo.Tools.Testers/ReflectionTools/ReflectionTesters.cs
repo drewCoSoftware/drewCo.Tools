@@ -1,5 +1,5 @@
 ﻿// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// Copyright (c)2012-2015 Andrew A. Ritz, all rights reserved.
+// Copyright (c)2012-2022 Andrew A. Ritz, all rights reserved.
 //
 // This code is released under the ms-pl (Microsoft Public License)
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -26,6 +26,31 @@ namespace drewCo.Tools.Testers
   [TestClass]
   public class ReflectionTesters
   {
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This test case was provided to show that we can use the various methods to get/set values
+    /// on nested data types.
+    /// </summary>
+    [TestMethod]
+    public void CanGetAndSetNestedPropertyValue()
+    {
+      const string VAL_1 = "Value 1";
+      const string VAL_2 = "Value 2";
+
+      var testInstance = new TypeWithNestedData();
+      testInstance.TypeWithNull = new TypeWithNullable()
+      {
+        SomeName = VAL_1,
+      };
+
+      string propPath = $"{nameof(TypeWithNestedData.TypeWithNull)}.{nameof(TypeWithNullable.SomeName)}";
+      string check1 = ReflectionTools.GetNestedPropertyValue(testInstance, propPath);
+      string check2 = ReflectionTools.GetNestedPropertyValue(testInstance, x => x.TypeWithNull.SomeName);
+      Assert.AreEqual(VAL_1, check1);
+      Assert.AreEqual(VAL_1, check2);
+
+      throw new NotImplementedException("Complete this by testing the setters too!");
+    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     [TestMethod]
