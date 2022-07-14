@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>drewCo.Tools</id>
-    <version>1.1.2.0</version>
+    <version>1.1.3.0</version>
     <title>drewCo.Tools</title>
     <authors>Andrew A. Ritz</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -16,7 +16,6 @@
       <group targetFramework=".NETFramework4.7.2"></group>
       <group targetFramework=".NETCoreApp3.1"></group>
       <group targetFramework="net5.0"></group>
-      <group targetFramework="net6.0"></group>
     </dependencies>
 
     <repository type="git" url="https://github.com/drewCoSoftware/drewCo.Tools" branch="main" />
