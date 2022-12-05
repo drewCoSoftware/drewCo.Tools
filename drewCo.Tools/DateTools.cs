@@ -18,6 +18,7 @@ namespace drewCo.Tools
     Invalid = 0,
     Always,           // Indicates that time intervals don't apply in this case.
     Once,
+    Hourly,
     Daily,
     Monthly,
     Weekly,

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 
 #if NETFX_CORE
@@ -83,8 +84,21 @@ namespace drewCo.Tools
     {
       XmlSerializer serial = new XmlSerializer(typeof(T));
       StringReader reader = new StringReader(xmlData);
+
+      // TODO: Let's see what we can do about this......
+      //      var r = XmlReader.Create(reader);
+      //      if (serial.CanDeserialize(r))
+      //      {
+
+      //      }
+      ////      var r = new XmlSerializationReader
+
+      //      if (serial.CanDeserialize()
+      //      {
+
       T res = (T)serial.Deserialize(reader);
       return res;
+
     }
 
     // --------------------------------------------------------------------------------------------------------------------------

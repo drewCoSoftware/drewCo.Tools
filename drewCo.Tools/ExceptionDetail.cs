@@ -131,6 +131,19 @@ namespace drewCo.Tools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This makes sure that stack traces are split into lines vs. always being in a single line.
+    /// </summary>
+    public void FixStackTrace()
+    {
+      if (_StackTrace == null) { return; }
+
+      string fullTrace = string.Join("\n", _StackTrace);
+      string[] parts = fullTrace.Split(new[] { Environment.NewLine, "\n" }, StringSplitOptions.None);
+      _StackTrace = new ReadOnlyCollection<string>(parts);
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
     public XDocument ToXML()
     {
       return GetXMLInner(this);
