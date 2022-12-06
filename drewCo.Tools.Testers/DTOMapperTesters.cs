@@ -23,6 +23,41 @@ namespace drewCo.Tools.Testers
   public class DTOMapperTesters
   {
 
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This test case was provided to solve a bug where members on an anonymous type could not be copied to
+    /// a concrete one.
+    /// </summary>
+    [TestMethod]
+    public void CanCopyMembersFromAnonymousTypeToConcreteType()
+    {
+      {
+        var concrete = new ListType1();
+        Assert.IsNull(concrete.Name, "The name should be null!");
+
+        // Does this work for a simple type, like string.... ??
+        const string TEST_NAME = "MyTestName";
+        var anonInstance = new { Name = TEST_NAME };
+
+        DTOMapper.CopyMembers(anonInstance, concrete);
+        Assert.AreEqual(TEST_NAME, concrete.Name, "The name data should have been copied!");
+      }
+
+      // Let's try something that is more complex.....
+      {
+        var concrete = new TypeWithCompositeMembers();
+        Assert.IsNull(concrete.Nested, "Nested data should be null!");
+        
+        var nested = new NestingType() { Number = 123 };
+        var anon = new { Nested = nested };
+        DTOMapper.CopyMembers(anon, concrete);
+
+        Assert.IsNotNull(concrete.Nested, "Nested data should not be null after 'CopyMembers'!");
+      }
+
+
+    }
+
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -32,14 +67,14 @@ namespace drewCo.Tools.Testers
     [TestMethod]
     public void CanCopyListsFromDifferentNamespaces()
     {
-      
-    const string NAME_1 = "myName";
-    const int NUMBER_1 = 123;
+
+      const string NAME_1 = "myName";
+      const int NUMBER_1 = 123;
 
       ListHost_T1 host1 = new ListHost_T1();
       host1.List.Add(new ListType1()
       {
-        Name =NAME_1,
+        Name = NAME_1,
         Number = NUMBER_1,
       });
 

@@ -20,8 +20,9 @@ namespace drewCo.Tools
     Once,
     Hourly,
     Daily,
-    Monthly,
     Weekly,
+    Monthly,
+    Yearly,
     Custom         // Custom time interval...
   }
 

@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 namespace drewCo.Tools.Testers
 {
 
+  public class TypeWithCompositeMembers
+  {
+    public string Name { get; set; }
+    public NestingType Nested { get; set; }
+  }
+
   public class TypeWithFields
   {
     public string Description;

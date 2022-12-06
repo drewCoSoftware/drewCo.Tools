@@ -133,7 +133,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>IF NOT EXIST "$(SolutionDir)lib\net472" md "$(SolutionDir)lib\net472"
-copy "$(TargetPath)" "$(SolutionDir)lib\net472\"$(TargetFileName)</PostBuildEvent>
+copy "$(TargetDir)" "$(SolutionDir)lib\net472\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

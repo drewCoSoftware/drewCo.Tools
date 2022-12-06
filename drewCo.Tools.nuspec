@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<package >
+<package>
   <metadata>
     <id>drewCo.Tools</id>
-    <version>1.1.4.0</version>
+    <version>1.1.5.0</version>
     <title>drewCo.Tools</title>
     <authors>Andrew A. Ritz</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -21,4 +21,8 @@
     <repository type="git" url="https://github.com/drewCoSoftware/drewCo.Tools" branch="main" />
 
   </metadata>
+
+  <!-- <files>
+    <file src="bin\$configuration$\$id$.pdb" target="lib\net472\" />
+  </files> -->
 </package>
