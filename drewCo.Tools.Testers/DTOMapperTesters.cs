@@ -18,10 +18,40 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace drewCo.Tools.Testers
 {
+
   // ============================================================================================================================
   [TestClass]
   public class DTOMapperTesters
   {
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This case was provided to solve a bug where using DTOMapper on subclasses wasn't working in some cases.
+    /// Basically the generic version of the function call was resolving the base classes, but we want to copy
+    /// to the derived versions, when possible.
+    /// </summary>
+    [TestMethod]
+    public void CanCopyMembersOfDerivedType()
+    {
+      var child = new ChildType()
+      {
+        ParentName = "parent"
+      };
+      ParentType parent = child;
+     
+      Assert.IsNull(child.ChildName);
+
+      const string TEST_CHILD_NAME = "ChildName";
+      var anon = new { ChildName = TEST_CHILD_NAME };
+
+      // Even tho 'parent' is ParentType, it has an instance of 'ChildType' so we should
+      // still copy the data members from our anonymous type to it!
+      DTOMapper.CopyMembers(anon, parent);
+
+      Assert.AreEqual(parent.GetType(), typeof(ChildType), "'parent' should be an instance of 'ChildType'!");
+      Assert.AreEqual(TEST_CHILD_NAME, child.ChildName, "The child name should have been copied!");
+    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>

@@ -1,5 +1,5 @@
 ﻿//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// Copyright ©2014-2018 Andrew A. Ritz, All Rights Reserved
+// Copyright ©2014-2022 Andrew A. Ritz, All Rights Reserved
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 using System;
@@ -76,36 +76,36 @@ namespace drewCo.Tools
     }
 
 
-    // --------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Non-Generic version of CopyProperties(TFrom, TTo)
-    /// </summary>
-    public static void CopyProperties(Type tFrom, Type tTo, object from, object to, bool allowNulls = true)
-    {
-      var mi = (from x in ReflectionTools.GetMethods(typeof(DTOMapper))
-                where x.IsGenericMethod
-                select x).Single();
+    //// --------------------------------------------------------------------------------------------------------------------------
+    ///// <summary>
+    ///// Non-Generic version of CopyProperties(TFrom, TTo)
+    ///// </summary>
+    //public static void CopyProperties(Type tFrom, Type tTo, object from, object to, bool allowNulls = true)
+    //{
+    //  var mi = (from x in ReflectionTools.GetMethods(typeof(DTOMapper))
+    //            where x.IsGenericMethod
+    //            select x).Single();
 
-      mi = mi.MakeGenericMethod(new[] { tFrom, tTo });
-      mi.Invoke(null, new object[] { from, to });
-    }
+    //  mi = mi.MakeGenericMethod(new[] { tFrom, tTo });
+    //  mi.Invoke(null, new object[] { from, to });
+    //}
 
 
-    // --------------------------------------------------------------------------------------------------------------------------
-    public static void CopyMembers(object from, object to, bool allowNulls = true)
-    {
-      Type t1 = from.GetType();
-      Type t2 = to.GetType();
+    //// --------------------------------------------------------------------------------------------------------------------------
+    //public static void CopyMembers(object from, object to, bool allowNulls = true)
+    //{
+    //  Type t1 = from.GetType();
+    //  Type t2 = to.GetType();
 
-      MethodInfo m = (from x in typeof(DTOMapper).GetMethods(BindingFlags.Static | BindingFlags.Public)
-                      where x.Name == "CopyMembers" && x.IsGenericMethod
-                      select x).Single().MakeGenericMethod(new[]
-                      {
-                            t1,
-                            t2
-                          });
-      m.Invoke(null, new object[] { from, to, allowNulls });
-    }
+    //  MethodInfo m = (from x in typeof(DTOMapper).GetMethods(BindingFlags.Static | BindingFlags.Public)
+    //                  where x.Name == "CopyMembers" && x.IsGenericMethod
+    //                  select x).Single().MakeGenericMethod(new[]
+    //                  {
+    //                        t1,
+    //                        t2
+    //                      });
+    //  m.Invoke(null, new object[] { from, to, allowNulls });
+    //}
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>

@@ -7,10 +7,22 @@ using System.Threading.Tasks;
 namespace drewCo.Tools.Testers
 {
 
+  public class ParentType
+  {
+    public string ParentName { get; set; }
+    public int Number { get; set; }
+  }
+
+  public class ChildType : ParentType
+  {
+    public string ChildName { get; set; }
+  }
+
   public class TypeWithCompositeMembers
   {
     public string Name { get; set; }
     public NestingType Nested { get; set; }
+    public ParentType ChildOrParent { get; set; }
   }
 
   public class TypeWithFields
