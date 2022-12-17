@@ -123,8 +123,8 @@ namespace drewCo.Tools
 
       if (from == null || to == null) { return; }
 
-      DataMember[] fromMembers = GetDataMembers<TFrom>();
-      DataMember[] toMembers = GetDataMembers<TTo>();
+      DataMember[] fromMembers = GetDataMembers(from.GetType()); // <TFrom>();
+      DataMember[] toMembers = GetDataMembers(to.GetType()); // <TTo>();
 
 
       // Obviously it would make a lot more sense to cache this, as it could be very expensive
@@ -217,10 +217,10 @@ namespace drewCo.Tools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    private static DataMember[] GetDataMembers<T>()
+    private static DataMember[] GetDataMembers(Type t)
     {
-      var props = ReflectionTools.GetProperties<T>();
-      var fields = ReflectionTools.GetFields<T>();
+      var props = ReflectionTools.GetProperties(t);
+      var fields = ReflectionTools.GetFields(t, false);
 
       var res = new List<DataMember>();
 
@@ -229,11 +229,32 @@ namespace drewCo.Tools
         res.Add(new DataMember(p));
       }
       foreach (var f in fields)
-      { 
+      {
         res.Add(new DataMember(f));
       }
 
       return res.ToArray();
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    private static DataMember[] GetDataMembers<T>()
+    {
+      return GetDataMembers(typeof(T));
+      //var props = ReflectionTools.GetProperties<T>();
+      //var fields = ReflectionTools.GetFields<T>();
+
+      //var res = new List<DataMember>();
+
+      //foreach (var p in props)
+      //{
+      //  res.Add(new DataMember(p));
+      //}
+      //foreach (var f in fields)
+      //{ 
+      //  res.Add(new DataMember(f));
+      //}
+
+      //return res.ToArray();
     }
 
     // --------------------------------------------------------------------------------------------------------------------------

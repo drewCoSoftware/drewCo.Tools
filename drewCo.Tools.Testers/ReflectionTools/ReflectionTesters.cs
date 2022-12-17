@@ -88,7 +88,6 @@ namespace drewCo.Tools.Testers
     [TestMethod]
     public void CanResolveCollectionTypesByName()
     {
-
       // Add to this list as needed.
       string[] testNames = new[]
       {
@@ -99,6 +98,7 @@ namespace drewCo.Tools.Testers
       {
         Type checkType = ReflectionTools.ResolveType(name, true, true);
       }
+
     }
 
 
@@ -109,9 +109,6 @@ namespace drewCo.Tools.Testers
     [TestMethod]
     public void CanGetStaticMethodOnType()
     {
-
-      //var o = Activator.CreateInstance<TypeWithNoDefaultConstructor>();
-
       MethodInfo m1 = ReflectionTools.GetMethod(typeof(TypeWithStaticFunctions), "AddEm", new[] { typeof(int) });
       MethodInfo m2 = ReflectionTools.GetMethod(typeof(TypeWithStaticFunctions), "AddEm", new[] { typeof(int), typeof(int) });
 

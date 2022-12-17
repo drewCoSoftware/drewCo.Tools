@@ -993,7 +993,11 @@ namespace drewCo.Tools
           for (int j = 0; j < typeCount; j++)
           {
             Type t = types[j];
-            if (t.Name == typeName)
+            //if (t.Name.Contains("SortedDictionary"))
+            //{
+            //  int x = 10;
+            //}
+            if (t.Name == typeName || t.FullName == typeName)
             {
               if (baseType != null && !t.IsSubclassOf(baseType))
               {
