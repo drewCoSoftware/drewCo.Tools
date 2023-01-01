@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>drewCo.Tools</id>
-    <version>1.1.9.0</version>
+    <version>1.1.10.0</version>
     <title>drewCo.Tools</title>
     <authors>Andrew A. Ritz</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -10,7 +10,7 @@
     <!--<projectUrl>http://project_url_here_or_delete_this_line/</projectUrl>
     <iconUrl>http://icon_url_here_or_delete_this_line/</iconUrl>-->
     <description>A useful set of utility code.</description>
-    <copyright>2022 Andrew A. Ritz</copyright>
+    <copyright>2022-2023 Andrew A. Ritz</copyright>
     <!--<tags>Tag1 Tag2</tags>-->
     <dependencies>
       <group targetFramework=".NETFramework4.7.2"></group>

@@ -69,7 +69,7 @@ namespace drewCo.Tools
     }
 
 #if NETCOREAPP
-    // NOTE: There is no native deserializer in .net classic!
+    // NOTE: There is no native (de)serializer in .net classic!
     // --------------------------------------------------------------------------------------------------------------------------
     public static T LoadJson<T>(string path)
     {
@@ -89,6 +89,14 @@ namespace drewCo.Tools
       //  return res;
       //}
     }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static void SaveJson<T>(string path, T obj)
+    {
+      string data = JsonSerializer.Serialize(obj);
+      File.WriteAllText(path, data);
+    }
+
 #endif
 
 
