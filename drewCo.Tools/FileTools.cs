@@ -1,5 +1,5 @@
 ﻿//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// Copyright ©2009-2020 Andrew A. Ritz, All Rights Reserved
+// Copyright ©2009-2023 Andrew A. Ritz, All Rights Reserved
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 using System;
@@ -21,10 +21,13 @@ using Windows.Storage.Streams;
 #else
 
 using System.Security.AccessControl;
+using drewCo.Curations;
 
 #endif
 
-
+#if NETCOREAPP
+using System.Text.Json;
+#endif
 
 namespace drewCo.Tools
 {
@@ -38,6 +41,53 @@ namespace drewCo.Tools
   public static partial class FileTools
 #endif
   {
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static DiffGram<string> ComputeFolderDiff(string leftDir, string rightDir)
+    {
+      string[] leftItems = GetFilesWithRelativePathNames(leftDir).Concat(GetDirectoriesWithRelativePathNames(leftDir)).ToArray();
+      string[] rightItems = GetFilesWithRelativePathNames(rightDir).Concat(GetDirectoriesWithRelativePathNames(rightDir)).ToArray();
+
+      var res =  new DiffGram<string>(leftItems, rightItems);
+      return res;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static string[] GetFilesWithRelativePathNames(string srcDir)
+    {
+      string[] res = (from x in Directory.GetFiles(srcDir, "*.*", SearchOption.AllDirectories)
+                      select x.Replace(srcDir + Path.DirectorySeparatorChar, "")).ToArray();
+      return res;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static string[] GetDirectoriesWithRelativePathNames(string srcDir)
+    {
+      string[] res = (from x in Directory.GetDirectories(srcDir, "*.*", SearchOption.AllDirectories)
+                      select x.Replace(srcDir + Path.DirectorySeparatorChar, "")).ToArray();
+      return res;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static T LoadJson<T>(string path)
+    {
+      if (!File.Exists(path))
+      {
+        throw new FileNotFoundException(path);
+      }
+
+      string data = File.ReadAllText(path);
+      T res = JsonSerializer.Deserialize<T>(data);
+      return res;
+
+      // NOTE: This is version works with .NET 6.0
+      //using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+      //{
+      //  T res = JsonSerializer.Deserialize<T>fs);
+      //  return res;
+      //}
+    }
+
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
