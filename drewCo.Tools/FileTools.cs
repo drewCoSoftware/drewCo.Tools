@@ -68,6 +68,8 @@ namespace drewCo.Tools
       return res;
     }
 
+#if NETCOREAPP
+    // NOTE: There is no native deserializer in .net classic!
     // --------------------------------------------------------------------------------------------------------------------------
     public static T LoadJson<T>(string path)
     {
@@ -87,6 +89,7 @@ namespace drewCo.Tools
       //  return res;
       //}
     }
+#endif
 
 
     // --------------------------------------------------------------------------------------------------------------------------

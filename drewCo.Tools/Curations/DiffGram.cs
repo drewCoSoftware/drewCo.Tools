@@ -57,9 +57,9 @@ namespace drewCo.Curations
         uniqueRight.Add(item);
       }
 
-      var res = new DiffGram<T>(uniqueLeft, uniqueRight, sameItems);
-      return res;
-
+      UniqueLeft =  new ReadOnlyCollection<T>(uniqueLeft);
+      UniqueRight = new ReadOnlyCollection<T>(uniqueRight);
+      Same = new ReadOnlyCollection<T>(sameItems);
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
