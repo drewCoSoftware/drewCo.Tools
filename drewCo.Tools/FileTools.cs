@@ -91,10 +91,13 @@ namespace drewCo.Tools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public static void SaveJson<T>(string path, T obj)
+    public static void SaveJson<T>(string path, T obj, bool indented = true)
     {
-      string data = JsonSerializer.Serialize(obj);
-      File.WriteAllText(path, data);
+      string json = JsonSerializer.Serialize(obj, new JsonSerializerOptions()
+      {
+        WriteIndented = indented,
+      });
+      File.WriteAllText(path, json, Encoding.UTF8);
     }
 
 #endif
