@@ -10,25 +10,72 @@ using System.Threading.Tasks;
 namespace drewCo.Tools.Testers
 {
 
-  // ============================================================================================================================
-  public class WineRack
-  {
-    public string Name { get; set; }
-  }
-
-  // ============================================================================================================================
-  public class SomeOtherData
-  {
-    public int Number { get; set; }
-    public string Content { get; set; }
-    public double OtherNumber { get; set; }
-  }
 
   // ============================================================================================================================
   [TestClass]
   public partial class CSVTesters
   {
     private static string TestFolder = FileTools.GetAppDir() + "\\TestData\\CSV";
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This test case was provided to solve a bug where sometimes extra quotes would find their way into
+    /// output files.
+    /// </summary>
+    [TestMethod]
+    public void CSVOutputDoesntContainExtraQuotes()
+    {
+
+      const int MAX = 1;
+      var allDatas = new List<SomeOtherData>();
+      for (int i = 0; i < MAX; i++)
+      {
+        allDatas.Add(new SomeOtherData()
+        {
+          Content = "xyz",
+          Number = 123,
+          OtherNumber = 456
+        });
+      }
+
+
+      var colMapping = CSVColumnMapping.CreateFromType<SomeOtherData>();
+      CSVFile f = new CSVFile(colMapping);
+      foreach (var item in allDatas)
+      {
+        f.AddLineFromData(item);
+      }
+
+      const string TEST_FILE_NAME = nameof(CSVOutputDoesntContainExtraQuotes);
+      FileTools.DeleteExistingFile(TEST_FILE_NAME);
+      f.Save(TEST_FILE_NAME);
+
+      var csvCheck = new CSVFile(TEST_FILE_NAME);
+
+      int lineCount = csvCheck.Lines.Count;
+      Assert.AreEqual(1, lineCount);
+
+      for (int i = 0; i < lineCount; i++)
+      {
+        var srcData = allDatas[i];
+        var checkData = csvCheck.Lines[i];
+
+        string srcContent = srcData.Content;
+        string checkContent = checkData[1];
+
+        Assert.AreEqual(srcContent, checkContent, "Check content doesn't match source content!");
+
+
+        // Show that we can deserialize the numbers correctly.....
+        var number = int.Parse(checkData[0]);
+        Assert.AreEqual(srcData.Number, number);
+
+        var otherNumber = double.Parse(checkData[2]);
+        Assert.AreEqual(srcData.OtherNumber, otherNumber);
+      }
+    }
+
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -102,11 +149,11 @@ namespace drewCo.Tools.Testers
       CSVFile f = new CSVFile(testPath);
       var line = f.Lines[0];
 
-       Assert.AreEqual("22.00",  line[0], "Incorrect value at index 0!");
-       Assert.AreEqual("27.50",  line[1], "Incorrect value at index 1!");
-       Assert.AreEqual("14\" x 17\"",  line[2], "Incorrect value at index 2!");
-       Assert.AreEqual("1",  line[3], "Incorrect value at index 3!");
-       Assert.AreEqual("1",  line[4], "Incorrect value at index 4!");
+      Assert.AreEqual("22.00", line[0], "Incorrect value at index 0!");
+      Assert.AreEqual("27.50", line[1], "Incorrect value at index 1!");
+      Assert.AreEqual("14\" x 17\"", line[2], "Incorrect value at index 2!");
+      Assert.AreEqual("1", line[3], "Incorrect value at index 3!");
+      Assert.AreEqual("1", line[4], "Incorrect value at index 4!");
 
     }
 
@@ -129,7 +176,7 @@ namespace drewCo.Tools.Testers
     [TestMethod]
     public void CanParseCSVDataWithEmbeddedLineBreaks()
     {
-      var map= CSVColumnMapping.CreateFromType<SomeOtherData>();
+      var map = CSVColumnMapping.CreateFromType<SomeOtherData>();
 
       string testPath = Path.Combine(TestFolder, "EmbeddedBreaks.csv");
       CSVFile f = new CSVFile(testPath);
@@ -138,7 +185,7 @@ namespace drewCo.Tools.Testers
       Assert.AreEqual(3, line.Values.Count, "There should only be three values for this line!");
 
       Assert.AreEqual("123", line[0]);
-      
+
       string expectedContent = "My Data" + Environment.NewLine + "looks great \"in quotes!\", so let's" + Environment.NewLine + "see what we can do with it";
       Assert.AreEqual(expectedContent, line[1], "Invalid value for 'Content'!");
       Assert.AreEqual("3.14159", line[2]);
@@ -401,4 +448,20 @@ namespace drewCo.Tools.Testers
 
 
   }
+
+
+  // ============================================================================================================================
+  public class WineRack
+  {
+    public string Name { get; set; }
+  }
+
+  // ============================================================================================================================
+  public class SomeOtherData
+  {
+    public int Number { get; set; }
+    public string Content { get; set; }
+    public double OtherNumber { get; set; }
+  }
+
 }

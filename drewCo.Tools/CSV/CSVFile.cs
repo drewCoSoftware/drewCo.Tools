@@ -242,8 +242,8 @@ namespace drewCo.Tools.CSV
 
       foreach (var l in Lines)
       {
-        var processedVals = from x in l.Values select "\"" + x.Replace("\"", "\"\"") + "\"";
-        // var processedVals = from x in l.Values select x;
+        // This will add quotes to any field that contains the separator character.
+        var processedVals = from x in l.Values select x.Contains(this.Separator) ? "\"" + x + "\"" : x;
 
         string line = string.Join(Separator, processedVals);
         toWrite.Add(line);
@@ -304,8 +304,13 @@ namespace drewCo.Tools.CSV
           {
             // Just quote all string fields...
             // Also make sure to escape any existing quotes.
+            string oldval = useVal;
             useVal = useVal.Replace("\"", "\"\"");
-            useVal = "\"" + useVal + "\"";
+
+            //if (useVal != oldval)
+            //{
+              useVal = "\"" + useVal + "\"";
+            //}
           }
           vals[index] = useVal;
 
