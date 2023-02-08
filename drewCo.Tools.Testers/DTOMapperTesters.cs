@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using drewCo.UnitTesting;
+using drewCo.Tools.UnitTesting;
 
 
 #if NETFX_CORE
@@ -27,6 +29,46 @@ namespace drewCo.Tools.Testers
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
+    /// This test case was provided to solve a bug where members that are of interface type could 
+    /// not be copied.
+    /// </summary>
+    [TestMethod]
+    public void CanCopyInterfaceMembers()
+    {
+      TypeWithInterfaceMember srcData = new TypeWithInterfaceMember()
+      {
+        Name = "TestData",
+        Numbers = new NumberType()
+        {
+          Number1 = 100,
+          Number2 = 200
+        }
+      };
+
+      var compData = new TypeWithInterfaceMember();
+      DTOMapper.CopyMembers(srcData, compData);
+      Check.ObjectValuesMatch(srcData, compData);
+
+      //{
+      //  var oi = new ObjectInspector();
+      //  var compResult = oi.CompareObjects(srcData, compData);
+      //  Assert.IsTrue(compResult.Success, $"The objects should match after call to '{nameof(DTOMapper.CopyMembers)}'!");
+      //}
+
+      var copyData = DTOMapper.CreateCopy(srcData);
+      Check.ObjectValuesMatch(srcData, copyData);
+      //{
+      //  var oi = new ObjectInspector();
+      //  var compResult = oi.CompareObjects(srcData, copyData);
+      //  Assert.IsTrue(compResult.Success, $"The objects should match after call to '{nameof(DTOMapper.CreateCopy)}'!");
+      //}
+
+    }
+
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
     /// This case was provided to solve a bug where using DTOMapper on subclasses wasn't working in some cases.
     /// Basically the generic version of the function call was resolving the base classes, but we want to copy
     /// to the derived versions, when possible.
@@ -39,7 +81,7 @@ namespace drewCo.Tools.Testers
         ParentName = "parent"
       };
       ParentType parent = child;
-     
+
       Assert.IsNull(child.ChildName);
 
       const string TEST_CHILD_NAME = "ChildName";
@@ -77,7 +119,7 @@ namespace drewCo.Tools.Testers
       {
         var concrete = new TypeWithCompositeMembers();
         Assert.IsNull(concrete.Nested, "Nested data should be null!");
-        
+
         var nested = new NestingType() { Number = 123 };
         var anon = new { Nested = nested };
         DTOMapper.CopyMembers(anon, concrete);
@@ -225,7 +267,7 @@ namespace drewCo.Tools.Testers
       ListHost2 comp = new ListHost2();
       DTOMapper.CopyMembers(source, comp);
 
-      drewCo.UnitTesting.ObjectInspector inspector = new UnitTesting.ObjectInspector();
+      drewCo.UnitTesting.ObjectInspector inspector = new ObjectInspector();
       var compIntResult = inspector.CompareLists(source.IntList, comp.IntList);
       Assert.IsTrue(compIntResult.Item1, compIntResult.Item2);
 
@@ -239,6 +281,27 @@ namespace drewCo.Tools.Testers
 
   }
 
+
+  // ============================================================================================================================
+  interface INumberInterface
+  {
+    int Number1 { get; set; }
+    int Number2 { get; set; }
+  }
+
+  // ============================================================================================================================
+  class NumberType : INumberInterface
+  {
+    public int Number1 { get; set; }
+    public int Number2 { get; set; }
+  }
+
+  // ============================================================================================================================
+  class TypeWithInterfaceMember
+  {
+    public string Name { get; set; }
+    public INumberInterface Numbers { get; set; }
+  }
 
   // ============================================================================================================================
   public class SomeType

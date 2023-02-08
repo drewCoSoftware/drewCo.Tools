@@ -437,6 +437,8 @@ namespace drewCo.Tools
     // --------------------------------------------------------------------------------------------------------------------------
     public static object CreateCopy(Type type, object from)
     {
+      if (from == null) { return null; }
+
       // Just make a copy of any struct types...  
 #if NETFX_CORE
       if (type.GetTypeInfo().IsValueType)
@@ -455,6 +457,12 @@ namespace drewCo.Tools
                                                                              x.GetGenericArguments().Length == 1).ToList();
       MethodInfo m = matches.Single();
 
+      // NOTE: This is kind of a waste, maybe.  Why check for interfaces when we can always just grab
+      // the type directly from 'from'
+      if (type.IsInterface)
+      {
+        type = from.GetType();
+      }
       m = m.MakeGenericMethod(type);
       return m.Invoke(null, new object[] { from });
     }
