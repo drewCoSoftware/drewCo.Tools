@@ -3,13 +3,13 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>drewCo.Tools</RootNamespace>
     <AssemblyName>drewCo.Tools</AssemblyName>
-    <AssemblyVersion>1.1.10.0</AssemblyVersion>
-    <Version>1.1.10.0</Version>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <Version>1.2.0.0</Version>
     <Authors>Andrew A. Ritz</Authors>
     <Company>drewCo Software</Company>
-    <Description>A library with a lot of useful utility code.</Description>
+    <Description>A useful set of utility code.</Description>
     <Copyright>Copyright ©Andrew A. Ritz  2012-2023</Copyright>
-    <FileVersion>1.1.10.0</FileVersion>
+    <FileVersion>1.2.0.0</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -53,7 +53,6 @@
     <Compile Include="..\drewCo.Tools\MathTools\Quadratic.cs" Link="MathTools\Quadratic.cs" />
     <Compile Include="..\drewCo.Tools\MathTools\Vector2.cs" Link="MathTools\Vector2.cs" />
     <Compile Include="..\drewCo.Tools\MathTools\Vector2Extensions.cs" Link="MathTools\Vector2Extensions.cs" />
-    <Compile Include="..\drewCo.Tools\ObjectInspector.cs" Link="ObjectInspector.cs" />
     <Compile Include="..\drewCo.Tools\ReflectionTools\DataSource.cs" Link="ReflectionTools\DataSource.cs" />
     <Compile Include="..\drewCo.Tools\ReflectionTools\ReflectionTools.cs" Link="ReflectionTools\ReflectionTools.cs" />
     <Compile Include="..\drewCo.Tools\Serialization\EZReader.cs" Link="Serialization\EZReader.cs" />
@@ -67,6 +66,7 @@
     <Compile Include="..\drewCo.Tools\StringTools.cs" Link="StringTools.cs" />
     <Compile Include="..\drewCo.Tools\XMLFile.cs" Link="XMLFile.cs" />
     <Compile Include="..\drewCo.Tools\XMLTools.cs" Link="XMLTools.cs" />
+    <Compile Include="..\drewCo.Tools\_UnitTesting\ObjectInspector.cs" Link="ObjectInspector.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Attributes" />

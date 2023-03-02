@@ -1,7 +1,6 @@
 ﻿//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 // Copyright ©2009-2023 Andrew A. Ritz, All Rights Reserved
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
 using System;
 using System.Text;
 using System.IO;
@@ -22,6 +21,7 @@ using Windows.Storage.Streams;
 
 using System.Security.AccessControl;
 using drewCo.Curations;
+using System.Runtime.InteropServices;
 
 #endif
 
@@ -41,6 +41,124 @@ namespace drewCo.Tools
   public static partial class FileTools
 #endif
   {
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Converts directory separator characters so that they match the current platform.
+    /// This makes it easier to move config files, etc. from one OS to another without having to worry about making minor updates to
+    /// all paths.
+    /// </summary>
+    public static string GetOSCompatiblePath(string inputPath)
+    {
+      string res = inputPath;
+      bool isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+      if (!isWindows)
+      {
+        res = res.Replace("\\", "/");
+      }
+      else
+      {
+        res = res.Replace("/", "\\");
+      }
+      return res;
+    }
+
+#if NETCOREAPP
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Save and object to disk in JSON format.
+    /// </summary>
+    public static void SaveJson<T>(string path, T obj, bool indented = true)
+    {
+      string json = JsonSerializer.Serialize(obj, new JsonSerializerOptions()
+      {
+        WriteIndented = indented,
+      });
+      File.WriteAllText(path, json, Encoding.UTF8);
+    }
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Loads a json file from the given path.
+    /// Parameters can be used to create + save a default instance of the type.
+    /// If a default instance can't be created, an InvalidOperationException will be
+    /// thrown with the InnerException containing the original exception.
+    /// </summary>
+    public static JsonLoadResult<T> SafeLoadJson<T>(string path)
+      where T : class, new()
+    {
+      Exception? readException = null;
+
+      if (System.IO.File.Exists(path))
+      {
+        try
+        {
+          T data = LoadJson<T>(path);
+          return new JsonLoadResult<T>(data, true, true, null);
+        }
+        catch (Exception readEx)
+        {
+          readException = readEx;
+        }
+      }
+
+      T resData = new T();
+      try
+      {
+        FileTools.CreateDirectory(Path.GetDirectoryName(path));
+        SaveJson<T>(path, resData);
+        return new JsonLoadResult<T>(resData, false, true, readException);
+      }
+      catch (Exception ex)
+      {
+        // We could not create new data, or save it for some reason....
+        throw new InvalidOperationException($"The json data could not be loaded from path: {path} and a new file could not be created and saved!  See InnerException for details.", ex);
+      }
+
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    // TODO: Move this to the tools lib.
+    /// <summary>
+    /// Load the json data from the given file.  If it doesn't exist, return null.
+    /// </summary>
+    public static T? LoadExistingJson<T>(string path)
+      where T : class
+    {
+      if (System.IO.File.Exists(path))
+      {
+        T res = LoadJson<T>(path);
+        return res;
+      }
+      else
+      {
+        return null;
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static T LoadJson<T>(string path)
+      where T : class
+    {
+      if (!File.Exists(path))
+      {
+        throw new FileNotFoundException();
+      }
+
+      using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+      {
+        var reader = new StreamReader(fs);
+        string data = reader.ReadToEnd();
+        T? res = JsonSerializer.Deserialize<T>(data);
+        return res;
+      }
+    }
+
+#endif
+
+
 
     // --------------------------------------------------------------------------------------------------------------------------
     public static DiffGram<string> ComputeFolderDiff(string leftDir, string rightDir)
@@ -67,40 +185,6 @@ namespace drewCo.Tools
                       select x.Replace(srcDir + Path.DirectorySeparatorChar, "")).ToArray();
       return res;
     }
-
-#if NETCOREAPP
-    // NOTE: There is no native (de)serializer in .net classic!
-    // --------------------------------------------------------------------------------------------------------------------------
-    public static T LoadJson<T>(string path)
-    {
-      if (!File.Exists(path))
-      {
-        throw new FileNotFoundException(path);
-      }
-
-      string data = File.ReadAllText(path);
-      T res = JsonSerializer.Deserialize<T>(data);
-      return res;
-
-      // NOTE: This is version works with .NET 6.0
-      //using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-      //{
-      //  T res = JsonSerializer.Deserialize<T>fs);
-      //  return res;
-      //}
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------
-    public static void SaveJson<T>(string path, T obj, bool indented = true)
-    {
-      string json = JsonSerializer.Serialize(obj, new JsonSerializerOptions()
-      {
-        WriteIndented = indented,
-      });
-      File.WriteAllText(path, json, Encoding.UTF8);
-    }
-
-#endif
 
 
     // --------------------------------------------------------------------------------------------------------------------------
@@ -1000,5 +1084,37 @@ namespace drewCo.Tools
 #endif
 
   }
+
+#if NETCOREAPP
+
+
+  // ==========================================================================
+  public class JsonLoadResult<T>
+      where T : new()
+  {
+    // --------------------------------------------------------------------------------------------------------------------------
+    public JsonLoadResult(T data_, bool fileExists_, bool dataOK_, Exception? readException_)
+    {
+      Data = data_;
+      FileExists = fileExists_;
+      ReadOK = dataOK_;
+      ReadException = readException_;
+    }
+
+    /// <summary>
+    /// The data that was loaded.
+    /// </summary>
+    public T Data { get; private set; }
+    public bool FileExists { get; private set; }
+    public bool ReadOK { get; private set; }
+
+    /// <summary>
+    /// Any exception that may have happened while reading the data from disk.
+    /// </summary>
+    public Exception? ReadException { get; private set; }
+  }
+
+#endif
+
 }
 
