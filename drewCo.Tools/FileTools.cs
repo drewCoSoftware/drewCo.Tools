@@ -97,7 +97,7 @@ namespace drewCo.Tools
       {
         WriteIndented = indented,
       });
-      File.WriteAllText(path, json, Encoding.UTF8);
+      File.WriteAllText(path, json, new UTF8Encoding(false));
     }
 
 #endif
