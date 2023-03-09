@@ -66,9 +66,8 @@ namespace drewCo.Tools.CSV
       Separator = separator;
 
       using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-      using (StreamReader r = new StreamReader(fs, Encoding.UTF8))
+      using (StreamReader r = new StreamReader(fs, new UTF8Encoding(false)))
       {
-        // r.Read(
 
         string line = GetNextLine(r);
         string[] firstParts = line.Split(splitWith, StringSplitOptions.None);

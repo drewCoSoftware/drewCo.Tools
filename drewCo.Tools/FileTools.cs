@@ -173,9 +173,17 @@ namespace drewCo.Tools
     // --------------------------------------------------------------------------------------------------------------------------
     public static string[] GetFilesWithRelativePathNames(string srcDir)
     {
+<<<<<<< HEAD
       string[] res = (from x in Directory.GetFiles(srcDir, "*.*", SearchOption.AllDirectories)
                       select x.Replace(srcDir + Path.DirectorySeparatorChar, "")).ToArray();
       return res;
+=======
+      string json = JsonSerializer.Serialize(obj, new JsonSerializerOptions()
+      {
+        WriteIndented = indented,
+      });
+      File.WriteAllText(path, json, new UTF8Encoding(false));
+>>>>>>> 9fc158bb4cb3f9fc68eb0cade62e36a6fe644b18
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
