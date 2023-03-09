@@ -139,7 +139,7 @@ namespace drewCo.Tools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public static T LoadJson<T>(string path)
+    public static T? LoadJson<T>(string path)
       where T : class
     {
       if (!File.Exists(path))
