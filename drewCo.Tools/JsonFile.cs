@@ -1,5 +1,6 @@
 
 
+using drewCo.Tools;
 using System;
 using System.IO;
 using System.Text.Json;
@@ -29,8 +30,7 @@ public class JsonFile<T>
     }
 
     PreSave();
-    string data = JsonSerializer.Serialize(this);
-    File.WriteAllText(FilePath, data);
+    FileTools.SaveJson(FilePath, this);
   }
 
   // --------------------------------------------------------------------------------------------------------------------------
