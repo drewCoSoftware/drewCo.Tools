@@ -22,6 +22,7 @@ using Windows.Storage.Streams;
 using System.Security.AccessControl;
 using drewCo.Curations;
 using System.Runtime.InteropServices;
+using System.Text.Encodings.Web;
 
 #endif
 
@@ -75,7 +76,9 @@ namespace drewCo.Tools
       {
         WriteIndented = indented,
       });
-      File.WriteAllText(path, json, Encoding.UTF8);
+
+      var encoding = new UTF8Encoding(false);
+      File.WriteAllText(path, json, encoding);
     }
 
 
@@ -160,31 +163,31 @@ namespace drewCo.Tools
 
 
 
-    // --------------------------------------------------------------------------------------------------------------------------
-    public static DiffGram<string> ComputeFolderDiff(string leftDir, string rightDir)
-    {
-      string[] leftItems = GetFilesWithRelativePathNames(leftDir).Concat(GetDirectoriesWithRelativePathNames(leftDir)).ToArray();
-      string[] rightItems = GetFilesWithRelativePathNames(rightDir).Concat(GetDirectoriesWithRelativePathNames(rightDir)).ToArray();
+    //// --------------------------------------------------------------------------------------------------------------------------
+    //public static DiffGram<string> ComputeFolderDiff(string leftDir, string rightDir)
+    //{
+    //  string[] leftItems = GetFilesWithRelativePathNames(leftDir).Concat(GetDirectoriesWithRelativePathNames(leftDir)).ToArray();
+    //  string[] rightItems = GetFilesWithRelativePathNames(rightDir).Concat(GetDirectoriesWithRelativePathNames(rightDir)).ToArray();
 
-      var res =  new DiffGram<string>(leftItems, rightItems);
-      return res;
-    }
+    //  var res =  new DiffGram<string>(leftItems, rightItems);
+    //  return res;
+    //}
 
-    // --------------------------------------------------------------------------------------------------------------------------
-    public static string[] GetFilesWithRelativePathNames(string srcDir)
-    {
-<<<<<<< HEAD
-      string[] res = (from x in Directory.GetFiles(srcDir, "*.*", SearchOption.AllDirectories)
-                      select x.Replace(srcDir + Path.DirectorySeparatorChar, "")).ToArray();
-      return res;
-=======
-      string json = JsonSerializer.Serialize(obj, new JsonSerializerOptions()
-      {
-        WriteIndented = indented,
-      });
-      File.WriteAllText(path, json, new UTF8Encoding(false));
->>>>>>> 9fc158bb4cb3f9fc68eb0cade62e36a6fe644b18
-    }
+//    // --------------------------------------------------------------------------------------------------------------------------
+//    public static string[] GetFilesWithRelativePathNames(string srcDir)
+//    {
+//<<<<<<< HEAD
+//      string[] res = (from x in Directory.GetFiles(srcDir, "*.*", SearchOption.AllDirectories)
+//                      select x.Replace(srcDir + Path.DirectorySeparatorChar, "")).ToArray();
+//      return res;
+//=======
+//      string json = JsonSerializer.Serialize(obj, new JsonSerializerOptions()
+//      {
+//        WriteIndented = indented,
+//      });
+//      File.WriteAllText(path, json, new UTF8Encoding(false));
+//>>>>>>> 9fc158bb4cb3f9fc68eb0cade62e36a6fe644b18
+//    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     public static string[] GetDirectoriesWithRelativePathNames(string srcDir)
