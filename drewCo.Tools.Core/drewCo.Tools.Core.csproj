@@ -3,13 +3,13 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>drewCo.Tools</RootNamespace>
     <AssemblyName>drewCo.Tools</AssemblyName>
-    <AssemblyVersion>1.2.0.0</AssemblyVersion>
-    <Version>1.2.0.0</Version>
+    <AssemblyVersion>1.2.1.0</AssemblyVersion>
+    <Version>1.2.1.0</Version>
     <Authors>Andrew A. Ritz</Authors>
     <Company>drewCo Software</Company>
     <Description>A useful set of utility code.</Description>
-    <Copyright>Copyright ©Andrew A. Ritz  2012-2023</Copyright>
-    <FileVersion>1.2.0.0</FileVersion>
+    <Copyright>Copyright &#169;Andrew A. Ritz  2012-2023</Copyright>
+    <FileVersion>1.2.1.0</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -18,7 +18,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="IF NOT EXIST &quot;$(SolutionDir)lib\netcoreapp3.1&quot; md &quot;$(SolutionDir)lib\netcoreapp3.1&quot;&#xD;&#xA;copy $(TargetPath) $(SolutionDir)lib\netcoreapp3.1&#xD;&#xA;IF NOT EXIST &quot;$(SolutionDir)lib\net5.0&quot; md &quot;$(SolutionDir)lib\net5.0&quot;&#xD;&#xA;copy $(TargetPath) $(SolutionDir)lib\net5.0" />
+    <Exec Command="IF NOT EXIST &quot;$(SolutionDir)lib\netcoreapp3.1&quot; md &quot;$(SolutionDir)lib\netcoreapp3.1&quot;&#13;&#10;copy $(TargetPath) $(SolutionDir)lib\netcoreapp3.1&#13;&#10;IF NOT EXIST &quot;$(SolutionDir)lib\net5.0&quot; md &quot;$(SolutionDir)lib\net5.0&quot;&#13;&#10;copy $(TargetPath) $(SolutionDir)lib\net5.0" />
   </Target>
   <ItemGroup>
     <Compile Include="..\drewCo.Tools\ArrayHelpers.cs" Link="ArrayHelpers.cs" />
