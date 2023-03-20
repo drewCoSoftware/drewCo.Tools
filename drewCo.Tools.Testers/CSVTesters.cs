@@ -20,6 +20,31 @@ namespace drewCo.Tools.Testers
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
+    /// This test case was provided to solve a bug where empty fields were being quoted in the output.
+    /// </summary>
+    [TestMethod]
+    public void EmptyFieldsAreNotQuoted()
+    {
+      var data = new StringsOnly();
+      var allDatas = new List<StringsOnly>() { data };
+      var colMapping = CSVColumnMapping.CreateFromType<StringsOnly>();
+      CSVFile f = new CSVFile(colMapping);
+      foreach (var item in allDatas)
+      {
+        f.AddLineFromData(item);
+      }
+
+      const string TEST_FILE_NAME = nameof(EmptyFieldsAreNotQuoted);
+      FileTools.DeleteExistingFile(TEST_FILE_NAME);
+      f.Save(TEST_FILE_NAME);
+
+      string raw = File.ReadAllText(TEST_FILE_NAME);
+      Assert.IsFalse(raw.Contains("\""), "There should be NO QUOTES in the output data!");
+    }
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
     /// This test case was provided to solve a bug where sometimes extra quotes would find their way into
     /// output files.
     /// </summary>
@@ -99,7 +124,6 @@ namespace drewCo.Tools.Testers
       const string TEST_PATH = nameof(CanReadAndWriteCSVWithQuotedFields) + ".csv";
       FileTools.DeleteExistingFile(TEST_PATH);
       file.Save(TEST_PATH);
-
 
       // Now we will read it back in....
       // All of the data should be the same.
@@ -464,4 +488,11 @@ namespace drewCo.Tools.Testers
     public double OtherNumber { get; set; }
   }
 
+  // ============================================================================================================================
+  public class StringsOnly
+  {
+    public string Name1 { get; set; }
+    public string Name2 { get; set; }
+    public string Name3 { get; set; }
+  }
 }

@@ -1,5 +1,5 @@
 ﻿//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// Copyright ©2019-2020 Andrew A. Ritz, All Rights Reserved
+// Copyright ©2019-2023 Andrew A. Ritz, All Rights Reserved
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 using System;
@@ -242,9 +242,8 @@ namespace drewCo.Tools.CSV
       foreach (var l in Lines)
       {
         // This will add quotes to any field that contains the separator character.
-        var processedVals = from x in l.Values select x.Contains(this.Separator) ? "\"" + x + "\"" : x;
-
-        string line = string.Join(Separator, processedVals);
+        //        var processedVals = from x in l.Values select x.Contains(this.Separator) ? "\"" + x + "\"" : x;
+        string line = string.Join(Separator, l.Values);
         toWrite.Add(line);
       }
 
@@ -267,7 +266,7 @@ namespace drewCo.Tools.CSV
       int index = 0;
       foreach (var v in values)
       {
-        l[index] = v;
+        l[index] = FormatValue(v);
         ++index;
       }
 
@@ -297,19 +296,13 @@ namespace drewCo.Tools.CSV
         {
           object val = p.PropInfo.GetValue(data, null);
 
-          string useVal = val?.ToString() ?? ""; // FixCSVData(val?.ToString() ?? "");
+          string useVal = val?.ToString() ?? string.Empty; // FixCSVData(val?.ToString() ?? "");
 
           if (p.PropInfo.PropertyType == typeof(string))
           {
             // Just quote all string fields...
             // Also make sure to escape any existing quotes.
-            string oldval = useVal;
-            useVal = useVal.Replace("\"", "\"\"");
-
-            //if (useVal != oldval)
-            //{
-              useVal = "\"" + useVal + "\"";
-            //}
+            useVal = FormatValue(useVal);
           }
           vals[index] = useVal;
 
@@ -317,6 +310,24 @@ namespace drewCo.Tools.CSV
       }
 
       Lines.Add(new CSVLine(ColumnMap, vals));
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This function will properly escape and quote the input value, as needed.
+    /// </summary>
+    private string FormatValue(string useVal)
+    {
+      if (!string.IsNullOrWhiteSpace(useVal))
+      {
+        useVal = useVal.Replace("\"", "\"\"");
+        if (useVal.Contains(this.Separator))
+        {
+          useVal = StringTools.Quote(useVal);
+        }
+      }
+
+      return useVal;
     }
 
     // --------------------------------------------------------------------------------------------------------------------------

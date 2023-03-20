@@ -22,12 +22,12 @@ using Windows.Storage.Streams;
 using System.Security.AccessControl;
 using drewCo.Curations;
 using System.Runtime.InteropServices;
-using System.Text.Encodings.Web;
 
 #endif
 
 #if NETCOREAPP
 using System.Text.Json;
+using System.Text.Encodings.Web;
 #endif
 
 namespace drewCo.Tools

@@ -29,36 +29,36 @@ namespace drewCo.Tools
   public partial class StringTools
   {
 
-        // --------------------------------------------------------------------------------------------------------------------------
-        public static int StrCompare(string x, string y)
-        {
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static int StrCompare(string x, string y)
+    {
 
-            int xLen = x.Length;
-            int yLen = y.Length;
-            int minLen = Math.Min(xLen, yLen);
+      int xLen = x.Length;
+      int yLen = y.Length;
+      int minLen = Math.Min(xLen, yLen);
 
-            int comp = 0;
-            int i = 0;
-            while (comp == 0 & i < minLen)
-            {
-                int xc = x[i];
-                int yc = y[i];
-                if ((uint)(xc - 'a') <= (uint)('z' - 'a')) xc -= 0x20;
-                if ((uint)(yc - 'a') <= (uint)('z' - 'a')) yc -= 0x20;
+      int comp = 0;
+      int i = 0;
+      while (comp == 0 & i < minLen)
+      {
+        int xc = x[i];
+        int yc = y[i];
+        if ((uint)(xc - 'a') <= (uint)('z' - 'a')) xc -= 0x20;
+        if ((uint)(yc - 'a') <= (uint)('z' - 'a')) yc -= 0x20;
 
 
-                comp = xc - yc;
-                ++i;
-            }
-            if (comp == 0) { comp = xLen - yLen; }
-            return Math.Sign(comp);
-        }
+        comp = xc - yc;
+        ++i;
+      }
+      if (comp == 0) { comp = xLen - yLen; }
+      return Math.Sign(comp);
+    }
 
-        // --------------------------------------------------------------------------------------------------------------------------
-        /// <summary>
-        /// Breaks a camel cased string into its constituent words.
-        /// </summary>
-        public static string DeCamelCase(string input)
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Breaks a camel cased string into its constituent words.
+    /// </summary>
+    public static string DeCamelCase(string input)
     {
       // We need at least three characters to detect a case change.
       int len = input.Length;
@@ -355,52 +355,52 @@ namespace drewCo.Tools
 
 #if !NETFX_CORE
 
-        // --------------------------------------------------------------------------------------------------------------------------
-        public static string ComputeSHA1(string input)
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static string ComputeSHA1(string input)
+    {
+      using (SHA1Managed sha1 = new SHA1Managed())
+      {
+        var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(input));
+        var sb = new StringBuilder(hash.Length * 2);
+
+        foreach (byte b in hash)
         {
-            using (SHA1Managed sha1 = new SHA1Managed())
-            {
-                var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(input));
-                var sb = new StringBuilder(hash.Length * 2);
-
-                foreach (byte b in hash)
-                {
-                    // can be "x2" if you want lowercase
-                    sb.Append(b.ToString("X2"));
-                }
-                return sb.ToString();
-            }
+          // can be "x2" if you want lowercase
+          sb.Append(b.ToString("X2"));
         }
+        return sb.ToString();
+      }
+    }
 
-        // --------------------------------------------------------------------------------------------------------------------------
-        public static string ComputeSHA256(string text)
-        {
-            // Thanks to: https://stackoverflow.com/questions/12416249/hashing-a-string-with-sha256#12416380
-            byte[] bytes = Encoding.UTF8.GetBytes(text);
-            SHA256Managed hashstring = new SHA256Managed();
-            byte[] hash = hashstring.ComputeHash(bytes);
-            string res = string.Empty;
-            foreach (byte x in hash)
-            {
-                res += String.Format("{0:x2}", x);
-            }
-            return res;
-        }
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static string ComputeSHA256(string text)
+    {
+      // Thanks to: https://stackoverflow.com/questions/12416249/hashing-a-string-with-sha256#12416380
+      byte[] bytes = Encoding.UTF8.GetBytes(text);
+      SHA256Managed hashstring = new SHA256Managed();
+      byte[] hash = hashstring.ComputeHash(bytes);
+      string res = string.Empty;
+      foreach (byte x in hash)
+      {
+        res += String.Format("{0:x2}", x);
+      }
+      return res;
+    }
 
-        // --------------------------------------------------------------------------------------------------------------------------
-        public static string ComputeMD5(string text)
-        {
-            byte[] bytes = Encoding.UTF8.GetBytes(text);
-            var hashstring = MD5.Create();
-            byte[] hash = hashstring.ComputeHash(bytes);
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static string ComputeMD5(string text)
+    {
+      byte[] bytes = Encoding.UTF8.GetBytes(text);
+      var hashstring = MD5.Create();
+      byte[] hash = hashstring.ComputeHash(bytes);
 
-            StringBuilder sb = new StringBuilder(32);
-            foreach (byte x in hash)
-            {
-                sb.AppendFormat("{0:x2}", x);
-            }
-            return sb.ToString();
-        }
+      StringBuilder sb = new StringBuilder(32);
+      foreach (byte x in hash)
+      {
+        sb.AppendFormat("{0:x2}", x);
+      }
+      return sb.ToString();
+    }
 
 #else
 
@@ -416,15 +416,15 @@ namespace drewCo.Tools
 #endif
 
 
-        // --------------------------------------------------------------------------------------------------------------------------
-        /// <summary>
-        /// Unlike ToString(), this allows for null objects.
-        /// </summary>
-        /// <param name="target"></param>
-        /// <remarks>
-        /// With newer versions of .NET object?.ToString() can be used instead of this function.
-        /// </remarks>
-        public static string AsString(object target)
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Unlike ToString(), this allows for null objects.
+    /// </summary>
+    /// <param name="target"></param>
+    /// <remarks>
+    /// With newer versions of .NET object?.ToString() can be used instead of this function.
+    /// </remarks>
+    public static string AsString(object target)
     {
       return target == null ? null : target.ToString();
     }
@@ -449,21 +449,6 @@ namespace drewCo.Tools
       }
     }
 
-    //// --------------------------------------------------------------------------------------------------------------------------
-    ///// <summary>
-    ///// Tells us if the input string is formatted according to the given format string.
-    ///// </summary>
-    ///// <remarks>Case sensitive.</remarks>
-    //public static bool MatchesFormat(string input, string format)
-    //{
-
-    //  if (input == null) { return false; }
-    //  format = Regex.Replace(format, "\\{.*\\}", ".*");
-    //  return Regex.IsMatch(input, format);
-
-    //}
-
-
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
     /// Takes a quoted string, and returns the data that is inside of the quotes.
@@ -474,6 +459,18 @@ namespace drewCo.Tools
     public static string Unquote(string input)
     {
       return GetInnerString(input, '"', '"');
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Add quotes to the input string.
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    public static string Quote(string input)
+    {
+      string res = "\"" + input + "\"";
+      return res;
     }
 
 
