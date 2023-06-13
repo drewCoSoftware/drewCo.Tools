@@ -20,6 +20,36 @@ namespace drewCo.Tools.Testers
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
+    /// This test case was provided to solve a bug where data that has newlines was not auto quoting on output.
+    /// </summary>
+    [TestMethod]
+    public void FieldsWithNewlinesAreAutoQuoted()
+    {
+      const string TEST_TEXT_1 = "<p>Some Text</p>" + "\r\n" + "<p>Some other text!</p>";
+      const string TEST_TEXT_2 = "<p>Some Text, don't ya know!</p>";
+
+      var file = new CSVFile(new[] { "COLLECTION_NAME", "URL", "HTML" });
+      file.AddLine("collection_1", "https://example.com/collection_1", TEST_TEXT_1);
+      file.AddLine("collection_2", "https://example.com/collection_2", TEST_TEXT_2);
+
+      const string FILE_NAME = nameof(FieldsWithNewlinesAreAutoQuoted) + ".csv";
+      file.Save(FILE_NAME);
+
+      // Make sure the values are quoted in the raw files.
+      string checkText = File.ReadAllText(FILE_NAME);
+      Assert.IsTrue(checkText.Contains(StringTools.Quote(TEST_TEXT_1)));
+      Assert.IsTrue(checkText.Contains(StringTools.Quote(TEST_TEXT_2)));
+
+      var checkFile = new CSVFile(FILE_NAME);
+      Assert.AreEqual(2, checkFile.Lines.Count);
+      Assert.AreEqual(TEST_TEXT_1, checkFile.Lines[0][2], "Invalid text! [1]");
+      Assert.AreEqual(TEST_TEXT_2, checkFile.Lines[1][2], "Invalid text! [2]");
+
+    }
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
     /// This test case was provided to solve a bug where empty fields were being quoted in the output.
     /// </summary>
     [TestMethod]

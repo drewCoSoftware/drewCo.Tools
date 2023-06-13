@@ -321,7 +321,7 @@ namespace drewCo.Tools.CSV
       if (!string.IsNullOrWhiteSpace(useVal))
       {
         useVal = useVal.Replace("\"", "\"\"");
-        if (useVal.Contains(this.Separator))
+        if (useVal.Contains(this.Separator) || useVal.Contains("\n"))
         {
           useVal = StringTools.Quote(useVal);
         }

@@ -28,6 +28,8 @@ using System.Runtime.InteropServices;
 #if NETCOREAPP
 using System.Text.Json;
 using System.Text.Encodings.Web;
+using System.Text.Json.Serialization;
+using System.Diagnostics;
 #endif
 
 namespace drewCo.Tools
@@ -66,16 +68,24 @@ namespace drewCo.Tools
 
 #if NETCOREAPP
 
+    //public static void SaveJson<T>(Stream toStream, T obj, bool indented = true)
+    //{
+    //}
+
+
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
     /// Save and object to disk in JSON format.
     /// </summary>
     public static void SaveJson<T>(string path, T obj, bool indented = true)
     {
-      string json = JsonSerializer.Serialize(obj, new JsonSerializerOptions()
+      var options = new JsonSerializerOptions()
       {
         WriteIndented = indented,
-      });
+      };
+      // options.Converters.Add(new JsonStringEnumConverter());
+
+      string json = JsonSerializer.Serialize(obj, options);
 
       var encoding = new UTF8Encoding(false);
       File.WriteAllText(path, json, encoding);
@@ -173,21 +183,21 @@ namespace drewCo.Tools
     //  return res;
     //}
 
-//    // --------------------------------------------------------------------------------------------------------------------------
-//    public static string[] GetFilesWithRelativePathNames(string srcDir)
-//    {
-//<<<<<<< HEAD
-//      string[] res = (from x in Directory.GetFiles(srcDir, "*.*", SearchOption.AllDirectories)
-//                      select x.Replace(srcDir + Path.DirectorySeparatorChar, "")).ToArray();
-//      return res;
-//=======
-//      string json = JsonSerializer.Serialize(obj, new JsonSerializerOptions()
-//      {
-//        WriteIndented = indented,
-//      });
-//      File.WriteAllText(path, json, new UTF8Encoding(false));
-//>>>>>>> 9fc158bb4cb3f9fc68eb0cade62e36a6fe644b18
-//    }
+    //    // --------------------------------------------------------------------------------------------------------------------------
+    //    public static string[] GetFilesWithRelativePathNames(string srcDir)
+    //    {
+    //<<<<<<< HEAD
+    //      string[] res = (from x in Directory.GetFiles(srcDir, "*.*", SearchOption.AllDirectories)
+    //                      select x.Replace(srcDir + Path.DirectorySeparatorChar, "")).ToArray();
+    //      return res;
+    //=======
+    //      string json = JsonSerializer.Serialize(obj, new JsonSerializerOptions()
+    //      {
+    //        WriteIndented = indented,
+    //      });
+    //      File.WriteAllText(path, json, new UTF8Encoding(false));
+    //>>>>>>> 9fc158bb4cb3f9fc68eb0cade62e36a6fe644b18
+    //    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     public static string[] GetDirectoriesWithRelativePathNames(string srcDir)
@@ -1123,6 +1133,28 @@ namespace drewCo.Tools
     /// Any exception that may have happened while reading the data from disk.
     /// </summary>
     public Exception? ReadException { get; private set; }
+  }
+
+
+  // ============================================================================================================================
+  // From the internet: https://stackoverflow.com/questions/67857022/system-formatexception-the-json-value-is-not-in-a-supported-datetimeoffset-form
+  // Because MS needs to make things hard on us.
+  public class DateTimeOffsetConverterUsingDateTimeParse : JsonConverter<DateTimeOffset>
+  {
+    // --------------------------------------------------------------------------------------------------------------------------
+    public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+      Debug.Assert(typeToConvert == typeof(DateTimeOffset));
+      string val = reader.GetString();
+      return DateTimeOffset.Parse(val);
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
+    {
+      string val = value.ToString("o");
+      writer.WriteStringValue(val);
+    }
   }
 
 #endif
