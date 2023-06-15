@@ -383,17 +383,18 @@ namespace drewCo.Tools
       Debug.WriteLine("W.RAWSTRING \t{0}", s.Position);
 #endif
 
-      int len = data.Length;
-      byte[] writeBytes = new byte[len + (crlfCount * 2)];
+      int charCount = data.Length;
+      int byteCount = Encoding.UTF8.GetByteCount(data);
 
-      Encoding.UTF8.GetBytes(data, 0, len, writeBytes, 0);
-      //      ASCIIEncoding.ASCII.GetBytes(data, 0, len, writeBytes, 0);
+      byte[] writeBytes = new byte[byteCount + (crlfCount * 2)];
+
+      Encoding.UTF8.GetBytes(data, 0, charCount, writeBytes, 0);
 
 
       for (int i = 0; i < crlfCount; i++)
       {
-        writeBytes[len + (i * 2)] = 13;
-        writeBytes[len + (i * 2) + 1] = 10;
+        writeBytes[charCount + (i * 2)] = 13;
+        writeBytes[charCount + (i * 2) + 1] = 10;
       }
       s.Write(writeBytes, 0, writeBytes.Length);
     }
