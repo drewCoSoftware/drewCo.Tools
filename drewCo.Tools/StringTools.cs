@@ -30,6 +30,20 @@ namespace drewCo.Tools
   {
 
     // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This computes a valid filename from an input URL.
+    /// The computed filename is safe on Windows, Linux, and MacOS filesystems.
+    /// </summary>
+    public static string TranslateUrlToFilename(string url)
+    {
+      string res = Regex.Replace(url, "http(s)?://", "");
+      res = res.Replace("/", "_");
+      res = res.Replace("?", "qs_");
+      return res;
+    }
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
     public static int StrCompare(string x, string y)
     {
 
