@@ -45,6 +45,137 @@ namespace drewCo.Tools
 #endif
   {
 
+
+#if NET6_0_OR_GREATER
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Save an object as JSON directly to a stream.
+    /// </summary>
+    public static void SaveJson<T>(Stream toStream, T obj, bool indented = true)
+    {
+      var options = new JsonSerializerOptions()
+      {
+        WriteIndented = indented,
+      };
+      JsonSerializer.Serialize(toStream, obj, options);
+    }
+#endif
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static string[] FindAllDirectories(string fromDir, bool includeSubdirectories, Predicate<string> filter)
+    {
+      if (!Directory.Exists(fromDir))
+      {
+        throw new DirectoryNotFoundException($"The directory: '{fromDir}' does not exist!");
+      }
+
+      var res = new List<string>();
+      string[] allFiles = Directory.GetDirectories(fromDir, "*.*", includeSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+      foreach (var f in allFiles)
+      {
+        bool isMatch = filter(f);
+        if (isMatch)
+        {
+          res.Add(f);
+        }
+      }
+
+      return res.ToArray();
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Find all of the files in the given directory that match the filter.
+    /// </summary>
+    public static string[] FindAllFiles(string fromDir, bool includeSubdirectories, Predicate<string> filter)
+    {
+      if (!Directory.Exists(fromDir))
+      {
+        throw new DirectoryNotFoundException($"The directory: '{fromDir}' does not exist!");
+      }
+
+      var res = new List<string>();
+      string[] allFiles = Directory.GetFiles(fromDir, "*.*", includeSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+      foreach (var f in allFiles)
+      {
+        bool isMatch = filter(f);
+        if (isMatch)
+        {
+          res.Add(f);
+        }
+      }
+
+      return res.ToArray();
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This will delete all files from the given directory that match <see cref="filter"/>
+    /// </summary>
+    public static void RemoveAllFiles(string fromDir, bool includeSubdirectories, Predicate<string> filter)
+    {
+      var match = FindAllFiles(fromDir, includeSubdirectories, filter);
+      foreach (var m in match)
+      {
+        FileTools.DeleteExistingFile(m);
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Sort the list of files (by path) by date, in descending order.
+    /// </summary>
+    internal static string[] SortByDate(IEnumerable<string> files, bool descending = true)
+    {
+      var infos = (from x in files select new FileInfo(x));
+      return SortByDate(infos, descending);
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    internal static string[] SortByDate(IEnumerable<FileInfo> files, bool descending = true)
+    {
+      IEnumerable<FileInfo> sorted = null;
+      if (descending)
+      {
+        sorted = (from x in files select x).OrderByDescending(x => x.LastWriteTime);
+      }
+      else
+      {
+        sorted = (from x in files select x).OrderBy(x => x.LastWriteTime);
+      }
+
+      string[] res = sorted.Select(x => x.FullName).ToArray();
+      return res;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Get the path of the most recent directory (by write time) in the given root dir.
+    /// </summary>
+    internal static string GetMostRecentDirectory(string rootDir)
+    {
+      if (!Directory.Exists(rootDir)) { return null; }
+
+      string[] dirs = Directory.GetDirectories(rootDir);
+      var dirInfos = (from x in dirs select new DirectoryInfo(x)).OrderByDescending(x => x.LastWriteTimeUtc);
+      var first = dirInfos.FirstOrDefault();
+
+      string res = first != null ? first.FullName : null;
+      return res;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    internal static FileInfo[] GetFileInfosByDate(string historyDir, string pattern, SearchOption allDirectories)
+    {
+      string[] stateFiles = Directory.GetFiles(historyDir, "JobInfo.json", SearchOption.AllDirectories);
+      var res = (from x in stateFiles select new FileInfo(x)).OrderByDescending(x => x.LastWriteTime).ToArray();
+      return res;
+    }
+
+
+
+
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
     /// Converts directory separator characters so that they match the current platform.

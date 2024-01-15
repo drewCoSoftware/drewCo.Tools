@@ -88,6 +88,7 @@
     <Compile Include="CSV\CSVColumnMap.cs" />
     <Compile Include="CSV\CSVFile.cs" />
     <Compile Include="CSV\CSVLine.cs" />
+    <Compile Include="Curations\Curations.cs" />
     <Compile Include="Curations\DefaultDictionary.cs" />
     <Compile Include="Curations\DiffGram.cs" />
     <Compile Include="Curations\DisposingList.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Curations\ICollectionHelper.cs" />
     <Compile Include="Curations\IEnumHelpers.cs" />
     <Compile Include="Curations\IListHelpers.cs" />
+    <Compile Include="Curations\LockedFile.cs" />
     <Compile Include="Curations\MultiDictionary.cs" />
     <Compile Include="Curations\MultiDictionaryHelper.cs" />
     <Compile Include="Curations\ObjectPool.cs" />
@@ -114,6 +116,8 @@
     <Compile Include="MathTools\Quadratic.cs" />
     <Compile Include="MathTools\Vector2.cs" />
     <Compile Include="MathTools\Vector2Extensions.cs" />
+    <Compile Include="ProcessTools.cs" />
+    <Compile Include="UserTools.cs" />
     <Compile Include="_UnitTesting\ObjectInspector.cs" />
     <Compile Include="ReflectionTools\DataSource.cs" />
     <Compile Include="ReflectionTools\ReflectionTools.cs" />

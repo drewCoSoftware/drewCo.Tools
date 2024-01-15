@@ -28,6 +28,52 @@ namespace drewCo.Tools
   // ============================================================================================================================
   public partial class StringTools
   {
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Remove <paramref name="toTrim"/> from the end of the <paramref name="input"/> string.
+    /// Multiple instances of <paramref name="toTrim"/> will be removed from the input string.
+    /// </summary>
+    public static string TrimEnd(string input, string toTrim)
+    {
+      while (input.EndsWith(toTrim))
+      {
+        input = input.Substring(0, input.Length - toTrim.Length);
+      }
+      return input;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Tells us if the given email address is valid or not.
+    /// </summary>
+    /// <remarks>
+    /// Email addres validation is difficult.  This function may not cover all cases.
+    /// Please report any valid email address that causes this function to return false.
+    /// </remarks>
+    public static bool IsValidEmail(string email)
+    {
+      // Thanks Internet!
+      // Original version from:
+      // https://stackoverflow.com/questions/1365407/c-sharp-code-to-validate-email-address
+
+      var trimmedEmail = email.Trim();
+
+      if (trimmedEmail.EndsWith("."))
+      {
+        return false; // suggested by @TK-421
+      }
+      try
+      {
+        var addr = new System.Net.Mail.MailAddress(email);
+        return addr.Address == trimmedEmail;
+      }
+      catch
+      {
+        return false;
+      }
+    }
+
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
     /// This computes a valid filename from an input URL.

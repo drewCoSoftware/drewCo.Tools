@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>drewCo.Tools</RootNamespace>
     <AssemblyName>drewCo.Tools</AssemblyName>
     <AssemblyVersion>1.2.1.3</AssemblyVersion>
@@ -26,6 +26,7 @@
     <Compile Include="..\drewCo.Tools\CSV\CSVColumnMap.cs" Link="CSV\CSVColumnMap.cs" />
     <Compile Include="..\drewCo.Tools\CSV\CSVFile.cs" Link="CSV\CSVFile.cs" />
     <Compile Include="..\drewCo.Tools\CSV\CSVLine.cs" Link="CSV\CSVLine.cs" />
+    <Compile Include="..\drewCo.Tools\Curations\Curations.cs" Link="Curations\Curations.cs" />
     <Compile Include="..\drewCo.Tools\Curations\DefaultDictionary.cs" Link="Curations\DefaultDictionary.cs" />
     <Compile Include="..\drewCo.Tools\Curations\DiffGram.cs" Link="Curations\DiffGram.cs" />
     <Compile Include="..\drewCo.Tools\Curations\DisposingList.cs" Link="Curations\DisposingList.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="..\drewCo.Tools\MathTools\Quadratic.cs" Link="MathTools\Quadratic.cs" />
     <Compile Include="..\drewCo.Tools\MathTools\Vector2.cs" Link="MathTools\Vector2.cs" />
     <Compile Include="..\drewCo.Tools\MathTools\Vector2Extensions.cs" Link="MathTools\Vector2Extensions.cs" />
+    <Compile Include="..\drewCo.Tools\ProcessTools.cs" Link="ProcessTools.cs" />
     <Compile Include="..\drewCo.Tools\ReflectionTools\DataSource.cs" Link="ReflectionTools\DataSource.cs" />
     <Compile Include="..\drewCo.Tools\ReflectionTools\ReflectionTools.cs" Link="ReflectionTools\ReflectionTools.cs" />
     <Compile Include="..\drewCo.Tools\Serialization\EZReader.cs" Link="Serialization\EZReader.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="..\drewCo.Tools\RandomTools.cs" Link="RandomTools.cs" />
     <Compile Include="..\drewCo.Tools\Sentinel.cs" Link="Sentinel.cs" />
     <Compile Include="..\drewCo.Tools\StringTools.cs" Link="StringTools.cs" />
+    <Compile Include="..\drewCo.Tools\UserTools.cs" Link="UserTools.cs" />
     <Compile Include="..\drewCo.Tools\XMLFile.cs" Link="XMLFile.cs" />
     <Compile Include="..\drewCo.Tools\XMLTools.cs" Link="XMLTools.cs" />
     <Compile Include="..\drewCo.Tools\_UnitTesting\ObjectInspector.cs" Link="ObjectInspector.cs" />
@@ -76,5 +79,8 @@
     <Folder Include="MathTools" />
     <Folder Include="ReflectionTools" />
     <Folder Include="Serialization" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
   </ItemGroup>
 </Project>
