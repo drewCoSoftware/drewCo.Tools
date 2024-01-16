@@ -3,13 +3,13 @@
     <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
     <RootNamespace>drewCo.Tools</RootNamespace>
     <AssemblyName>drewCo.Tools</AssemblyName>
-    <AssemblyVersion>1.3.0.1</AssemblyVersion>
-    <Version>1.3.0.1</Version>
+    <AssemblyVersion>1.3.0.2</AssemblyVersion>
+    <Version>1.3.0.2</Version>
     <Authors>Andrew A. Ritz</Authors>
     <Company>drewCo Software</Company>
     <Description>A useful set of utility code.</Description>
     <Copyright>Copyright ©Andrew A. Ritz  2012-2024</Copyright>
-    <FileVersion>1.3.0.1</FileVersion>
+    <FileVersion>1.3.0.2</FileVersion>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -45,6 +45,7 @@
     <Compile Include="..\drewCo.Tools\ExceptionDetail.cs" Link="ExceptionDetail.cs" />
     <Compile Include="..\drewCo.Tools\Gopher.cs" Link="Gopher.cs" />
     <Compile Include="..\drewCo.Tools\JSONFile.cs" Link="JSONFile.cs" />
+    <Compile Include="..\drewCo.Tools\LockedFile.cs" Link="LockedFile.cs" />
     <Compile Include="..\drewCo.Tools\MathTools\Geometry\Circle.cs" Link="MathTools\Geometry\Circle.cs" />
     <Compile Include="..\drewCo.Tools\MathTools\Geometry\LineSegment.cs" Link="MathTools\Geometry\LineSegment.cs" />
     <Compile Include="..\drewCo.Tools\MathTools\Geometry\Polygon.cs" Link="MathTools\Geometry\Polygon.cs" />

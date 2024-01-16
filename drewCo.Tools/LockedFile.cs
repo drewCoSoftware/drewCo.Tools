@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace drewCo.Tools.Curations
+namespace drewCo.Tools
 {
   // ============================================================================================================================
   public class LockedFile

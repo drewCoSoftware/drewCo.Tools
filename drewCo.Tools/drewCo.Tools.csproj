@@ -100,7 +100,7 @@
     <Compile Include="Curations\ICollectionHelper.cs" />
     <Compile Include="Curations\IEnumHelpers.cs" />
     <Compile Include="Curations\IListHelpers.cs" />
-    <Compile Include="Curations\LockedFile.cs" />
+    <Compile Include="LockedFile.cs" />
     <Compile Include="Curations\MultiDictionary.cs" />
     <Compile Include="Curations\MultiDictionaryHelper.cs" />
     <Compile Include="Curations\ObjectPool.cs" />
