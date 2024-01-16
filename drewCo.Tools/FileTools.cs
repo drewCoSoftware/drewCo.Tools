@@ -1,5 +1,5 @@
 ﻿//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// Copyright ©2009-2023 Andrew A. Ritz, All Rights Reserved
+// Copyright ©2009-2024 Andrew A. Ritz, All Rights Reserved
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 using System;
 using System.Text;
@@ -126,14 +126,14 @@ namespace drewCo.Tools
     /// <summary>
     /// Sort the list of files (by path) by date, in descending order.
     /// </summary>
-    internal static string[] SortByDate(IEnumerable<string> files, bool descending = true)
+    public static string[] SortByDate(IEnumerable<string> files, bool descending = true)
     {
       var infos = (from x in files select new FileInfo(x));
       return SortByDate(infos, descending);
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    internal static string[] SortByDate(IEnumerable<FileInfo> files, bool descending = true)
+    public static string[] SortByDate(IEnumerable<FileInfo> files, bool descending = true)
     {
       IEnumerable<FileInfo> sorted = null;
       if (descending)
@@ -153,7 +153,7 @@ namespace drewCo.Tools
     /// <summary>
     /// Get the path of the most recent directory (by write time) in the given root dir.
     /// </summary>
-    internal static string GetMostRecentDirectory(string rootDir)
+    public static string GetMostRecentDirectory(string rootDir)
     {
       if (!Directory.Exists(rootDir)) { return null; }
 
@@ -166,7 +166,7 @@ namespace drewCo.Tools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    internal static FileInfo[] GetFileInfosByDate(string historyDir, string pattern, SearchOption allDirectories)
+    public static FileInfo[] GetFileInfosByDate(string historyDir, string pattern, SearchOption allDirectories)
     {
       string[] stateFiles = Directory.GetFiles(historyDir, "JobInfo.json", SearchOption.AllDirectories);
       var res = (from x in stateFiles select new FileInfo(x)).OrderByDescending(x => x.LastWriteTime).ToArray();
