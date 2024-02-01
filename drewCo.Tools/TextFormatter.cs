@@ -10,7 +10,6 @@ namespace drewCo.Tools
   /// This class is mainly used to format bits of text into a tabular format
   /// for consoles.
   /// </summary>
-  [Obsolete("Use the tools version!")]
   public class TextFormatter
   {
     private List<List<string>> _Lines = new List<List<string>>();
