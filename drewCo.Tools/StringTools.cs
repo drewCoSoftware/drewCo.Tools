@@ -1,5 +1,5 @@
 ﻿//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// Copyright ©2009-2022 Andrew A. Ritz, All Rights Reserved
+// Copyright ©2009-2024 Andrew A. Ritz, All Rights Reserved
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 using System;
@@ -28,6 +28,28 @@ namespace drewCo.Tools
   // ============================================================================================================================
   public partial class StringTools
   {
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static string PadString(string input, int paddedLength)
+    {
+      int padSize = paddedLength - input.Length;
+      if (padSize <= 0) { return input; }
+
+      string padWith = new string(' ', padSize);
+
+      var side = EPadSide.Right;
+      switch (side)
+      {
+        case EPadSide.Left:
+          return padWith + input;
+
+        case EPadSide.Right:
+          return input + padWith;
+
+        default:
+          throw new NotSupportedException();
+      }
+    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -1043,6 +1065,7 @@ namespace drewCo.Tools
       _Encoding = encoding_;
     }
 
+    // --------------------------------------------------------------------------------------------------------------------------
     public override Encoding Encoding
     {
       get
@@ -1052,5 +1075,10 @@ namespace drewCo.Tools
     }
   }
 
+  // --------------------------------------------------------------------------------------------------------------------------
+  /// <summary>
+  /// Describes what side of a string padding may be applied to.
+  /// </summary>
+  public enum EPadSide { Invalid = 0, Left, Right }
 
 }

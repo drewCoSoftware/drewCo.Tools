@@ -117,6 +117,7 @@
     <Compile Include="MathTools\Vector2.cs" />
     <Compile Include="MathTools\Vector2Extensions.cs" />
     <Compile Include="ProcessTools.cs" />
+    <Compile Include="TextFormatter.cs" />
     <Compile Include="UserTools.cs" />
     <Compile Include="_UnitTesting\ObjectInspector.cs" />
     <Compile Include="ReflectionTools\DataSource.cs" />
