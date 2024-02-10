@@ -98,12 +98,38 @@ namespace drewCo.Tools
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
+    /// This computes a valid filename from an input URI.
+    /// The computed filename is safe on Windows, Linux, and MacOS filesystems.
+    /// </summary>
+    /// <param name="preserveScheme">When false, this will remove scheme information (http/https/etc) from the url.</param>
+    public static string TranslateUrlToFilename(Uri uri, bool preserveScheme = false)
+    {
+      string useUrl = uri.Scheme + "//" + uri.AbsolutePath;
+      if (!string.IsNullOrWhiteSpace(uri.Query))
+      {
+        useUrl += "?" + uri.Query;
+      }
+      string res = TranslateUrlToFilename(useUrl);
+      return res;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
     /// This computes a valid filename from an input URL.
     /// The computed filename is safe on Windows, Linux, and MacOS filesystems.
     /// </summary>
-    public static string TranslateUrlToFilename(string url)
+    /// <remarks>
+    /// This function assumes that you are passing a valid url.
+    /// This function will remove any scheme information from the url
+    /// </remarks>
+    /// <param name="preserveScheme">When false, this will remove scheme information (http/https/etc) from the url.</param>
+    public static string TranslateUrlToFilename(string url, bool preserveScheme = false)
     {
-      string res = Regex.Replace(url, "http(s)?://", "");
+      string res = url;
+      if (!preserveScheme)
+      {
+        res = Regex.Replace(url, "http(s)?://", "");
+      }
       res = res.Replace("/", "_");
       res = res.Replace("?", "qs_");
       return res;
