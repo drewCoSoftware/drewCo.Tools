@@ -10,6 +10,7 @@ using System.Security.Principal;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Diagnostics;
 
 #if NETFX_CORE
 
@@ -862,9 +863,17 @@ namespace drewCo.Tools
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
     /// Empty the contents of the given directory, without deleting it.
+    /// If the directoy does not exist, nothing will happen.
     /// </summary>
     public static void EmptyDirectory(string dirPath)
     {
+      if (!Directory.Exists(dirPath))
+      {
+        // VERBOSE:
+        Debug.WriteLine($"FileTools.EmptyDirectory: The directory with path: {dirPath} does not exist!");
+        return;
+      }
+
       string[] allFiles = Directory.GetFiles(dirPath, "*.*");
       foreach (var f in allFiles)
       {
