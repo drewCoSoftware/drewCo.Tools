@@ -13,6 +13,25 @@ namespace drewCo.Tools.Testers
   public class StringToolsTesters
   {
 
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Shows us that we can preserve folders (directories) when translating url names.
+    /// </summary>
+    [TestMethod]
+    public void CanPreserveFoldersInUrlTranslations()
+    {
+      const string TEST_URL = "https://my/folder/here/something.jpg";
+      string translated = StringTools.TranslateUrlToFilename(TEST_URL);
+
+      string expected = "my" + Path.DirectorySeparatorChar + "folder" + Path.DirectorySeparatorChar + "here";
+
+
+      // Make sure that the directory name is correct...
+      string dirName = Path.GetDirectoryName(translated);
+      Assert.AreEqual(expected, dirName, "Folder names were not correctly preserved!");
+    }
+
+
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>

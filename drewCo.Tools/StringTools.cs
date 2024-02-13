@@ -102,14 +102,15 @@ namespace drewCo.Tools
     /// The computed filename is safe on Windows, Linux, and MacOS filesystems.
     /// </summary>
     /// <param name="preserveScheme">When false, this will remove scheme information (http/https/etc) from the url.</param>
-    public static string TranslateUrlToFilename(Uri uri, bool preserveScheme = false)
+    /// <param name="preserveFolders">When true, slashes ('/') in the url will be represented as folders.  If false, the url will be translated to a single file name.</param>
+    public static string TranslateUrlToFilename(Uri uri, bool preserveScheme = false, bool preserveFolders = true)
     {
       string useUrl = uri.Scheme + "//" + uri.AbsolutePath;
       if (!string.IsNullOrWhiteSpace(uri.Query))
       {
         useUrl += "?" + uri.Query;
       }
-      string res = TranslateUrlToFilename(useUrl);
+      string res = TranslateUrlToFilename(useUrl, preserveScheme, preserveFolders);
       return res;
     }
 
@@ -123,14 +124,28 @@ namespace drewCo.Tools
     /// This function will remove any scheme information from the url
     /// </remarks>
     /// <param name="preserveScheme">When false, this will remove scheme information (http/https/etc) from the url.</param>
-    public static string TranslateUrlToFilename(string url, bool preserveScheme = false)
+    /// <param name="preserveFolders">When true, slashes ('/') in the url will be represented as folders.  If false, the url will be translated to a single file name.</param>
+    public static string TranslateUrlToFilename(string url, bool preserveScheme = false, bool preserveFolders = true)
     {
       string res = url;
       if (!preserveScheme)
       {
         res = Regex.Replace(url, "http(s)?://", "");
       }
-      res = res.Replace("/", "_");
+      else
+      {
+        res = Regex.Replace(url, "(http[s])?://", "$1__");
+      }
+
+      if (preserveFolders)
+      {
+        res = res.Replace('/', Path.DirectorySeparatorChar);
+      }
+      else
+      {
+        res = res.Replace("/", "_");
+      }
+
       res = res.Replace("?", "qs_");
       return res;
     }
