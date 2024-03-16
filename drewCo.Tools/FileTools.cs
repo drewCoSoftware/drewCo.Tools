@@ -47,6 +47,10 @@ namespace drewCo.Tools
   {
 
 
+
+
+
+
 #if NET6_0_OR_GREATER
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -85,25 +89,118 @@ namespace drewCo.Tools
       return res.ToArray();
     }
 
+    // ============================================================================================================================
+    public enum EDateComparisonType
+    {
+      /// <summary>
+      /// Indicates that a variable of <see cref="EDateComparisonType"/> may not have been initialized correctly!
+      /// </summary>
+      Invalid = -1,
+      Before = 0,
+      After = 1,
+      On = 2,
+      BeforeOrOn = 3,
+      OnOrAfter = 4
+    }
+
+    // ============================================================================================================================
+    public class FindFilesOptions
+    {
+      /// <summary>
+      /// A predicate that will be applied to all files.
+      /// If false, the file will be excluded.
+      /// </summary>
+      public Predicate<FileInfo> Filter = null;
+
+      /// <summary>
+      /// Traditional DOS type name filter to use.  *.*, *.txt, etc.
+      /// Use <see cref="Filter" /> for more advanced filtering.
+      /// </summary>
+      public string DOSNameFilter = "*.*";
+
+      /// <summary>
+      /// Include subdirectories when searching?
+      /// </summary>
+      public bool IncludeSubDirectories = false;
+
+      /// <summary>
+      /// If comparing by date, this is the date cutoff.
+      /// </summary>
+      /// <remarks>
+      /// the last write time is always used when comparing dates.
+      /// </remarks>
+      public Nullable<DateTimeOffset> Cutoff = null;
+
+      /// <summary>
+      /// How do we compare the <see cref="Cutoff" /> date to the file date. 
+      /// </summary>
+      public EDateComparisonType DateCompareType = EDateComparisonType.After;
+    }
+
+
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
-    /// Find all of the files in the given directory that match the filter.
+    /// Finds all files in the given directory using the given set of options.
     /// </summary>
-    public static string[] FindAllFiles(string fromDir, bool includeSubdirectories, Predicate<string> filter)
+    public static string[] FindFiles(string fromDir, FindFilesOptions options)
     {
       if (!Directory.Exists(fromDir))
       {
         throw new DirectoryNotFoundException($"The directory: '{fromDir}' does not exist!");
       }
 
-      var res = new List<string>();
-      string[] allFiles = Directory.GetFiles(fromDir, "*.*", includeSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-      foreach (var f in allFiles)
+      var useFilter = options.Filter;
+
+      // Create a date cutoff predicate to combine with the current predicate.
+      // There are all kinds of ways to optimize this with logic + codegen.
+      // We could even just have a predefined functions arrays whos indexes match up to the enum values....
+      if (options.Cutoff != null)
       {
-        bool isMatch = filter(f);
-        if (isMatch)
+        Predicate<FileInfo> cutoffFunc = (x) =>
         {
-          res.Add(f);
+          switch (options.DateCompareType)
+          {
+            case EDateComparisonType.On:
+              return x.LastWriteTime == options.Cutoff;
+            case EDateComparisonType.After:
+              return x.LastWriteTime > options.Cutoff;
+            case EDateComparisonType.Before:
+              return x.LastWriteTime < options.Cutoff;
+            case EDateComparisonType.OnOrAfter:
+              return x.LastWriteTime >= options.Cutoff;
+            case EDateComparisonType.BeforeOrOn:
+              return x.LastWriteTime <= options.Cutoff;
+
+            default:
+              throw new NotSupportedException($"The date comparison type: {options.DateCompareType} is not supported!");
+          }
+        };
+
+        if (useFilter == null)
+        {
+          useFilter = cutoffFunc;
+        }
+        else
+        {
+          // Combine date and user filter.
+          // This is how we could combine many many different types of filters.
+          useFilter = (x) => useFilter(x) && cutoffFunc(x);
+        }
+      }
+
+
+      var res = new List<string>();
+      FileInfo[] allInfos = GetFileInfos(fromDir, options.DOSNameFilter, options.IncludeSubDirectories);
+      if (useFilter != null)
+      {
+        // OPTIMIZE: for loop + skip array convert.
+        foreach (var f in allInfos)
+        {
+          bool isMatch = useFilter(f);
+          if (isMatch)
+          {
+            res.Add(f.FullName);
+          }
         }
       }
 
@@ -112,16 +209,71 @@ namespace drewCo.Tools
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
-    /// This will delete all files from the given directory that match <see cref="filter"/>
+    /// Find all of the files in the given directory that match the filter.
     /// </summary>
-    public static void RemoveAllFiles(string fromDir, bool includeSubdirectories, Predicate<string> filter)
+    public static string[] FindAllFiles(string fromDir, bool includeSubdirectories, Predicate<string> namePredicate)
     {
-      var match = FindAllFiles(fromDir, includeSubdirectories, filter);
+      if (!Directory.Exists(fromDir))
+      {
+        throw new DirectoryNotFoundException($"The directory: '{fromDir}' does not exist!");
+      }
+
+      var options = new FindFilesOptions()
+      {
+        IncludeSubDirectories = includeSubdirectories,
+      };
+      if (namePredicate != null)
+      {
+        options.Filter = (x) => namePredicate(x.FullName);
+      }
+
+      var res = FindFiles(fromDir, options);
+      return res;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This will delete all files from the given directory that match <see paramref="nameFilter"/>
+    /// </summary>
+    public static void RemoveAllFiles(string fromDir, bool includeSubdirectories, Predicate<string> nameFilter)
+    {
+      var match = FindAllFiles(fromDir, includeSubdirectories, nameFilter);
       foreach (var m in match)
       {
         FileTools.DeleteExistingFile(m);
       }
     }
+
+
+    //// --------------------------------------------------------------------------------------------------------------------------
+    //public static IEnumerable<FileInfo> FindFilesOlderThan(DateTimeOffset cutoff, string dir, string filter)
+    //{
+    //  var fileInfos = FileTools.GetFileInfosByDate(dir, filter, SearchOption.TopDirectoryOnly);
+    //  var tooOld = (from x in fileInfos
+    //                where x.LastWriteTime <= cutoff
+    //                select x);
+    //  return tooOld;
+    //}
+
+    //// --------------------------------------------------------------------------------------------------------------------------
+    //public static void RemoveFilesOlderThan(string directory, string filter, TimeSpan age)
+    //{
+    //  var cutoff = DateTimeOffset.Now - age;
+    //  RemoveFilesOlderThan(directory, filter, cutoff);
+    //}
+
+    //// --------------------------------------------------------------------------------------------------------------------------
+    //public static void RemoveFilesOlderThan(string targetDirectory, string filter, DateTimeOffset cutoff)
+    //{
+    //  var toDelete = FindFilesOlderThan(cutoff, targetDirectory, filter);
+    //  foreach (var item in toDelete)
+    //  {
+    //    System.IO.File.Delete(item.FullName);
+    //  }
+    //}
+
+
+
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -163,6 +315,30 @@ namespace drewCo.Tools
       var first = dirInfos.FirstOrDefault();
 
       string res = first != null ? first.FullName : null;
+      return res;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Similar to Directory.GetFiles, but returns an array of FileInfo instead.
+    /// </summary>
+    public static FileInfo[] GetFileInfos(string fromDir, string filter, bool includeSubDirectories)
+    {
+      if (!Directory.Exists(fromDir))
+      {
+        throw new DirectoryNotFoundException($"The directory: '{fromDir}' does not exist!");
+      }
+
+      string[] paths = Directory.GetFiles(fromDir, filter, includeSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+
+      // TODO: Optimize w/ for loop.
+      int len = paths.Length;
+      var res = new FileInfo[len];
+      for (int i = 0; i < len; i++)
+      {
+        res[i] = new FileInfo(paths[i]);
+      }
+
       return res;
     }
 
@@ -284,6 +460,11 @@ namespace drewCo.Tools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Load the json file at the given path.
+    /// If the file does not exist, a FileNotFoundException will be thrown.
+    /// Use <see cref="LoadExistingJson{T}(string)"/> if you want non-existing files to return null instead of throwing an exception.
+    /// </summary>
     public static T? LoadJson<T>(string path)
       where T : class
     {

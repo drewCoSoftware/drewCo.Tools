@@ -21,6 +21,72 @@ namespace drewCo.Tools.Testers
     public const string TEST_DEFAULT_VALUE = "This is a test!";
 
     // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This shows that we can find files using certain date criteria.
+    /// </summary>
+    [TestMethod]
+    public void CanFindFilesByDate()
+    {
+      // Create a test dir + populate it with some files.
+      // Set each write time like 1 hour apart.
+
+      string testDir = $"{nameof(CanFindFilesByDate)}_test-files";
+      FileTools.EmptyDirectory(testDir);
+      FileTools.CreateDirectory(testDir);
+      DateTime startDate = new DateTime(2000, 1, 1);
+
+      const int FILE_COUNT = 10;
+      for (int i = 0; i < FILE_COUNT; i++)
+      {
+        //  make the files....
+        string path = Path.Combine(testDir, $"test-file_{i}");
+        using (var fs = File.Create(path))
+        {
+          EZWriter.RawString(fs, "Hello " + i);
+        }
+
+        var fi = new FileInfo(path);
+        fi.LastWriteTime = startDate + (TimeSpan.FromHours(i));
+      }
+
+      // Show we can find files before and after some certain date.
+      // Show that no files outside of a certain bound will be located.
+      DateTime cutoff = startDate + (TimeSpan.FromHours(FILE_COUNT / 2));
+
+      // BEFORE:
+      {
+        var files = FileTools.FindFiles(testDir, new FileTools.FindFilesOptions()
+        {
+          Cutoff = cutoff,
+          DateCompareType = FileTools.EDateComparisonType.Before
+        });
+
+        foreach (var file in files)
+        {
+          var fi = new FileInfo(file);
+          Assert.IsTrue(fi.LastWriteTime < cutoff, "Incorrect write time!");
+        }
+      }
+
+      // AFTER:
+      {
+        var files = FileTools.FindFiles(testDir, new FileTools.FindFilesOptions()
+        {
+          Cutoff = cutoff,
+          DateCompareType = FileTools.EDateComparisonType.After
+        });
+
+        foreach (var file in files)
+        {
+          var fi = new FileInfo(file);
+          Assert.IsTrue(fi.LastWriteTime > cutoff, "Incorrect write time!");
+        }
+      }
+
+    }
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
     [TestMethod]
     public void CanCreateBackupFile()
     {
