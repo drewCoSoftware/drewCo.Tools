@@ -100,6 +100,7 @@
     <Compile Include="Curations\ICollectionHelper.cs" />
     <Compile Include="Curations\IEnumHelpers.cs" />
     <Compile Include="Curations\IListHelpers.cs" />
+    <Compile Include="FileTools\FileToolsExtra.cs" />
     <Compile Include="LockedFile.cs" />
     <Compile Include="Curations\MultiDictionary.cs" />
     <Compile Include="Curations\MultiDictionaryHelper.cs" />
@@ -124,7 +125,7 @@
     <Compile Include="ReflectionTools\ReflectionTools.cs" />
     <Compile Include="Serialization\EZReader.cs" />
     <Compile Include="Serialization\EZWriter.cs" />
-    <Compile Include="FileTools.cs" />
+    <Compile Include="FileTools\FileTools.cs" />
     <Compile Include="IDeepCopy.cs" />
     <Compile Include="Impersonator.cs" />
     <Compile Include="PerfLog.cs" />

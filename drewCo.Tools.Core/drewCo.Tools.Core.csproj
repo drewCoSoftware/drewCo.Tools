@@ -8,7 +8,7 @@
     <Authors>Andrew A. Ritz</Authors>
     <Company>drewCo Software</Company>
     <Description>A useful set of utility code.</Description>
-    <Copyright>Copyright &#169;Andrew A. Ritz  2012-2024</Copyright>
+    <Copyright>Copyright ©Andrew A. Ritz  2012-2024</Copyright>
     <FileVersion>1.3.1.3</FileVersion>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
@@ -43,6 +43,8 @@
     <Compile Include="..\drewCo.Tools\DateTools.cs" Link="DateTools.cs" />
     <Compile Include="..\drewCo.Tools\DTOMapper.cs" Link="DTOMapper.cs" />
     <Compile Include="..\drewCo.Tools\ExceptionDetail.cs" Link="ExceptionDetail.cs" />
+    <Compile Include="..\drewCo.Tools\FileTools\FileTools.cs" Link="FileTools\FileTools.cs" />
+    <Compile Include="..\drewCo.Tools\FileTools\FileToolsExtra.cs" Link="FileTools\FileToolsExtra.cs" />
     <Compile Include="..\drewCo.Tools\Gopher.cs" Link="Gopher.cs" />
     <Compile Include="..\drewCo.Tools\JSONFile.cs" Link="JSONFile.cs" />
     <Compile Include="..\drewCo.Tools\LockedFile.cs" Link="LockedFile.cs" />
@@ -58,7 +60,6 @@
     <Compile Include="..\drewCo.Tools\ReflectionTools\ReflectionTools.cs" Link="ReflectionTools\ReflectionTools.cs" />
     <Compile Include="..\drewCo.Tools\Serialization\EZReader.cs" Link="Serialization\EZReader.cs" />
     <Compile Include="..\drewCo.Tools\Serialization\EZWriter.cs" Link="Serialization\EZWriter.cs" />
-    <Compile Include="..\drewCo.Tools\FileTools.cs" Link="FileTools.cs" />
     <Compile Include="..\drewCo.Tools\IDeepCopy.cs" Link="IDeepCopy.cs" />
     <Compile Include="..\drewCo.Tools\Impersonator.cs" Link="Impersonator.cs" />
     <Compile Include="..\drewCo.Tools\PerfLog.cs" Link="PerfLog.cs" />

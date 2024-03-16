@@ -1449,6 +1449,8 @@ namespace drewCo.Tools
   // ============================================================================================================================
   public class FindFilesOptions
   {
+    public const string DEFAULT_DOS_NAME_FILTER = "*.*";
+
     /// <summary>
     /// A predicate that will be applied to all files.
     /// If false, the file will be excluded.
@@ -1459,7 +1461,7 @@ namespace drewCo.Tools
     /// Traditional DOS type name filter to use.  *.*, *.txt, etc.
     /// Use <see cref="Filter" /> for more advanced filtering.
     /// </summary>
-    public string DOSNameFilter = "*.*";
+    public string DOSNameFilter = DEFAULT_DOS_NAME_FILTER;
 
     /// <summary>
     /// Include subdirectories when searching?
