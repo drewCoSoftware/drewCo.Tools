@@ -89,54 +89,6 @@ namespace drewCo.Tools
       return res.ToArray();
     }
 
-    // ============================================================================================================================
-    public enum EDateComparisonType
-    {
-      /// <summary>
-      /// Indicates that a variable of <see cref="EDateComparisonType"/> may not have been initialized correctly!
-      /// </summary>
-      Invalid = -1,
-      Before = 0,
-      After = 1,
-      On = 2,
-      BeforeOrOn = 3,
-      OnOrAfter = 4
-    }
-
-    // ============================================================================================================================
-    public class FindFilesOptions
-    {
-      /// <summary>
-      /// A predicate that will be applied to all files.
-      /// If false, the file will be excluded.
-      /// </summary>
-      public Predicate<FileInfo> Filter = null;
-
-      /// <summary>
-      /// Traditional DOS type name filter to use.  *.*, *.txt, etc.
-      /// Use <see cref="Filter" /> for more advanced filtering.
-      /// </summary>
-      public string DOSNameFilter = "*.*";
-
-      /// <summary>
-      /// Include subdirectories when searching?
-      /// </summary>
-      public bool IncludeSubDirectories = false;
-
-      /// <summary>
-      /// If comparing by date, this is the date cutoff.
-      /// </summary>
-      /// <remarks>
-      /// the last write time is always used when comparing dates.
-      /// </remarks>
-      public Nullable<DateTimeOffset> Cutoff = null;
-
-      /// <summary>
-      /// How do we compare the <see cref="Cutoff" /> date to the file date. 
-      /// </summary>
-      public EDateComparisonType DateCompareType = EDateComparisonType.After;
-    }
-
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
@@ -1479,6 +1431,54 @@ namespace drewCo.Tools
   }
 
 #endif
+
+  // ============================================================================================================================
+  public enum EDateComparisonType
+  {
+    /// <summary>
+    /// Indicates that a variable of <see cref="EDateComparisonType"/> may not have been initialized correctly!
+    /// </summary>
+    Invalid = -1,
+    Before = 0,
+    After = 1,
+    On = 2,
+    BeforeOrOn = 3,
+    OnOrAfter = 4
+  }
+
+  // ============================================================================================================================
+  public class FindFilesOptions
+  {
+    /// <summary>
+    /// A predicate that will be applied to all files.
+    /// If false, the file will be excluded.
+    /// </summary>
+    public Predicate<FileInfo> Filter = null;
+
+    /// <summary>
+    /// Traditional DOS type name filter to use.  *.*, *.txt, etc.
+    /// Use <see cref="Filter" /> for more advanced filtering.
+    /// </summary>
+    public string DOSNameFilter = "*.*";
+
+    /// <summary>
+    /// Include subdirectories when searching?
+    /// </summary>
+    public bool IncludeSubDirectories = false;
+
+    /// <summary>
+    /// If comparing by date, this is the date cutoff.
+    /// </summary>
+    /// <remarks>
+    /// the last write time is always used when comparing dates.
+    /// </remarks>
+    public Nullable<DateTimeOffset> Cutoff = null;
+
+    /// <summary>
+    /// How do we compare the <see cref="Cutoff" /> date to the file date. 
+    /// </summary>
+    public EDateComparisonType DateCompareType = EDateComparisonType.After;
+  }
 
 }
 

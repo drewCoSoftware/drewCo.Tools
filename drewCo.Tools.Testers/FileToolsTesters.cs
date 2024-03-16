@@ -28,13 +28,13 @@ namespace drewCo.Tools.Testers
     public void CanFindFilesByDate()
     {
       // Create a test dir + populate it with some files.
-      // Set each write time like 1 hour apart.
 
       string testDir = $"{nameof(CanFindFilesByDate)}_test-files";
       FileTools.EmptyDirectory(testDir);
       FileTools.CreateDirectory(testDir);
       DateTime startDate = new DateTime(2000, 1, 1);
 
+      // Set each write time like 1 hour apart.
       const int FILE_COUNT = 10;
       for (int i = 0; i < FILE_COUNT; i++)
       {
@@ -55,10 +55,10 @@ namespace drewCo.Tools.Testers
 
       // BEFORE:
       {
-        var files = FileTools.FindFiles(testDir, new FileTools.FindFilesOptions()
+        var files = FileTools.FindFiles(testDir, new FindFilesOptions()
         {
           Cutoff = cutoff,
-          DateCompareType = FileTools.EDateComparisonType.Before
+          DateCompareType = EDateComparisonType.Before
         });
 
         foreach (var file in files)
@@ -70,10 +70,10 @@ namespace drewCo.Tools.Testers
 
       // AFTER:
       {
-        var files = FileTools.FindFiles(testDir, new FileTools.FindFilesOptions()
+        var files = FileTools.FindFiles(testDir, new FindFilesOptions()
         {
           Cutoff = cutoff,
-          DateCompareType = FileTools.EDateComparisonType.After
+          DateCompareType = EDateComparisonType.After
         });
 
         foreach (var file in files)
