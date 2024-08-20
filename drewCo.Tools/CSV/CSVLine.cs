@@ -10,6 +10,7 @@ using System.Reflection;
 namespace drewCo.Tools.CSV
 {
   // ============================================================================================================================
+  [Obsolete("This will be deleted in the future! Use CsvHelper instead. https://github.com/JoshClose/CsvHelper")]
   public class CSVLine
   {
     private CSVColumnMap ColumnMap = null;
@@ -287,6 +288,7 @@ namespace drewCo.Tools.CSV
   }
 
   // ============================================================================================================================
+  [Obsolete("This will be deleted in the future! Use CsvHelper instead. https://github.com/JoshClose/CsvHelper")]
   internal class CSVColToPropertyMap
   {
     public string ColName { get; set; }

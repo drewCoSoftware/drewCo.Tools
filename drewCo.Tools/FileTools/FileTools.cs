@@ -31,6 +31,7 @@ using System.Text.Json;
 using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Diagnostics;
+using System.Net.Http.Headers;
 #endif
 
 namespace drewCo.Tools
@@ -47,6 +48,21 @@ namespace drewCo.Tools
   {
 
 
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Replaces all illegal filename characters (and optionall the space character) with '_'
+    /// </summary>
+    public static string ComputeLegalFileName(string fromString, bool replaceSpaces = true)
+    {
+      string res = fromString;
+      var toReplace = Path.GetInvalidFileNameChars().Append(' ');
+      foreach (var c in toReplace)
+      {
+        res = res.Replace(c, '_');
+      }
+      return res;
+    }
 
 
 
@@ -295,14 +311,12 @@ namespace drewCo.Tools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public static FileInfo[] GetFileInfosByDate(string historyDir, string pattern, SearchOption allDirectories)
+    public static FileInfo[] GetFileInfosByDate(string historyDir, string dosFilenameFilter, SearchOption allDirectories)
     {
-      string[] stateFiles = Directory.GetFiles(historyDir, "JobInfo.json", SearchOption.AllDirectories);
+      string[] stateFiles = Directory.GetFiles(historyDir, dosFilenameFilter, SearchOption.AllDirectories);
       var res = (from x in stateFiles select new FileInfo(x)).OrderByDescending(x => x.LastWriteTime).ToArray();
       return res;
     }
-
-
 
 
     // --------------------------------------------------------------------------------------------------------------------------

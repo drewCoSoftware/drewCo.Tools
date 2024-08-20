@@ -12,7 +12,6 @@ if (Item-Exists("nuget-build")) {
     New-Item "nuget-build" -ItemType "Directory"
 }
 New-Item "nuget-build\lib\net472" -ItemType "Directory"
-New-Item "nuget-build\lib\net5.0" -ItemType "Directory"
 New-Item "nuget-build\lib\net6.0" -ItemType "Directory"
 
 
@@ -34,10 +33,10 @@ Copy-Item -Path ".\drewCo.Tools\bin\Any CPU\Release\drewCo.Tools.xml" "nuget-bui
 # Copy-Item -Path ".\drewCo.Tools.Core\bin\Release\netcoreapp3.1\drewCo.Tools.xml" "nuget-build\lib\netcoreapp3.1\drewCo.Tools.xml"
 
 # NETCORE 5.0
-Copy-Item -Path ".\drewCo.Tools.Core\bin\Release\net5.0\drewCo.Tools.dll" "nuget-build\lib\net5.0\drewCo.Tools.dll"
-Copy-Item -Path ".\drewCo.Tools.Core\bin\Release\net5.0\drewCo.Tools.pdb" "nuget-build\lib\net5.0\drewCo.Tools.pdb"
-Copy-Item -Path ".\drewCo.Tools.Core\bin\Release\net5.0\drewCo.Tools.xml" "nuget-build\lib\net5.0\drewCo.Tools.xml"
-Copy-Item -Path ".\drewCo.Tools.Core\bin\Release\net5.0\drewCo.Tools.deps.json" "nuget-build\lib\net5.0\drewCo.Tools.deps.json"
+# Copy-Item -Path ".\drewCo.Tools.Core\bin\Release\net5.0\drewCo.Tools.dll" "nuget-build\lib\net5.0\drewCo.Tools.dll"
+# Copy-Item -Path ".\drewCo.Tools.Core\bin\Release\net5.0\drewCo.Tools.pdb" "nuget-build\lib\net5.0\drewCo.Tools.pdb"
+# Copy-Item -Path ".\drewCo.Tools.Core\bin\Release\net5.0\drewCo.Tools.xml" "nuget-build\lib\net5.0\drewCo.Tools.xml"
+# Copy-Item -Path ".\drewCo.Tools.Core\bin\Release\net5.0\drewCo.Tools.deps.json" "nuget-build\lib\net5.0\drewCo.Tools.deps.json"
 
 # NETCORE 6.0
 Copy-Item -Path ".\drewCo.Tools.Core\bin\Release\net6.0\drewCo.Tools.dll" "nuget-build\lib\net6.0\drewCo.Tools.dll"

@@ -10,8 +10,9 @@ using System.Reflection;
 
 namespace drewCo.Tools.CSV
 {
-    // ============================================================================================================================
-    [DebuggerDisplay("{Name} ({Index})")]
+  // ============================================================================================================================
+  [Obsolete("This will be deleted in the future! Use CsvHelper instead. https://github.com/JoshClose/CsvHelper")]
+  [DebuggerDisplay("{Name} ({Index})")]
     public class CSVColumnMapping
     {
         public int Index { get; set; }
@@ -41,11 +42,12 @@ namespace drewCo.Tools.CSV
         }
     }
 
-    // ============================================================================================================================
-    /// <summary>
-    /// Associates names to indexes, etc. for extracting data from a csv line.
-    /// </summary>
-    public class CSVColumnMap
+  // ============================================================================================================================
+  /// <summary>
+  /// Associates names to indexes, etc. for extracting data from a csv line.
+  /// </summary>
+  [Obsolete("This will be deleted in the future! Use CsvHelper instead. https://github.com/JoshClose/CsvHelper")]
+  public class CSVColumnMap
     {
         private Dictionary<string, int> NamesToIndexes = null;
         public CSVColumnMap(List<CSVColumnMapping> mappings_)

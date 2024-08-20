@@ -14,6 +14,7 @@ namespace drewCo.Tools.CSV
   /// <summary>
   /// Represents CSV data on disk.
   /// </summary>
+  [Obsolete("This will be deleted in the future! Use CsvHelper instead. https://github.com/JoshClose/CsvHelper")]
   public class CSVFile
   {
 
@@ -340,7 +341,7 @@ namespace drewCo.Tools.CSV
   }
 
 
-
+  [Obsolete("This will be deleted in the future! Use CsvHelper instead. https://github.com/JoshClose/CsvHelper")]
   public static class Csv
   {
 
