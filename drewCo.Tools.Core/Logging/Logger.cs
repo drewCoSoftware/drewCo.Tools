@@ -9,10 +9,24 @@ namespace drewCo.Tools.Logging
 
   // ============================================================================================================================
   /// <summary>
+  /// Interface for the things that log.
+  /// </summary>
+  public interface ILogger
+  {
+    void Log(ELogLevel level, string message);
+    void Log(string level, string message);
+    void Verbose(string message);
+    void Info(string message);
+    void Warning(string message);
+    string? LogException(Exception? ex, string? introMessage = "An unhandled exception was encountered!");
+  }
+
+  // ============================================================================================================================
+  /// <summary>
   /// This is used for our logging purposes.
   /// REFACTOR: This logger is useful and should find its way to shared space!
   /// </summary>
-  public class Logger : IDisposable
+  public class Logger : ILogger, IDisposable
   {
     private const int DEFAULT_LEFT = -1;
 
@@ -30,6 +44,12 @@ namespace drewCo.Tools.Logging
     /// This event is fired when something is logged.
     /// </summary>
     public EventHandler<LogEventArgs> OnLogged = null;
+
+    /// <summary>
+    /// This property can be set so that your application can more conveniently access a logger across components.
+    /// The default value is an instance of NullLogger.
+    /// </summary>
+    public static ILogger? GlobalLogger { get; set; } = new NullLogger();
 
     // --------------------------------------------------------------------------------------------------------------------------
     public Logger() : this(new LoggerOptions())
