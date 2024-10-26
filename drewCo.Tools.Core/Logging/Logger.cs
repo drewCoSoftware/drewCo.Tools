@@ -45,11 +45,17 @@ namespace drewCo.Tools.Logging
     /// </summary>
     public EventHandler<LogEventArgs> OnLogged = null;
 
+
+    /// <summary>
+    /// A convenient way to provide access to a NullLogger instance..
+    /// </summary>
+    public static ILogger Null { get; private set; } = new NullLogger();
+
     /// <summary>
     /// This property can be set so that your application can more conveniently access a logger across components.
     /// The default value is an instance of NullLogger.
     /// </summary>
-    public static ILogger? GlobalLogger { get; set; } = new NullLogger();
+    public static ILogger? GlobalLogger { get; set; } = Logger.Null;
 
     // --------------------------------------------------------------------------------------------------------------------------
     public Logger() : this(new LoggerOptions())
