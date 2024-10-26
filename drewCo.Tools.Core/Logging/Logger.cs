@@ -6,20 +6,6 @@ using System.Linq;
 
 namespace drewCo.Tools.Logging
 {
-  // ============================================================================================================================
-  public class LogEventArgs : EventArgs
-  {
-
-    // --------------------------------------------------------------------------------------------------------------------------
-    public LogEventArgs(string level_, string message_)
-    {
-      Level = level_;
-      Message = message_;
-    }
-
-    public readonly string Level;
-    public readonly string Message;
-  }
 
   // ============================================================================================================================
   /// <summary>
@@ -96,7 +82,7 @@ namespace drewCo.Tools.Logging
         Debug.WriteLine(ex.Message);
       }
 
-      OnLogged?.Invoke(this, new LogEventArgs(level, message)); 
+      OnLogged?.Invoke(this, new LogEventArgs(level, message));
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
@@ -195,7 +181,7 @@ namespace drewCo.Tools.Logging
     // --------------------------------------------------------------------------------------------------------------------------
     /// <param name="introMessage">Introduction error message to print to the log. If null, no message will be used.</param>
     /// <returns>Path to the ExceptionDetail that was saved, if any.</returns>
-    internal string? LogException(Exception? ex, string? introMessage = "An unhandled exception was encountered!")
+    public string? LogException(Exception? ex, string? introMessage = "An unhandled exception was encountered!")
     {
       lock (ExceptionLock)
       {
@@ -222,7 +208,7 @@ namespace drewCo.Tools.Logging
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <inheritdoc path="WriteToConsole"/>     /*How does this work?*/
-    internal void WriteToConsole(string message)
+    public void WriteToConsole(string message)
     {
       WriteToConsole(message, DEFAULT_LEFT);
     }
@@ -232,7 +218,7 @@ namespace drewCo.Tools.Logging
     /// Write a message to the console only.
     /// This does not add a newline.
     /// </summary>
-    internal void WriteToConsole(string message, int left)
+    public void WriteToConsole(string message, int left)
     {
       if (Options.LogToConsole)
       {
@@ -248,7 +234,7 @@ namespace drewCo.Tools.Logging
     /// Write a message to the console only.
     /// This does not add a newline.
     /// </summary>
-    internal void WriteToConsole(string message, int left, int top, bool clearLineFirst = true)
+    public void WriteToConsole(string message, int left, int top, bool clearLineFirst = true)
     {
       if (Options.LogToConsole)
       {
@@ -313,10 +299,46 @@ namespace drewCo.Tools.Logging
   /// </summary>
   public enum ELogLevel
   {
+    /// <summary>
+    /// General information.
+    /// </summary>
     INFO,
+
+    /// <summary>
+    /// Something is not quite right, but not critical.
+    /// </summary>
     WARNING,
+
+    /// <summary>
+    /// There was an error.
+    /// </summary>
     ERROR,
-    VERBOSE
+
+    /// <summary>
+    /// Extra wordy logs, ususally for diagnostics or extra descriptions.
+    /// </summary>
+    VERBOSE,
+
+    /// <summary>
+    /// Messages for debug builds of your application.  Kind of like VERBOSE, but maybe more to the point.
+    /// </summary>
+    DEBUG
+  }
+
+
+  // ============================================================================================================================
+  public class LogEventArgs : EventArgs
+  {
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public LogEventArgs(string level_, string message_)
+    {
+      Level = level_;
+      Message = message_;
+    }
+
+    public readonly string Level;
+    public readonly string Message;
   }
 
 }
