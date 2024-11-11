@@ -20,6 +20,7 @@ namespace drewCo.Tools.Logging
     void Warning(string message);
     string? LogException(Exception? ex, string? introMessage = "An unhandled exception was encountered!");
     void Error(string message);
+    void Debug(string message);
   }
 
 }

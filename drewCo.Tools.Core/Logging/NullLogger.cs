@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace drewCo.Tools.Logging
     public void Info(string message) { }
     public void Warning(string message) { }
     public string? LogException(Exception? ex, string? introMessage = "An unhandled exception was encountered!") { return null; }
-    public void Error(string message) { } 
+    public void Error(string message) { }
+    public void Debug(string message) { }
   }
 }

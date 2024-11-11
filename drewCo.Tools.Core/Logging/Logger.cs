@@ -89,8 +89,8 @@ namespace drewCo.Tools.Logging
       catch (Exception ex)
       {
         // We have a catch-all here so that failure to write to the log will not crash the application.
-        Debug.WriteLine("Could not write log!");
-        Debug.WriteLine(ex.Message);
+        System.Diagnostics.Debug.WriteLine("Could not write log!");
+        System.Diagnostics.Debug.WriteLine(ex.Message);
       }
 
       OnLogged?.Invoke(this, new LogEventArgs(level, message));
@@ -137,6 +137,12 @@ namespace drewCo.Tools.Logging
     public void Info()
     {
       NewLine();
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public void Debug(string message)
+    {
+      Log(ELogLevel.DEBUG, message);
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
