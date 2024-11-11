@@ -18,5 +18,6 @@ namespace drewCo.Tools.Logging
     public void Info(string message) { }
     public void Warning(string message) { }
     public string? LogException(Exception? ex, string? introMessage = "An unhandled exception was encountered!") { return null; }
+    public void Error(string message) { } 
   }
 }

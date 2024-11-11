@@ -7,19 +7,6 @@ using System.Linq;
 namespace drewCo.Tools.Logging
 {
 
-  // ============================================================================================================================
-  /// <summary>
-  /// Interface for the things that log.
-  /// </summary>
-  public interface ILogger
-  {
-    void Log(ELogLevel level, string message);
-    void Log(string level, string message);
-    void Verbose(string message);
-    void Info(string message);
-    void Warning(string message);
-    string? LogException(Exception? ex, string? introMessage = "An unhandled exception was encountered!");
-  }
 
   // ============================================================================================================================
   /// <summary>
@@ -34,7 +21,6 @@ namespace drewCo.Tools.Logging
 
     public LoggerOptions Options { get; private set; } = null!;
     private FileStream? LogStream = null;
-    private bool UseAllLogLevels = false;
 
     private HashSet<string> UseLevels = null!;
 
@@ -76,7 +62,6 @@ namespace drewCo.Tools.Logging
       {
         UseLevels.Add(level);
       }
-      UseAllLogLevels = Options.LogLevels.Contains(LoggerOptions.ALL_LEVELS);
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
@@ -91,7 +76,7 @@ namespace drewCo.Tools.Logging
     public void Log(string level, string message)
     {
       // Only log the levels that we currently support.
-      if (!UseAllLogLevels && !Options.LogLevels.Contains(level))
+      if (!Options.LogLevels.Contains(level))
       {
         return;
       }
@@ -281,8 +266,8 @@ namespace drewCo.Tools.Logging
   // ============================================================================================================================
   public class LoggerOptions
   {
-
-    public const string ALL_LEVELS = "ALL";
+    //[Obsolete("We will no longer support this notion!")]
+    //public const string ALL_LEVELS = "ALL";
 
     /// <summary>
     /// Should log messages go to the console?
@@ -300,14 +285,43 @@ namespace drewCo.Tools.Logging
     public bool AppendLog { get; set; } = false;
 
     /// <summary>
-    /// Which log levels should be used?  If set to 'ALL', all messages will be used.
+    /// Which log levels should be used?
     /// </summary>
-    public string[] LogLevels { get; set; } = new[] { ALL_LEVELS };
+    public string[] LogLevels { get; set; } = new[] { ELogLevel.DEBUG.ToString(), ELogLevel.VERBOSE.ToString(), ELogLevel.WARNING.ToString(), ELogLevel.INFO.ToString(), ELogLevel.ERROR.ToString() };
 
     /// <summary>
     /// Directory that excception logs should be placed in.
     /// </summary>
     public string ExceptionsDir { get; set; } = "Exceptions";
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public void RemoveLogLevel(ELogLevel level)
+    {
+      RemoveLogLevel(level.ToString());
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public void AddLogLevel(ELogLevel level)
+    {
+      AddLogLevel(level.ToString());
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public void RemoveLogLevel(string level)
+    {
+      LogLevels = (from x in LogLevels where x != level select x).ToArray();
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public void AddLogLevel(string level)
+    {
+      if (!LogLevels.Contains(level.ToString()))
+      {
+        LogLevels = LogLevels.Concat(new[] { level }).ToArray();
+      }
+    }
+
 
     ///// <summary>
     ///// Instructs the logger how to format the messages. (Level, Timestamps, etc.)
@@ -317,6 +331,9 @@ namespace drewCo.Tools.Logging
     ///// Not really supported at this time. 
     ///// </remarks>
     //public string? LineFormat { get; set; } = null;
+
+
+
   }
 
   // ============================================================================================================================
