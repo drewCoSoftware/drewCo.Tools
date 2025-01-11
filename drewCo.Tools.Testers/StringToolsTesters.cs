@@ -1,17 +1,64 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿#if NETCOREAPP
+using NUnit.Framework;
+using TestMethod = NUnit.Framework.TestAttribute;
+#else
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace drewCo.Tools.Testers
 {
   // ============================================================================================================================
+#if !NETCOREAPP
   [TestClass]
+#endif
   public class StringToolsTesters
   {
+
+
+    // --------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Shows that our string truncation code actually works...
+    /// </summary>
+    [TestMethod]
+    public void CanTruncateString()
+    {
+      const int MAX_LEN = 10;
+
+      string testInput = new string('a', MAX_LEN * 2);
+
+      {
+        string truncated = StringTools.Truncate(testInput, MAX_LEN, true);
+        Assert.AreEqual(MAX_LEN, truncated.Length, "Truncated string is the wrong length!");
+        Assert.IsTrue(truncated.EndsWith(StringTools.ELLIPSIS), "Truncated string should end with the ellipsis!");
+      }
+
+      {
+        string truncated = StringTools.Truncate(testInput, MAX_LEN);
+        Assert.AreEqual(MAX_LEN, truncated.Length, "Truncated string is the wrong length!");
+        Assert.IsFalse(truncated.EndsWith(StringTools.ELLIPSIS), "Truncated string should not end with the ellipsis!");
+      }
+
+      const int SHORT_LEN = 3;
+      string testInput2 = new string('a', SHORT_LEN);
+      {
+        string truncated = StringTools.Truncate(testInput2 + testInput2, SHORT_LEN);
+        Assert.AreEqual(SHORT_LEN, truncated.Length);
+        Assert.IsFalse(truncated.EndsWith(StringTools.ELLIPSIS), "Truncated string should not end with the ellipsis!");
+      }
+
+
+      // Show that we won't include ellipsis on especially short strings.
+      {
+        string truncated = StringTools.Truncate(testInput2, SHORT_LEN, true);
+        Assert.AreEqual(SHORT_LEN, truncated.Length);
+        Assert.IsFalse(truncated.EndsWith(StringTools.ELLIPSIS), "Truncated string should not end with the ellipsis!");
+      }
+
+    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>

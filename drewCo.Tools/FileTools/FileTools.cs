@@ -47,6 +47,34 @@ namespace drewCo.Tools
 #endif
   {
 
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static void DeleteFilesOlderThan(string inDirectory, string pattern, TimeSpan maxAge)
+    {
+      DeleteFilesOlderThan(inDirectory, pattern, DateTimeOffset.UtcNow, maxAge, true);
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static void DeleteFilesOlderThan(string inDirectory, TimeSpan maxAge)
+    {
+      DeleteFilesOlderThan(inDirectory, "*.*", DateTimeOffset.UtcNow, maxAge, true);
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public static void DeleteFilesOlderThan(string inDirectory, string pattern, DateTimeOffset timestamp, TimeSpan maxAge, bool includeSubFolders)
+    {
+      if (!Directory.Exists(inDirectory)) { return; }
+
+      string[] candidates = Directory.GetFiles(inDirectory, pattern, (includeSubFolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly  ));
+      foreach (string path in candidates)
+      {
+        var fi = new FileInfo(path);
+        if (timestamp - fi.LastWriteTimeUtc >= maxAge)
+        {
+          FileTools.DeleteExistingFile(path);
+        }
+      }
+    }
+
 
 
     // --------------------------------------------------------------------------------------------------------------------------

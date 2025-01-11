@@ -12,6 +12,8 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 using SysMath = System.Math;
+using System.Diagnostics.SymbolStore;
+
 
 #if !NETFX_CORE
 using System.Security.Cryptography;
@@ -28,6 +30,56 @@ namespace drewCo.Tools
   // ============================================================================================================================
   public partial class StringTools
   {
+    public const string ELLIPSIS = "...";
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    // Use the form: *d *h *m *s for days, hours, minutes, seconds."
+    /// <summary>
+    /// Parses the input string and return a timespan instance.
+    /// </summary>
+    /// <param name="cacheAge">Use the form: *d *h *m *s for days, hours, minutes, seconds."</param>
+    public static TimeSpan ParseTimespanString(string cacheAge)
+    {
+      // TimeSpan res = new TimeSpan();
+      int days = 0;
+      int hours = 0;
+      int minutes = 0;
+      int seconds = 0;
+
+      cacheAge.Replace(":", " ");
+
+      string[] parts = cacheAge.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+      foreach (string part in parts)
+      {
+        string p = part.Trim();
+        char specifier = p[p.Length - 1];
+        switch (specifier)
+        {
+          case 'd':
+            days = int.Parse(p.Substring(0, p.Length - 1));
+            break;
+
+          case 'h':
+            hours = int.Parse(p.Substring(0, p.Length - 1));
+            break;
+
+          case 'm':
+            minutes = int.Parse(p.Substring(0, p.Length - 1));
+            break;
+
+          case 's':
+            seconds = int.Parse(p.Substring(0, p.Length - 1));
+            break;
+          default:
+            throw new NotSupportedException($"Format specifier: {specifier} is not supported!");
+        }
+
+      }
+
+      var res = new TimeSpan(days, hours, minutes, seconds);
+      return res;
+
+    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     public static string PadString(string input, int paddedLength)
@@ -236,13 +288,30 @@ namespace drewCo.Tools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public static string Truncate(string input, uint length)
+    /// <summary>
+    /// Truncate the input to the given length if its length exceeds it.  An ellipsis can optionally be
+    /// used at the end of the string.
+    /// </summary>
+    /// <param name="useEllipsis">If set, and ellipsis '...' will be the last characters of the truncated string.
+    /// If <paramref name="length"/> is less than the length of the ellipsis, 'useEllipsis' will be ignored.</param>
+    /// <returns></returns>
+    public static string Truncate(string input, uint length, bool useEllipsis = false)
     {
       if (input == null) { return input; }
       if (input.Length > length)
       {
-        string res = input.Substring(0, (int)length);
-        return res;
+        if (useEllipsis && length > ELLIPSIS.Length)
+        {
+          length = (uint)(length - ELLIPSIS.Length);
+          string res = input.Substring(0, (int)length) + ELLIPSIS;
+          return res;
+        }
+        else
+        {
+          string res = input.Substring(0, (int)length);
+          return res;
+        }
+
       }
       return input;
     }
