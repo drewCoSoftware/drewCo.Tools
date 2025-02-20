@@ -48,7 +48,8 @@ namespace drewCo.Tools
 
       cacheAge.Replace(":", " ");
 
-      string[] parts = cacheAge.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+      string[] parts = cacheAge.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
       foreach (string part in parts)
       {
         string p = part.Trim();
