@@ -23,7 +23,7 @@ namespace drewCo.Tools.Logging
     /// <summary>
     /// If file logging is active, this is the path where the file will be written to.
     /// </summary>
-    public string LogFilePath { get { return LogStream != null ? null : Options.LogFilePath; } }
+    public string LogFilePath { get { return LogStream == null ? null : Options.LogFilePath; } }
 
     public LoggerOptions Options { get; private set; } = null!;
 
@@ -48,6 +48,12 @@ namespace drewCo.Tools.Logging
     /// </summary>
     public static ILogger? GlobalLogger { get; set; } = Logger.Null;
 
+    /// <summary>
+    /// Lock that makes sure that this logger is threadsafe!
+    /// </summary>
+    private object WriteLock = new object();
+
+
     // --------------------------------------------------------------------------------------------------------------------------
     public Logger() : this(new LoggerOptions())
     { }
@@ -58,7 +64,7 @@ namespace drewCo.Tools.Logging
       Options = options_;
       if (Options.LogFilePath != null)
       {
-        LogStream = new FileStream(Options.LogFilePath, FileMode.Create, FileAccess.Write);
+        LogStream = new FileStream(Options.LogFilePath, FileMode.Create, FileAccess.ReadWrite);
       }
       FileTools.CreateDirectory(Options.ExceptionsDir);
 
@@ -109,20 +115,24 @@ namespace drewCo.Tools.Logging
       return message;
     }
 
+
     // --------------------------------------------------------------------------------------------------------------------------
     private void Write(string message)
     {
-      if (Options.LogToConsole)
+      lock (WriteLock)
       {
-        Console.WriteLine(message);
-      }
-      if (LogToFile)
-      {
-        int useLines = message == Environment.NewLine ? 0 : 1;
-        EZWriter.RawString(LogStream, message, useLines);
+        if (Options.LogToConsole)
+        {
+          Console.WriteLine(message);
+        }
+        if (LogToFile)
+        {
+          // int useLines = message == Environment.NewLine ? 0 : 1;
+          EZWriter.RawString(LogStream, (LogStream.Length > 0 ? Environment.NewLine : null) + message);
 
-        // TODO: Flush every n-messages.
-        LogStream!.Flush();
+          // TODO: Flush every n-messages.
+          LogStream!.Flush();
+        }
       }
     }
 
@@ -197,6 +207,29 @@ namespace drewCo.Tools.Logging
         LogStream.Dispose();
       }
       LogStream = null;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This allows us to get the current content of the log, if it is being written to disk.
+    /// </summary>
+    /// <returns></returns>
+    public string GetLogFileContent()
+    {
+      lock (WriteLock)
+      {
+        if (LogStream == null) { return null; }
+        var reader = new StreamReader(LogStream);
+        long cPos = LogStream.Position;
+        LogStream.Seek(0, SeekOrigin.Begin);
+
+        string res = reader.ReadToEnd();
+
+        // Put the rw-head back where it belongs!
+        LogStream.Seek(cPos, SeekOrigin.Begin);
+
+        return res;
+      }
     }
 
 
@@ -277,9 +310,6 @@ namespace drewCo.Tools.Logging
   // ============================================================================================================================
   public class LoggerOptions
   {
-    //[Obsolete("We will no longer support this notion!")]
-    //public const string ALL_LEVELS = "ALL";
-
     /// <summary>
     /// Should log messages go to the console?
     /// </summary>
