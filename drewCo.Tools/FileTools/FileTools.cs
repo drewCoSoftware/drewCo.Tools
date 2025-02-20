@@ -765,11 +765,16 @@ namespace drewCo.Tools
 #endif
     public static string GetAppDir()
     {
+
+    // https://stackoverflow.com/questions/3991933/get-path-for-my-exe
+
 #if NETFX_CORE
       string res = ApplicationData.Current.LocalFolder.Path;
       return res;
 #else
-      return Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
+      string res = AppContext.BaseDirectory;
+      return res;
+      // return Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
 #endif
     }
 
@@ -885,7 +890,7 @@ namespace drewCo.Tools
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
-    /// Get a sequential file name from an existing file.
+    /// Get a sequential file name using the given path as an example.
     /// </summary>
     public static string GetSequentialFileName(string path)
     {

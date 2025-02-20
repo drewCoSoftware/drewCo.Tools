@@ -18,9 +18,14 @@ namespace drewCo.Tools.Logging
     private const int DEFAULT_LEFT = -1;
 
     private bool LogToFile { get { return LogStream != null; } }
+    private FileStream? LogStream = null;
+
+    /// <summary>
+    /// If file logging is active, this is the path where the file will be written to.
+    /// </summary>
+    public string LogFilePath { get { return LogStream != null ? null : Options.LogFilePath; } }
 
     public LoggerOptions Options { get; private set; } = null!;
-    private FileStream? LogStream = null;
 
     private HashSet<string> UseLevels = null!;
 
