@@ -33,6 +33,26 @@ namespace drewCo.Tools
     public const string ELLIPSIS = "...";
 
     // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Convert the first character of the input string to lowercase.
+    /// </summary>
+    public static string LowerFirst(string input)
+    {
+      if (input.Length == 0) { return input; }
+
+      uint val = (uint)input[0];
+      if (val >= 65 & val <= 90)
+      {
+        val += 32;
+      }
+
+      // Too bad we can't just set the stupid character.  Might be useful to do so in an
+      // unsafe context tho!
+      string res = (char)val + input.Substring(1);
+      return res;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
     // Use the form: *d *h *m *s for days, hours, minutes, seconds."
     /// <summary>
     /// Parses the input string and return a timespan instance.
