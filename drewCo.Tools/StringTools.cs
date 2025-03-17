@@ -53,6 +53,20 @@ namespace drewCo.Tools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Remove all newline characters from the given input string.
+    /// Newlines can optionaly be replaced with space characters via <paramref name="replaceWithSpace"/>.
+    /// </summary>
+    public static string StripNewlines(string input, bool replaceWithSpace = false)
+    {
+      string replaceWith = replaceWithSpace ? " " : string.Empty;;
+
+      string res = input.Replace("\r\n", replaceWith).Replace("\r", replaceWith).Replace("\n", replaceWith);
+      return res;
+    }
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
     // Use the form: *d *h *m *s for days, hours, minutes, seconds."
     /// <summary>
     /// Parses the input string and return a timespan instance.
