@@ -64,7 +64,7 @@ namespace drewCo.Tools
     {
       if (!Directory.Exists(inDirectory)) { return; }
 
-      string[] candidates = Directory.GetFiles(inDirectory, pattern, (includeSubFolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly  ));
+      string[] candidates = Directory.GetFiles(inDirectory, pattern, (includeSubFolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly));
       foreach (string path in candidates)
       {
         var fi = new FileInfo(path);
@@ -766,7 +766,7 @@ namespace drewCo.Tools
     public static string GetAppDir()
     {
 
-    // https://stackoverflow.com/questions/3991933/get-path-for-my-exe
+      // https://stackoverflow.com/questions/3991933/get-path-for-my-exe
 
 #if NETFX_CORE
       string res = ApplicationData.Current.LocalFolder.Path;
@@ -1049,8 +1049,8 @@ namespace drewCo.Tools
     {
       if (!Directory.Exists(dirPath))
       {
-        // VERBOSE:
-        Debug.WriteLine($"FileTools.EmptyDirectory: The directory with path: {dirPath} does not exist!");
+        // DEBUG:
+        Debug.WriteLine($"DEBUG: The directory with path: {dirPath} does not exist and will not be emptied!");
         return;
       }
 
@@ -1295,6 +1295,11 @@ namespace drewCo.Tools
     // --------------------------------------------------------------------------------------------------------------------------
     public static string GetRootedPath(string path, string relPath = null)
     {
+      if (string.IsNullOrWhiteSpace(path))
+      {
+        throw new InvalidOperationException($"Please provide a valid path!");
+      }
+
       relPath = (relPath ?? GetAppDir());
       string fullPath;
       if (Path.IsPathRooted(path))
