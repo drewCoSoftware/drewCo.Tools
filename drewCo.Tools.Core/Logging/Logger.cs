@@ -242,7 +242,7 @@ namespace drewCo.Tools.Logging
       {
         if (ex == null) { return null; }
 
-        string exPath = FileTools.GetSequentialFileName(Options.ExceptionsDir, "ExceptionDetail", ".xml", 50000);
+        string exPath = FileTools.GetSequentialFileName(Options.ExceptionsDir, "ExceptionDetail", ".xml");
 
         var detail = new ExceptionDetail(ex);
         detail.ToXML().Save(exPath);

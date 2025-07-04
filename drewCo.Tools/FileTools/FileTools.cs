@@ -32,6 +32,8 @@ using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Diagnostics;
 using System.Net.Http.Headers;
+using System.Net.WebSockets;
+using System.Runtime.CompilerServices;
 #endif
 
 namespace drewCo.Tools
@@ -339,6 +341,9 @@ namespace drewCo.Tools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Get all file infos in the given directory / filter ordered by date with the newest first.
+    /// </summary>
     public static FileInfo[] GetFileInfosByDate(string historyDir, string dosFilenameFilter, SearchOption allDirectories)
     {
       string[] stateFiles = Directory.GetFiles(historyDir, dosFilenameFilter, SearchOption.AllDirectories);
@@ -903,24 +908,89 @@ namespace drewCo.Tools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Given the base directory and base file name, this function will return an unused path with a sequence number in the form:
+    /// {baseDir}-{baseName}-{sequence}.{extension}
+    /// This function is useful for saving logs records, etc.
+    /// </summary>
+    /// <remarks>
+    /// The number of files in baseDir can has an impact on the performance of this function.
+    /// It can have have especially poor performance in cases where baseDir has a large number of files whose sequences don't correspond to their write time, i.e. the newest file should also have the largest sequence number.
+    /// </remarks>
 #if NETFX_CORE
     public static string GetSequentialFileName(StorageFolder folder, string baseName, string extention, int sanityCount = 0x400)
     {
       string baseDir = folder.Path;
 #else
-    public static string GetSequentialFileName(string baseDir, string baseName, string extention, int sanityCount = 0x400)
+    public static string GetSequentialFileName(string baseDir, string baseName, string extension)
     {
 #endif
 
-      for (int i = 0; i < sanityCount; i++)
+      int maxNumber = 0;
+
+      // We want to find the highest file number....
+      var byDate = FileTools.GetFileInfosByDate(baseDir, $"{baseName}*{extension}", SearchOption.TopDirectoryOnly);
+      var oldest = byDate.FirstOrDefault();
+      if (oldest != null)
       {
-        string res = Path.Combine(baseDir, baseName + "-" + i + extention);
-        if (!File.Exists(res)) { return res; }
+        // Check for the number...
+        string numberString = Path.GetFileNameWithoutExtension(oldest.FullName).Replace($"{baseName}-", "");
+        if (int.TryParse(numberString, out int number))
+        {
+          maxNumber = number;
+        }
+        maxNumber++;
       }
 
-      // Maybe someone can do something about this if it becomes a problem...
-      throw new InvalidOperationException("Sanity count failed!");
+      if (maxNumber == 0)
+      {
+        return Path.Combine(baseDir, $"{baseName}{extension}");
+      }
 
+      string res = Path.Combine(baseDir, baseName + "-" + maxNumber + extension);
+      if (File.Exists(res))
+      {
+        // The file already exists, so our hueristic failed....
+        // At this point we should probably gather the max number from all files and use that....
+        // Probably not the optimal solution, but it should do the trick....
+        maxNumber = GetMaxFileNumber(byDate, baseName);
+
+        res = Path.Combine(baseDir, baseName + "-" + (maxNumber + 1) + extension);
+        if (File.Exists(res))
+        {
+          throw new InvalidOperationException($"The sequential file with path: {res} should not exist!");
+        }
+      }
+
+      return res;
+      //// var files = Directory.GetFiles(baseDir,  $"{baseName}*{extension}");
+
+
+      //for (int i = 0; i < sanityCount; i++)
+      //{
+      //  string res = Path.Combine(baseDir, baseName + "-" + i + extension);
+      //  if (!File.Exists(res)) { return res; }
+      //}
+
+      //// Maybe someone can do something about this if it becomes a problem...
+      //throw new InvalidOperationException("Sanity count failed!");
+
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    private static int GetMaxFileNumber(FileInfo[] byDate, string baseName)
+    {
+      int res = 0;
+      foreach (var item in byDate)
+      {
+        string number = Path.GetFileNameWithoutExtension(item.FullName).Replace(baseName + "-", "");
+        if (int.TryParse(number, out int useNumber))
+        {
+          res = Math.Max(res, useNumber);
+        }
+      }
+
+      return res;
     }
 
 
@@ -1423,7 +1493,8 @@ namespace drewCo.Tools
         commonRoot += (commonRoot != string.Empty ? new string(Path.DirectorySeparatorChar, 1) : string.Empty);
         commonRoot += srcParts[count];
         count++;
-      };
+      }
+      ;
 
       return commonRoot;
     }
