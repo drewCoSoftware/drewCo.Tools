@@ -344,9 +344,9 @@ namespace drewCo.Tools
     /// <summary>
     /// Get all file infos in the given directory / filter ordered by date with the newest first.
     /// </summary>
-    public static FileInfo[] GetFileInfosByDate(string historyDir, string dosFilenameFilter, SearchOption allDirectories)
+    public static FileInfo[] GetFileInfosByDate(string directory, string dosFilenameFilter, SearchOption dirOps)
     {
-      string[] stateFiles = Directory.GetFiles(historyDir, dosFilenameFilter, SearchOption.AllDirectories);
+      string[] stateFiles = Directory.GetFiles(directory, dosFilenameFilter, SearchOption.AllDirectories);
       var res = (from x in stateFiles select new FileInfo(x)).OrderByDescending(x => x.LastWriteTime).ToArray();
       return res;
     }

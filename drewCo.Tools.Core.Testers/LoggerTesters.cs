@@ -30,12 +30,8 @@ public class LoggerTesters
     FileTools.DeleteExistingFile(testPath);
     Assert.IsFalse(File.Exists(testPath));
 
-    var ops = new LoggerOptions()
-    {
-      AppendLog = false,
-      LogFilePath = testPath
-    };
-    var l = new Logger(ops);
+    var ops = new FileLoggerOptions(null, "./", testPath, null, EFileLoggerMode.Append);
+    var l = new FileLogger(ops);
 
     const string TEST_MSG_1 = "abc";
     const string TEST_MSG_2 = "def";
@@ -46,7 +42,7 @@ public class LoggerTesters
 
     string curContent = l.GetLogFileContent();
     Assert.IsNotNull(curContent);
-    Assert.AreEqual(curContent, TEST_MSG_1 + Environment.NewLine + TEST_MSG_2);
+    Assert.AreEqual(curContent, TEST_MSG_1 + Environment.NewLine + TEST_MSG_2 + Environment.NewLine);
 
     l.Info(TEST_MSG_3);
     l.Dispose();
