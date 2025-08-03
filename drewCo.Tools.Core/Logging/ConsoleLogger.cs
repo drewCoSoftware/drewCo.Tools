@@ -55,8 +55,10 @@ public class ConsoleLogger : ILogger, IDisposable
   public void WriteLine(string level, object message)
   {
     string content = Log.ObjectToString(message);
+
     // Only log the levels that we currently support.
-    if (!Options.LogLevels.Contains(level))
+    bool logIt = Options.LogLevels.Count ==0 || Options.LogLevels.Contains(level);
+    if (!logIt)
     {
       return;
     }
