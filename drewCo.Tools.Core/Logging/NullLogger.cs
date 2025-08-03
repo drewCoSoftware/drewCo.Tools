@@ -14,13 +14,13 @@ namespace drewCo.Tools.Logging
   [Obsolete("Using the new 'Log' approach obviates the need for NullLogger.  It will be deleted!")]
   public class NullLogger : ILogger
   {
-    public void WriteLine(ELogLevel level, string message) { }
-    public void WriteLine(string level, string message) { }
-    public void Verbose(string message) { }
-    public void Info(string message) { }
-    public void Warning(string message) { }
+    public void WriteLine(ELogLevel level, object message) { }
+    public void WriteLine(string level, object message) { }
+    public void Verbose(object message) { }
+    public void Info(object message) { }
+    public void Warning(object message) { }
     public string? Exception(Exception? ex, string? introMessage = "An unhandled exception was encountered!") { return null; }
-    public void Error(string message) { }
-    public void Debug(string message) { }
+    public void Error(object message) { }
+    public void Debug(object message) { }
   }
 }

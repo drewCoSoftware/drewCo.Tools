@@ -44,7 +44,7 @@ public class ConsoleLogger : ILogger, IDisposable
   }
 
   // --------------------------------------------------------------------------------------------------------------------------
-  public void WriteLine(ELogLevel level, string message)
+  public void WriteLine(ELogLevel level, object message)
   {
     WriteLine(level.ToString(), message);
   }
@@ -52,8 +52,9 @@ public class ConsoleLogger : ILogger, IDisposable
   // --------------------------------------------------------------------------------------------------------------------------
   /// <param name="level">The level of hte log to write (case insensitive).  If the level isn't set in the options
   /// it will be ignored.</param>
-  public void WriteLine(string level, string message)
+  public void WriteLine(string level, object message)
   {
+    string content = Log.ObjectToString(message);
     // Only log the levels that we currently support.
     if (!Options.LogLevels.Contains(level))
     {
@@ -62,7 +63,7 @@ public class ConsoleLogger : ILogger, IDisposable
 
     try
     {
-      string useMsg = Options.FormatMessage(level, message, true);
+      string useMsg = Options.FormatMessage(level, content, true);
       Write(useMsg);
     }
     catch (Exception ex)
@@ -72,12 +73,12 @@ public class ConsoleLogger : ILogger, IDisposable
       System.Diagnostics.Debug.WriteLine(ex.Message);
     }
 
-    OnLogged?.Invoke(this, new LogEventArgs(level, message));
+    OnLogged?.Invoke(this, new LogEventArgs(level, content));
   }
 
 
   // --------------------------------------------------------------------------------------------------------------------------
-  private void Write(string message)
+  private void Write(object message)
   {
     Console.WriteLine(message);
   }
@@ -101,31 +102,31 @@ public class ConsoleLogger : ILogger, IDisposable
   }
 
   // --------------------------------------------------------------------------------------------------------------------------
-  public void Debug(string message)
+  public void Debug(object message)
   {
     WriteLine(ELogLevel.DEBUG, message);
   }
 
   // --------------------------------------------------------------------------------------------------------------------------
-  public void Info(string message)
+  public void Info(object message)
   {
     WriteLine(ELogLevel.INFO, message);
   }
 
   // --------------------------------------------------------------------------------------------------------------------------
-  public void Error(string message)
+  public void Error(object message)
   {
     WriteLine(ELogLevel.ERROR, message);
   }
 
   // --------------------------------------------------------------------------------------------------------------------------
-  public void Warning(string message)
+  public void Warning(object message)
   {
     WriteLine(ELogLevel.WARNING, message);
   }
 
   // --------------------------------------------------------------------------------------------------------------------------
-  public void Verbose(string message)
+  public void Verbose(object message)
   {
     WriteLine(ELogLevel.VERBOSE, message);
   }
@@ -172,7 +173,7 @@ public class ConsoleLogger : ILogger, IDisposable
 
   //// --------------------------------------------------------------------------------------------------------------------------
   ///// <inheritdoc path="WriteToConsole"/>     /*How does this work?*/
-  //public void WriteToConsole(string message)
+  //public void WriteToConsole(object message)
   //{
   //  WriteToConsole(message, DEFAULT_LEFT);
   //}
@@ -182,7 +183,7 @@ public class ConsoleLogger : ILogger, IDisposable
   ///// Write a message to the console only.
   ///// This does not add a newline.
   ///// </summary>
-  //public void WriteToConsole(string message, int left)
+  //public void WriteToConsole(object message, int left)
   //{
   //  if (Options.LogToConsole)
   //  {
@@ -198,7 +199,7 @@ public class ConsoleLogger : ILogger, IDisposable
   ///// Write a message to the console only.
   ///// This does not add a newline.
   ///// </summary>
-  //public void WriteToConsole(string message, int left, int top, bool clearLineFirst = true)
+  //public void WriteToConsole(object message, int left, int top, bool clearLineFirst = true)
   //{
   //  if (Options.LogToConsole)
   //  {

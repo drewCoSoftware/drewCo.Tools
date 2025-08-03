@@ -46,7 +46,7 @@ namespace drewCo.Tools.Logging
     /// Log a message with a standard logging level.
     /// NOTE: Use Log.Info/Debug/Warning for convenience.
     /// </summary>
-    public static void WriteLine(ELogLevel level, string message)
+    public static void WriteLine(ELogLevel level, object message)
     {
       foreach (var item in _Loggers)
       {
@@ -58,7 +58,7 @@ namespace drewCo.Tools.Logging
     /// <summary>
     /// Log a message with a custom logging level.
     /// </summary>
-    public static void AddMessage(string level, string message)
+    public static void AddMessage(string level, object message)
     {
       foreach (var item in _Loggers)
       {
@@ -70,7 +70,7 @@ namespace drewCo.Tools.Logging
     /// <summary>
     /// Log an info level message.
     /// </summary>
-    public static void Info(string message)
+    public static void Info(object message)
     {
       foreach (var item in _Loggers)
       {
@@ -79,7 +79,7 @@ namespace drewCo.Tools.Logging
     }
 
     // ------------------------------------------------------------------------------------------------------
-    public static void Verbose(string message)
+    public static void Verbose(object message)
     {
       foreach (var item in _Loggers)
       {
@@ -88,7 +88,7 @@ namespace drewCo.Tools.Logging
     }
 
     // ------------------------------------------------------------------------------------------------------
-    public static void Warning(string message)
+    public static void Warning(object message)
     {
       foreach (var item in _Loggers)
       {
@@ -97,7 +97,7 @@ namespace drewCo.Tools.Logging
     }
 
     // ------------------------------------------------------------------------------------------------------
-    public static void Error(string message)
+    public static void Error(object message)
     {
       foreach (var item in _Loggers)
       {
@@ -106,7 +106,7 @@ namespace drewCo.Tools.Logging
     }
 
     // ------------------------------------------------------------------------------------------------------
-    public static void Debug(string message)
+    public static void Debug(object message)
     {
       foreach (var item in _Loggers)
       {
@@ -122,6 +122,62 @@ namespace drewCo.Tools.Logging
         item.Exception(ex);
       }
     }
+
+    // ------------------------------------------------------------------------------------------------------
+    internal static string ObjectToString(object e)
+    {
+      return e?.ToString();
+    }
+
+
+    //// *** OBJECT BASED **** ///
+    //// ------------------------------------------------------------------------------------------------------
+    ///// <summary>
+    ///// Log an info level message.
+    ///// </summary>
+    //public static void Info(object message)
+    //{
+    //  foreach (var item in _Loggers)
+    //  {
+    //    item.Info(message);
+    //  }
+    //}
+
+    //// ------------------------------------------------------------------------------------------------------
+    //public static void Verbose(object message)
+    //{
+    //  foreach (var item in _Loggers)
+    //  {
+    //    item.Verbose(message);
+    //  }
+    //}
+
+    //// ------------------------------------------------------------------------------------------------------
+    //public static void Warning(object message)
+    //{
+    //  foreach (var item in _Loggers)
+    //  {
+    //    item.Verbose(message);
+    //  }
+    //}
+
+    //// ------------------------------------------------------------------------------------------------------
+    //public static void Error(object message)
+    //{
+    //  foreach (var item in _Loggers)
+    //  {
+    //    item.Debug(message);
+    //  }
+    //}
+
+    //// ------------------------------------------------------------------------------------------------------
+    //public static void Debug(object message)
+    //{
+    //  foreach (var item in _Loggers)
+    //  {
+    //    item.Debug(message);
+    //  }
+    //}
 
   }
 

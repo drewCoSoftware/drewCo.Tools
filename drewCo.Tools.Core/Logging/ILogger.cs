@@ -13,15 +13,14 @@ namespace drewCo.Tools.Logging
   /// </summary>
   public interface ILogger
   {
-    void WriteLine(ELogLevel level, string message);
-    void WriteLine(string level, string message);
-    void Verbose(string message);
-    void Info(string message);
-    void Warning(string message);
+    void WriteLine(ELogLevel level, object message);
+    void WriteLine(string level, object message);
+    void Verbose(object message);
+    void Info(object message);
+    void Warning(object message);
     string? Exception(Exception? ex, string? introMessage = "An unhandled exception was encountered!");
-    void Error(string message);
-    void Debug(string message);
-
+    void Error(object message);
+    void Debug(object message);
   }
 
 }

@@ -81,7 +81,7 @@ namespace drewCo.Tools.Logging
 
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public void WriteLine(ELogLevel level, string message)
+    public void WriteLine(ELogLevel level, object message)
     {
       WriteLine(level.ToString(), message);
     }
@@ -89,7 +89,7 @@ namespace drewCo.Tools.Logging
     // --------------------------------------------------------------------------------------------------------------------------
     /// <param name="level">The level of the log to write (case insensitive).  If the level isn't set in the options
     /// it will be ignored.</param>
-    public void WriteLine(string level, string message)
+    public void WriteLine(string level, object message)
     {
       // Only log the levels that we currently support.
       if (!Options.HasLevel(level))
@@ -113,38 +113,40 @@ namespace drewCo.Tools.Logging
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    private void Write(string message)
+    private void Write(object message)
     {
-      var data = Encoding.UTF8.GetBytes(message);
+      string useMsg = Log.ObjectToString(message);  
+
+      var data = Encoding.UTF8.GetBytes(useMsg);
       LogStream.Write(data, 0, data.Length);
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public void Debug(string message)
+    public void Debug(object message)
     {
       WriteLine(ELogLevel.DEBUG, message);
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public void Info(string message)
+    public void Info(object message)
     {
       WriteLine(ELogLevel.INFO, message);
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public void Error(string message)
+    public void Error(object message)
     {
       WriteLine(ELogLevel.ERROR, message);
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public void Warning(string message)
+    public void Warning(object message)
     {
       WriteLine(ELogLevel.WARNING, message);
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public void Verbose(string message)
+    public void Verbose(object message)
     {
       WriteLine(ELogLevel.VERBOSE, message);
     }

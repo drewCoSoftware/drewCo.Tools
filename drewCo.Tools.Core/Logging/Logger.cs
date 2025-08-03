@@ -74,9 +74,10 @@ namespace drewCo.Tools.Logging
 
     // --------------------------------------------------------------------------------------------------------------------------
     // NOTE: Message formatters could be added later, as needed, and they will be needed.
-    public string FormatMessage(string level, string input, bool addNewline)
+    public string FormatMessage(string level, object input, bool addNewline)
     {
-      string res = input + (addNewline ? Environment.NewLine : null);
+      string msg = Log.ObjectToString(input);
+      string res = msg + (addNewline ? Environment.NewLine : null);
       return res;
     }
 
@@ -125,14 +126,14 @@ namespace drewCo.Tools.Logging
   {
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public LogEventArgs(string level_, string message_)
+    public LogEventArgs(string level_, object message_)
     {
       Level = level_;
       Message = message_;
     }
 
     public readonly string Level;
-    public readonly string Message;
+    public readonly object Message;
   }
 
 }
