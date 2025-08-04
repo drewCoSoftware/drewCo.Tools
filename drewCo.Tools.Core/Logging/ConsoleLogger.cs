@@ -1,47 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace drewCo.Tools.Logging;
 
 // ============================================================================================================================== 
-public class ConsoleLogger : ILogger, IDisposable
+public class ConsoleLogger : LoggerBase, ILogger, IDisposable
 {
-  private const int DEFAULT_LEFT = -1;
-
-  public LoggerOptions Options { get; private set; } = null!;
-
-  private HashSet<string> UseLevels = null!;
-
-  /// <summary>
-  /// This event is fired when something is logged.
-  /// TODO: Move this to the interface? / Log class?
-  /// </summary>
-  public EventHandler<LogEventArgs> OnLogged = null;
-
-  /// <summary>
-  /// Lock that makes sure that this logger is threadsafe!
-  /// </summary>
-  private object WriteLock = new object();
-
-
   // --------------------------------------------------------------------------------------------------------------------------
-  public ConsoleLogger() : this(new LoggerOptions())
+  public ConsoleLogger(LoggerOptions options_ = null)
+    : base(options_)
   { }
-
-  // --------------------------------------------------------------------------------------------------------------------------
-  public ConsoleLogger(LoggerOptions options_)
-  {
-    Options = options_;
-
-    UseLevels = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-    foreach (string level in Options.LogLevels.Distinct())
-    {
-      UseLevels.Add(level);
-    }
-  }
 
   // --------------------------------------------------------------------------------------------------------------------------
   public void WriteLine(ELogLevel level, object message)
@@ -54,10 +20,10 @@ public class ConsoleLogger : ILogger, IDisposable
   /// it will be ignored.</param>
   public void WriteLine(string level, object message)
   {
-    string content = Log.ObjectToString(message);
+    string content = ObjectToString(message);
 
     // Only log the levels that we currently support.
-    bool logIt = Options.LogLevels.Count ==0 || Options.LogLevels.Contains(level);
+    bool logIt = HasLogLevel(level);
     if (!logIt)
     {
       return;
@@ -65,8 +31,8 @@ public class ConsoleLogger : ILogger, IDisposable
 
     try
     {
-      string useMsg = Options.FormatMessage(level, content, true);
-      Write(useMsg);
+      string useMsg = FormatMessage(level, content, true);
+      WriteToLog(useMsg);
     }
     catch (Exception ex)
     {
@@ -78,9 +44,8 @@ public class ConsoleLogger : ILogger, IDisposable
     OnLogged?.Invoke(this, new LogEventArgs(level, content));
   }
 
-
   // --------------------------------------------------------------------------------------------------------------------------
-  private void Write(object message)
+  public override void WriteToLog(string message)
   {
     Console.WriteLine(message);
   }
@@ -91,7 +56,7 @@ public class ConsoleLogger : ILogger, IDisposable
   /// </summary>
   public void NewLine()
   {
-    Write(Environment.NewLine);
+    WriteToLog(Environment.NewLine);
   }
 
   // --------------------------------------------------------------------------------------------------------------------------
@@ -150,71 +115,8 @@ public class ConsoleLogger : ILogger, IDisposable
     Console.WriteLine(msg);
 
     return null;
-    //lock (ExceptionLock)
-    //{
-    //  if (ex == null) { return null; }
-
-    //  string exPath = FileTools.GetSequentialFileName(Options.ExceptionsDir, "ExceptionDetail", ".xml");
-
-    //  var detail = new ExceptionDetail(ex);
-    //  detail.ToXML().Save(exPath);
-
-    //  string relPath = Path.GetRelativePath(FileTools.GetAppDir(), exPath);
-
-    //  if (!string.IsNullOrWhiteSpace(introMessage))
-    //  {
-    //    Error(introMessage);
-    //  }
-    //  Error(ex.Message);
-    //  Error($"An ExceptionDetail was written to: {relPath}!");
-
-    //  return relPath;
-    //}
   }
 
 
-  //// --------------------------------------------------------------------------------------------------------------------------
-  ///// <inheritdoc path="WriteToConsole"/>     /*How does this work?*/
-  //public void WriteToConsole(object message)
-  //{
-  //  WriteToConsole(message, DEFAULT_LEFT);
-  //}
-
-  //// --------------------------------------------------------------------------------------------------------------------------
-  ///// <summary>
-  ///// Write a message to the console only.
-  ///// This does not add a newline.
-  ///// </summary>
-  //public void WriteToConsole(object message, int left)
-  //{
-  //  if (Options.LogToConsole)
-  //  {
-  //    if (left == DEFAULT_LEFT) { left = Console.CursorLeft; }
-
-  //    int top = Console.CursorTop;
-  //    WriteToConsole(message, left, top);
-  //  }
-  //}
-
-  //// --------------------------------------------------------------------------------------------------------------------------
-  ///// <summary>
-  ///// Write a message to the console only.
-  ///// This does not add a newline.
-  ///// </summary>
-  //public void WriteToConsole(object message, int left, int top, bool clearLineFirst = true)
-  //{
-  //  if (Options.LogToConsole)
-  //  {
-  //    if (clearLineFirst)
-  //    {
-  //      int w = Console.BufferWidth;
-  //      Console.Write(new string((char)0, w));
-  //    }
-
-  //    message = FormatMessage(null, message);
-  //    Console.SetCursorPosition(left, top);
-  //    Console.Write(message);
-  //  }
-  //}
 }
 

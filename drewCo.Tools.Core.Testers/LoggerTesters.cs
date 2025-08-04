@@ -10,11 +10,43 @@ using NUnit.Framework;
 namespace drewCo.Tools.Core.Testers;
 
 // ==============================================================================================================================
+public class TestLogger : ConsoleLogger
+{
+  public string LastMessage = null;
+
+  // --------------------------------------------------------------------------------------------------------------------
+  public override void WriteToLog(string message)
+  {
+    LastMessage = message;
+  }
+}
+
+// ==============================================================================================================================
 /// <summary>
 /// Makes sure that our logger does WTF we intend it to do.
 /// </summary>
 public class LoggerTesters
 {
+
+
+  // --------------------------------------------------------------------------------------------------------------------
+  /// <summary>
+  /// This test case was provided to solve a bug where default logger options effectively
+  /// disabled all messages.
+  /// </summary>
+  [Test]
+  public void DefaultLoggerOptionsIncludeAllLevels()
+  {
+    var logger = new TestLogger();
+    Assert.IsTrue(logger.HasLogLevel("whatever"));
+
+    Assert.IsNull(logger.LastMessage);
+
+    const string TEST_STRING = "some message....";
+    logger.WriteLine("awugnpawnug", TEST_STRING);
+
+    Assert.That(logger.LastMessage , Is.EqualTo(TEST_STRING + Environment.NewLine));  
+  }
 
   // --------------------------------------------------------------------------------------------------------------------------
   /// <summary>

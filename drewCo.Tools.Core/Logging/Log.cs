@@ -123,62 +123,6 @@ namespace drewCo.Tools.Logging
       }
     }
 
-    // ------------------------------------------------------------------------------------------------------
-    internal static string ObjectToString(object e)
-    {
-      return e?.ToString();
-    }
-
-
-    //// *** OBJECT BASED **** ///
-    //// ------------------------------------------------------------------------------------------------------
-    ///// <summary>
-    ///// Log an info level message.
-    ///// </summary>
-    //public static void Info(object message)
-    //{
-    //  foreach (var item in _Loggers)
-    //  {
-    //    item.Info(message);
-    //  }
-    //}
-
-    //// ------------------------------------------------------------------------------------------------------
-    //public static void Verbose(object message)
-    //{
-    //  foreach (var item in _Loggers)
-    //  {
-    //    item.Verbose(message);
-    //  }
-    //}
-
-    //// ------------------------------------------------------------------------------------------------------
-    //public static void Warning(object message)
-    //{
-    //  foreach (var item in _Loggers)
-    //  {
-    //    item.Verbose(message);
-    //  }
-    //}
-
-    //// ------------------------------------------------------------------------------------------------------
-    //public static void Error(object message)
-    //{
-    //  foreach (var item in _Loggers)
-    //  {
-    //    item.Debug(message);
-    //  }
-    //}
-
-    //// ------------------------------------------------------------------------------------------------------
-    //public static void Debug(object message)
-    //{
-    //  foreach (var item in _Loggers)
-    //  {
-    //    item.Debug(message);
-    //  }
-    //}
-
   }
 
 }

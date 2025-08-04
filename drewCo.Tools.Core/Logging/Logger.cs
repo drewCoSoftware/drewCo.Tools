@@ -72,14 +72,6 @@ namespace drewCo.Tools.Logging
       return res;
     }
 
-    // --------------------------------------------------------------------------------------------------------------------------
-    // NOTE: Message formatters could be added later, as needed, and they will be needed.
-    public string FormatMessage(string level, object input, bool addNewline)
-    {
-      string msg = Log.ObjectToString(input);
-      string res = msg + (addNewline ? Environment.NewLine : null);
-      return res;
-    }
 
   }
 

@@ -8,39 +8,26 @@ namespace drewCo.Tools.Logging
   /// <summary>
   /// Logs messages to disk.
   /// </summary>
-  public class FileLogger : ILogger, IDisposable
+  public class FileLogger : ConsoleLogger, ILogger, IDisposable
   {
-
-    /// <summary>
-    /// This event is fired when something is logged.
-    /// TODO: Move this to the interface? / Log class?
-    /// </summary>
-    public EventHandler<LogEventArgs> OnLogged = null;
-
     private object WriteLock = new object();
     private object ExceptionLock = new object();
 
-    private FileLoggerOptions Options = null;
+    private FileLoggerOptions FileOptions = null;
 
     private FileStream? LogStream = null;
 
-    ///// <summary>
-    ///// If file logging is active, this is the path where the file will be written to.
-    ///// </summary>
-    //public string LogFilePath { get { return LogStream == null ? null : Options.LogFilePath; } }
-
     /// <summary>
-    /// Where are exceptions logged to?
+    /// Path to where the logs are currently being written to.
     /// </summary>
-    // public string ExceptionsDir { get; private set; }
-
     public string FilePath { get; private set; }
 
     // --------------------------------------------------------------------------------------------------------------------------
     public FileLogger(FileLoggerOptions options_)
+      : base(new LoggerOptions(options_.LogLevels))
     {
-      Options = options_;
-      FilePath = OpenLogStream(Options);
+      FileOptions = options_;
+      FilePath = OpenLogStream(FileOptions);
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
@@ -79,94 +66,12 @@ namespace drewCo.Tools.Logging
       return res;
     }
 
-
     // --------------------------------------------------------------------------------------------------------------------------
-    public void WriteLine(ELogLevel level, object message)
+    public override void WriteToLog(string message)
     {
-      WriteLine(level.ToString(), message);
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------
-    /// <param name="level">The level of the log to write (case insensitive).  If the level isn't set in the options
-    /// it will be ignored.</param>
-    public void WriteLine(string level, object message)
-    {
-      // Only log the levels that we currently support.
-      if (!Options.HasLevel(level))
-      {
-        return;
-      }
-
-      try
-      {
-        string useMsg = Options.FormatMessage(level, message, true);
-        Write(useMsg);
-      }
-      catch (Exception ex)
-      {
-        // We have a catch-all here so that failure to write to the log will not crash the application.
-        System.Diagnostics.Debug.WriteLine("Could not write log!");
-        System.Diagnostics.Debug.WriteLine(ex.Message);
-      }
-
-      OnLogged?.Invoke(this, new LogEventArgs(level, message));
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------
-    private void Write(object message)
-    {
-      string useMsg = Log.ObjectToString(message);  
-
-      var data = Encoding.UTF8.GetBytes(useMsg);
+      var data = Encoding.UTF8.GetBytes(message);
       LogStream.Write(data, 0, data.Length);
     }
-
-    // --------------------------------------------------------------------------------------------------------------------------
-    public void Debug(object message)
-    {
-      WriteLine(ELogLevel.DEBUG, message);
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------
-    public void Info(object message)
-    {
-      WriteLine(ELogLevel.INFO, message);
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------
-    public void Error(object message)
-    {
-      WriteLine(ELogLevel.ERROR, message);
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------
-    public void Warning(object message)
-    {
-      WriteLine(ELogLevel.WARNING, message);
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------
-    public void Verbose(object message)
-    {
-      WriteLine(ELogLevel.VERBOSE, message);
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------
-    public void Dispose()
-    {
-      CloseFileStream();
-    }
-
-    // --------------------------------------------------------------------------------------------------------------------------
-    private void CloseFileStream()
-    {
-      if (LogStream != null)
-      {
-        LogStream.Dispose();
-      }
-      LogStream = null;
-    }
-
 
     // --------------------------------------------------------------------------------------------------------------------------
     public string GetLogFileContent()
@@ -194,7 +99,7 @@ namespace drewCo.Tools.Logging
       {
         if (ex == null) { return null; }
 
-        string exPath = FileTools.GetSequentialFileName(Options.ExceptionsDir, "ExceptionDetail", ".xml");
+        string exPath = FileTools.GetSequentialFileName(FileOptions.ExceptionsDir, "ExceptionDetail", ".xml");
 
         var detail = new ExceptionDetail(ex);
         detail.ToXML().Save(exPath);
@@ -211,6 +116,23 @@ namespace drewCo.Tools.Logging
         return relPath;
       }
     }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    private void CloseFileStream()
+    {
+      if (LogStream != null)
+      {
+        LogStream.Dispose();
+      }
+      LogStream = null;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public void Dispose()
+    {
+      CloseFileStream();
+    }
+
 
   }
 
