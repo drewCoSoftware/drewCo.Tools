@@ -47,7 +47,7 @@ public class ConsoleLogger : LoggerBase, ILogger, IDisposable
   // --------------------------------------------------------------------------------------------------------------------------
   public override void WriteToLog(string message)
   {
-    Console.WriteLine(message);
+    Console.Write(message);
   }
 
   // --------------------------------------------------------------------------------------------------------------------------
