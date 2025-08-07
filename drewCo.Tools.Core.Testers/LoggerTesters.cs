@@ -12,13 +12,13 @@ namespace drewCo.Tools.Core.Testers;
 // ==============================================================================================================================
 public class TestLogger : ConsoleLogger
 {
-  public string LastMessage = null;
+    public string LastMessage = null;
 
-  // --------------------------------------------------------------------------------------------------------------------
-  public override void WriteToLog(string message)
-  {
-    LastMessage = message;
-  }
+    // --------------------------------------------------------------------------------------------------------------------
+    public override void WriteToLog(string message)
+    {
+        LastMessage = message;
+    }
 }
 
 // ==============================================================================================================================
@@ -28,61 +28,78 @@ public class TestLogger : ConsoleLogger
 public class LoggerTesters
 {
 
+    // --------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This test case was provided to solve a bug where overwrite mode with the file logger didn't work if there wasn't an existing
+    /// log file.
+    /// </summary>
+    [Test]
+    public void CanUseOverwriteModeWithFileLogger()
+    {
+        string logsDir = $"{nameof(CanUseOverwriteModeWithFileLogger)}_logs";
+        FileTools.DeleteExistingDirectory(logsDir);
+        // FileTools.CreateDirectory(logsDir);
 
-  // --------------------------------------------------------------------------------------------------------------------
-  /// <summary>
-  /// This test case was provided to solve a bug where default logger options effectively
-  /// disabled all messages.
-  /// </summary>
-  [Test]
-  public void DefaultLoggerOptionsIncludeAllLevels()
-  {
-    var logger = new TestLogger();
-    Assert.IsTrue(logger.HasLogLevel("whatever"));
+        var fLogger = new FileLogger(new FileLoggerOptions(new[] { ELogLevel.EXCEPTION.ToString() }, logsDir, "runlog.log", EFileLoggerMode.Overwrite));
+        fLogger.Dispose();
 
-    Assert.IsNull(logger.LastMessage);
+        Assert.That(File.Exists(fLogger.FilePath), Is.True);    
+    }
 
-    const string TEST_STRING = "some message....";
-    logger.WriteLine("awugnpawnug", TEST_STRING);
+    // --------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This test case was provided to solve a bug where default logger options effectively
+    /// disabled all messages.
+    /// </summary>
+    [Test]
+    public void DefaultLoggerOptionsIncludeAllLevels()
+    {
+        var logger = new TestLogger();
+        Assert.IsTrue(logger.HasLogLevel("whatever"));
 
-    Assert.That(logger.LastMessage , Is.EqualTo(TEST_STRING + Environment.NewLine));  
-  }
+        Assert.IsNull(logger.LastMessage);
 
-  // --------------------------------------------------------------------------------------------------------------------------
-  /// <summary>
-  /// This test was provided to make sure that we can get the contents of a log file when we need it.
-  /// This is mainly used in cases where we need to read-back or post the current state of the log to
-  /// some external service.
-  /// </summary>
-  [Test]
-  public void CanGetCurrentLogDataFromFile()
-  {
+        const string TEST_STRING = "some message....";
+        logger.WriteLine("awugnpawnug", TEST_STRING);
 
-    string testPath = $"log-{nameof(CanGetCurrentLogDataFromFile)}.txt";
-    FileTools.DeleteExistingFile(testPath);
-    Assert.IsFalse(File.Exists(testPath));
+        Assert.That(logger.LastMessage, Is.EqualTo(TEST_STRING + Environment.NewLine));
+    }
 
-    var ops = new FileLoggerOptions(null, "./", testPath, null, EFileLoggerMode.Append);
-    var l = new FileLogger(ops);
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// This test was provided to make sure that we can get the contents of a log file when we need it.
+    /// This is mainly used in cases where we need to read-back or post the current state of the log to
+    /// some external service.
+    /// </summary>
+    [Test]
+    public void CanGetCurrentLogDataFromFile()
+    {
 
-    const string TEST_MSG_1 = "abc";
-    const string TEST_MSG_2 = "def";
-    const string TEST_MSG_3 = "ghi";
+        string testPath = $"log-{nameof(CanGetCurrentLogDataFromFile)}.txt";
+        FileTools.DeleteExistingFile(testPath);
+        Assert.IsFalse(File.Exists(testPath));
 
-    l.Info(TEST_MSG_1);
-    l.Info(TEST_MSG_2);
+        var ops = new FileLoggerOptions(null, "./", testPath, null, EFileLoggerMode.Append);
+        var l = new FileLogger(ops);
 
-    string curContent = l.GetLogFileContent();
-    Assert.IsNotNull(curContent);
-    Assert.AreEqual(curContent, TEST_MSG_1 + Environment.NewLine + TEST_MSG_2 + Environment.NewLine);
+        const string TEST_MSG_1 = "abc";
+        const string TEST_MSG_2 = "def";
+        const string TEST_MSG_3 = "ghi";
 
-    l.Info(TEST_MSG_3);
-    l.Dispose();
+        l.Info(TEST_MSG_1);
+        l.Info(TEST_MSG_2);
 
-    string fileContent = File.ReadAllText(testPath);
+        string curContent = l.GetLogFileContent();
+        Assert.IsNotNull(curContent);
+        Assert.AreEqual(curContent, TEST_MSG_1 + Environment.NewLine + TEST_MSG_2 + Environment.NewLine);
 
-    Assert.AreNotEqual(fileContent, curContent);
+        l.Info(TEST_MSG_3);
+        l.Dispose();
 
-  }
+        string fileContent = File.ReadAllText(testPath);
+
+        Assert.AreNotEqual(fileContent, curContent);
+
+    }
 
 }

@@ -36,6 +36,9 @@ namespace drewCo.Tools.Logging
     /// </summary>
     private string OpenLogStream(FileLoggerOptions options)
     {
+      FileTools.CreateDirectory(options.LogsDir);
+      FileTools.CreateDirectory(options.ExceptionsDir);
+
       string res = Path.Combine(options.LogsDir, options.FileName);
       switch (options.Mode)
       {
@@ -51,17 +54,8 @@ namespace drewCo.Tools.Logging
           throw new ArgumentOutOfRangeException();
       }
 
-      if (options.Mode == EFileLoggerMode.Overwrite)
-      {
-      }
-
       var fileMode = FileMode.Create;
-      if (options.Mode == EFileLoggerMode.Overwrite)
-      {
-        fileMode = FileMode.Truncate;
-      }
       LogStream = new FileStream(res, fileMode, FileAccess.ReadWrite, FileShare.Read);
-
 
       return res;
     }
