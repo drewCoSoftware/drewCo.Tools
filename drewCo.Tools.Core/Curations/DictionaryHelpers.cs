@@ -15,7 +15,7 @@ public static class DictionaryHelpers {
   /// <summary>
   /// Partitions the list of inputs into a dictionary using a function to derive a key from those inputs.
   /// </summary>
-  private static Dictionary<TKey, List<TInput>> Partition<TInput, TKey>(List<TInput> input, Func<TInput, TKey> keyGenerator)
+  private static Dictionary<TKey, List<TInput>> Partition<TInput, TKey>(IEnumerable<TInput> input, Func<TInput, TKey> keyGenerator)
   {
     var res = new Dictionary<TKey, List<TInput>>();
     foreach (var item in input)
@@ -37,7 +37,7 @@ public static class DictionaryHelpers {
   /// <summary>
   /// Partitions the inputs into lists grouped by property value.
   /// </summary>
-  public static Dictionary<TKey, List<TInput>> PartitionIntoDictionary<TInput, TKey>(List<TInput> input, Expression<Func<TInput, TKey>> keyPropExp)
+  public static Dictionary<TKey, List<TInput>> PartitionIntoDictionary<TInput, TKey>(IEnumerable<TInput> input, Expression<Func<TInput, TKey>> keyPropExp)
   {
     var res = new Dictionary<TKey, List<TInput>>();
 
@@ -60,7 +60,7 @@ public static class DictionaryHelpers {
   /// <summary>
   /// Partitions properties of the inputs into lists grouped by property value.
   /// </summary>
-  public static Dictionary<TKey, List<TVal>> PartitionIntoDictionary<TInput, TKey, TVal>(List<TInput> input, Expression<Func<TInput, TKey>> keyPropExp, Expression<Func<TInput, TVal>> valPropExp)
+  public static Dictionary<TKey, List<TVal>> PartitionIntoDictionary<TInput, TKey, TVal>(IEnumerable<TInput> input, Expression<Func<TInput, TKey>> keyPropExp, Expression<Func<TInput, TVal>> valPropExp)
   {
     var res = new Dictionary<TKey, List<TVal>>();
 
@@ -85,7 +85,7 @@ public static class DictionaryHelpers {
   /// <summary>
   /// Partitions the list of values, computed from the inputs, into a dictionary using a function to derive a key from those inputs.
   /// </summary>
-  public static Dictionary<TKey, List<TValue>> Partition<TInput, TKey, TValue>(List<TInput> input, Func<TInput, TKey> keyGenerator, Func<TInput, TValue> valGenerator)
+  public static Dictionary<TKey, List<TValue>> Partition<TInput, TKey, TValue>(IEnumerable<TInput> input, Func<TInput, TKey> keyGenerator, Func<TInput, TValue> valGenerator)
   {
     var res = new Dictionary<TKey, List<TValue>>();
     foreach (var item in input)
