@@ -61,7 +61,7 @@ namespace drewCo.Tools.Logging
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public override void WriteToLog(string message)
+    public override void WriteToLog(string level, string message)
     {
       var data = Encoding.UTF8.GetBytes(message);
       LogStream.Write(data, 0, data.Length);

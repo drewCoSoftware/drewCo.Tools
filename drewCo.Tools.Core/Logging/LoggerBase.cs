@@ -58,6 +58,6 @@ public abstract class LoggerBase
   /// <summary>
   /// This function is used to write the formatted message to the log.
   /// </summary>
-  public abstract void WriteToLog(string message);
+  public abstract void WriteToLog(string level, string message);
 }
 

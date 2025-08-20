@@ -15,7 +15,7 @@ public class TestLogger : ConsoleLogger
     public string LastMessage = null;
 
     // --------------------------------------------------------------------------------------------------------------------
-    public override void WriteToLog(string message)
+    public override void WriteToLog(string level, string message)
     {
         LastMessage = message;
     }

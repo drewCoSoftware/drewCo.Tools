@@ -1,13 +1,62 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+
 namespace drewCo.Tools.Logging;
+
 
 // ============================================================================================================================== 
 public class ConsoleLogger : LoggerBase, ILogger, IDisposable
 {
+  //ANSI MODE DETECTION:
+  [DllImport("kernel32.dll", SetLastError = true)]
+  static extern IntPtr GetStdHandle(int nStdHandle);
+
+  [DllImport("kernel32.dll", SetLastError = true)]
+  static extern bool GetConsoleMode(IntPtr hConsoleHandle, out int mode);
+
+  [DllImport("kernel32.dll", SetLastError = true)]
+  static extern bool SetConsoleMode(IntPtr hConsoleHandle, int mode);
+
+  const int STD_OUTPUT_HANDLE = -11;
+  const int ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
+
+
+  private Dictionary<string, ConsoleColor> LevelsToColors = new Dictionary<string, ConsoleColor>();
+  private bool IsUsingAnsiColor = false;
+  private bool IsUsingColor = true;
+
   // --------------------------------------------------------------------------------------------------------------------------
   public ConsoleLogger(LoggerOptions options_ = null)
     : base(options_)
-  { }
+  {
+    Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+    IsUsingAnsiColor = IsAnsiSupportEnabled() & false;
+
+    LevelsToColors.Add(ELogLevel.INFO.ToString(), ConsoleColor.White);
+    LevelsToColors.Add(ELogLevel.VERBOSE.ToString(), ConsoleColor.Blue);
+    LevelsToColors.Add(ELogLevel.WARNING.ToString(), ConsoleColor.Yellow);
+    LevelsToColors.Add(ELogLevel.ERROR.ToString(), ConsoleColor.Red);
+    LevelsToColors.Add(ELogLevel.DEBUG.ToString(), ConsoleColor.Green);
+    LevelsToColors.Add(ELogLevel.EXCEPTION.ToString(), ConsoleColor.Magenta);
+  }
+
+  // --------------------------------------------------------------------------------------------------------------------------
+  private bool IsAnsiSupportEnabled()
+  {
+    var handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (GetConsoleMode(handle, out int mode))
+    {
+      SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
 
   // --------------------------------------------------------------------------------------------------------------------------
   public void WriteLine(ELogLevel level, object message)
@@ -32,7 +81,7 @@ public class ConsoleLogger : LoggerBase, ILogger, IDisposable
     try
     {
       string useMsg = FormatMessage(level, content, true);
-      WriteToLog(useMsg);
+      WriteToLog(level, useMsg);
     }
     catch (Exception ex)
     {
@@ -44,10 +93,22 @@ public class ConsoleLogger : LoggerBase, ILogger, IDisposable
     OnLogged?.Invoke(this, new LogEventArgs(level, content));
   }
 
+
   // --------------------------------------------------------------------------------------------------------------------------
-  public override void WriteToLog(string message)
+  public override void WriteToLog(string level, string message)
   {
+    var startColor = Console.ForegroundColor;
+    if (!IsUsingAnsiColor) {
+      if (LevelsToColors.TryGetValue(level, out var color)) {
+        Console.ForegroundColor = color;
+      }
+    }
+
     Console.Write(message);
+
+    if (!IsUsingAnsiColor) { 
+      Console.ForegroundColor = startColor;
+    }
   }
 
   // --------------------------------------------------------------------------------------------------------------------------
@@ -56,7 +117,7 @@ public class ConsoleLogger : LoggerBase, ILogger, IDisposable
   /// </summary>
   public void NewLine()
   {
-    WriteToLog(Environment.NewLine);
+    WriteToLog(string.Empty, Environment.NewLine);
   }
 
   // --------------------------------------------------------------------------------------------------------------------------
