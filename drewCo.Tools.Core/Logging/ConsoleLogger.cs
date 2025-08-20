@@ -24,7 +24,9 @@ public class ConsoleLogger : LoggerBase, ILogger, IDisposable
 
 
   private Dictionary<string, ConsoleColor> LevelsToColors = new Dictionary<string, ConsoleColor>();
-  private bool IsUsingAnsiColor = false;
+  private Dictionary<string, string> LevelsToAnsiColors = new Dictionary<string, string>();
+
+  private bool IsAnsiColorMode = false;
   private bool IsUsingColor = true;
 
   // --------------------------------------------------------------------------------------------------------------------------
@@ -33,7 +35,7 @@ public class ConsoleLogger : LoggerBase, ILogger, IDisposable
   {
     Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-    IsUsingAnsiColor = IsAnsiSupportEnabled() & false;
+    IsAnsiColorMode = IsAnsiSupportEnabled();
 
     LevelsToColors.Add(ELogLevel.INFO.ToString(), ConsoleColor.White);
     LevelsToColors.Add(ELogLevel.VERBOSE.ToString(), ConsoleColor.Blue);
@@ -41,6 +43,14 @@ public class ConsoleLogger : LoggerBase, ILogger, IDisposable
     LevelsToColors.Add(ELogLevel.ERROR.ToString(), ConsoleColor.Red);
     LevelsToColors.Add(ELogLevel.DEBUG.ToString(), ConsoleColor.Green);
     LevelsToColors.Add(ELogLevel.EXCEPTION.ToString(), ConsoleColor.Magenta);
+
+    LevelsToAnsiColors.Add(ELogLevel.INFO.ToString(), "#FFFFFF");
+    LevelsToAnsiColors.Add(ELogLevel.VERBOSE.ToString(), "#CD86F9");   // (205,134,249)
+    LevelsToAnsiColors.Add(ELogLevel.WARNING.ToString(), "#EABE1E");   // (234,190,30)
+    LevelsToAnsiColors.Add(ELogLevel.ERROR.ToString(), "#FF0000");   // (255,0,0)
+    LevelsToAnsiColors.Add(ELogLevel.DEBUG.ToString(), "#61BFF9");   // (97,191,249)
+    LevelsToAnsiColors.Add(ELogLevel.EXCEPTION.ToString(), "#FCA9E9");  // (252,169,233)
+
   }
 
   // --------------------------------------------------------------------------------------------------------------------------
@@ -97,17 +107,33 @@ public class ConsoleLogger : LoggerBase, ILogger, IDisposable
   // --------------------------------------------------------------------------------------------------------------------------
   public override void WriteToLog(string level, string message)
   {
-    var startColor = Console.ForegroundColor;
-    if (!IsUsingAnsiColor) {
-      if (LevelsToColors.TryGetValue(level, out var color)) {
-        Console.ForegroundColor = color;
+    if (IsUsingColor)
+    {
+
+      if (IsAnsiColorMode)
+      {
+        string useMessage = message;
+        if (LevelsToAnsiColors.TryGetValue(level, out var color)) {
+          useMessage = Ansi.Style(message, color);
+        }
+
+        Console.Write(useMessage);
+      }
+      else
+      {
+        var startColor = Console.ForegroundColor;
+        if (LevelsToColors.TryGetValue(level, out var color))
+        {
+          Console.ForegroundColor = color;
+        }
+
+        Console.Write(message);
+        Console.ForegroundColor = startColor;
       }
     }
-
-    Console.Write(message);
-
-    if (!IsUsingAnsiColor) { 
-      Console.ForegroundColor = startColor;
+    else
+    {
+      Console.Write(message);
     }
   }
 
@@ -177,7 +203,83 @@ public class ConsoleLogger : LoggerBase, ILogger, IDisposable
 
     return null;
   }
-
-
 }
+
+
+// ==============================================================================================================================
+// CLANKER CODE!
+public static class Ansi
+{
+  // ---------- Foreground ----------
+  public static string Fg(string text, int r, int g, int b) =>
+      $"\u001b[38;2;{r};{g};{b}m{text}\u001b[0m";
+
+  public static string Fg(string text, uint rgbOrArgb) =>
+      $"\u001b[38;2;{(rgbOrArgb >> 16) & 0xFF};{(rgbOrArgb >> 8) & 0xFF};{rgbOrArgb & 0xFF}m{text}\u001b[0m";
+
+  public static string Fg(string text, string hex)
+  {
+    var (r, g, b) = FromHex(hex);
+    return $"\u001b[38;2;{r};{g};{b}m{text}\u001b[0m";
+  }
+
+  // ---------- Background ----------
+  public static string Bg(string text, int r, int g, int b) =>
+      $"\u001b[48;2;{r};{g};{b}m{text}\u001b[0m";
+
+  public static string Bg(string text, uint rgbOrArgb) =>
+      $"\u001b[48;2;{(rgbOrArgb >> 16) & 0xFF};{(rgbOrArgb >> 8) & 0xFF};{rgbOrArgb & 0xFF}m{text}\u001b[0m";
+
+  public static string Bg(string text, string hex)
+  {
+    var (r, g, b) = FromHex(hex);
+    return $"\u001b[48;2;{r};{g};{b}m{text}\u001b[0m";
+  }
+
+  // ---------- Styles (can be combined) ----------
+  public static string Bold(string text) => $"\u001b[1m{text}\u001b[22m";
+  public static string Underline(string text) => $"\u001b[4m{text}\u001b[24m";
+  public static string Reversed(string text) => $"\u001b[7m{text}\u001b[27m";
+  public static string Dim(string text) => $"\u001b[2m{text}\u001b[22m";
+  public static string Italic(string text) => $"\u001b[3m{text}\u001b[23m";
+
+  // ---------- Compose manually ----------
+  public static string Style(string text, string fgHex = null, string bgHex = null,
+                             bool bold = false, bool underline = false, bool italic = false, bool reversed = false, bool dim = false)
+  {
+    string seq = "";
+    if (bold) seq += "\u001b[1m";
+    if (dim) seq += "\u001b[2m";
+    if (italic) seq += "\u001b[3m";
+    if (underline) seq += "\u001b[4m";
+    if (reversed) seq += "\u001b[7m";
+    if (!string.IsNullOrEmpty(fgHex))
+    {
+      var (r, g, b) = FromHex(fgHex);
+      seq += $"\u001b[38;2;{r};{g};{b}m";
+    }
+    if (!string.IsNullOrEmpty(bgHex))
+    {
+      var (r, g, b) = FromHex(bgHex);
+      seq += $"\u001b[48;2;{r};{g};{b}m";
+    }
+
+    return $"{seq}{text}\u001b[0m";
+  }
+
+  // ---------- Reset ----------
+  public static string Reset() => "\u001b[0m";
+
+  // ---------- Helpers ----------
+  private static (int r, int g, int b) FromHex(string hex)
+  {
+    if (hex.StartsWith("#")) hex = hex[1..];
+    if (hex.Length == 8) hex = hex[2..]; // strip alpha if #AARRGGBB
+    int r = Convert.ToInt32(hex.Substring(0, 2), 16);
+    int g = Convert.ToInt32(hex.Substring(2, 2), 16);
+    int b = Convert.ToInt32(hex.Substring(4, 2), 16);
+    return (r, g, b);
+  }
+}
+
 

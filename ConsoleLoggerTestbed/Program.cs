@@ -9,6 +9,7 @@ namespace ConsoleLoggerTestbed
       Console.WriteLine("Hello, World!");
 
       var cl = new ConsoleLogger();
+
       cl.Info("Normal Message");
       cl.Warning("This is a warning!");
       cl.Error("This is an error!");
