@@ -330,14 +330,14 @@ namespace drewCo.Tools
     /// <param name="useEllipsis">If set, and ellipsis '...' will be the last characters of the truncated string.
     /// If <paramref name="length"/> is less than the length of the ellipsis, 'useEllipsis' will be ignored.</param>
     /// <returns></returns>
-    public static string Truncate(string input, uint length, bool useEllipsis = false)
+    public static string Truncate(string input, int length, bool useEllipsis = false)
     {
       if (input == null) { return input; }
       if (input.Length > length)
       {
         if (useEllipsis && length > ELLIPSIS.Length)
         {
-          length = (uint)(length - ELLIPSIS.Length);
+          length = (length - ELLIPSIS.Length);
           string res = input.Substring(0, (int)length) + ELLIPSIS;
           return res;
         }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Security.Principal;
 
 namespace drewCo.Tools.Logging;
 
@@ -68,6 +70,64 @@ public class ConsoleLogger : LoggerBase, ILogger, IDisposable
     }
   }
 
+  public const int CURRENT_LINE = -1;
+
+  // --------------------------------------------------------------------------------------------------------------------------
+  public void ShowCursor(bool show)
+  {
+    Console.CursorVisible = show;
+  }
+
+  // --------------------------------------------------------------------------------------------------------------------------
+  public int GetTop()
+  {
+    return Console.CursorTop;
+  }
+
+  // --------------------------------------------------------------------------------------------------------------------------
+  /// <summary>
+  /// Set the cursor to the top of the buffer.
+  /// </summary>
+  public void ToTop()
+  {
+    Console.CursorTop = 0;
+    Console.CursorLeft = 0;
+  }
+
+  // --------------------------------------------------------------------------------------------------------------------------
+  // TODO: Make this part of the interface: 
+  /// <summary>
+  /// Write a temporary message to the console.
+  /// It will be overwritten by the next message that is written.
+  /// NOTE: This does not break to a new line and will truncate output to fit on one line.
+  /// This function is great for writing progress information and other things that don't need
+  /// to scroll the console all over the place.
+  /// </summary>
+  public void WriteTemp(string msg, int line = CURRENT_LINE)
+  {
+    msg = StringTools.Truncate(msg, Console.BufferWidth);
+
+    // Clear the current line:
+    if (line == CURRENT_LINE)
+    {
+      line = Console.CursorTop;
+    }
+    if (line > Console.BufferHeight) {
+      line = Console.BufferHeight - 1;
+    }
+
+    Console.CursorTop = line;
+    Console.CursorLeft = 0;
+
+    var blankLine = new string(' ', Console.BufferWidth);
+    Console.Write(blankLine);
+
+    Console.CursorLeft = 0;
+    Console.Write(msg);
+
+  }
+
+
   // --------------------------------------------------------------------------------------------------------------------------
   public void WriteLine(ELogLevel level, object message)
   {
@@ -113,7 +173,8 @@ public class ConsoleLogger : LoggerBase, ILogger, IDisposable
       if (IsAnsiColorMode)
       {
         string useMessage = message;
-        if (LevelsToAnsiColors.TryGetValue(level, out var color)) {
+        if (LevelsToAnsiColors.TryGetValue(level, out var color))
+        {
           useMessage = Ansi.Style(message, color);
         }
 
