@@ -34,6 +34,23 @@ namespace drewCo.Tools
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
+    /// An easy, non-stupid way to reverse a string.
+    /// </summary>
+    /// <remarks>
+    /// Probably doesn't work well with stuff that isn't UTF-8 / ASCII.
+    /// </remarks>
+    public static string Reverse(string s)
+    {
+      // Thanks internet!
+      //https://stackoverflow.com/questions/228038/best-way-to-reverse-a-string
+      // Looks expensive!
+      char[] charArray = s.ToCharArray();
+      Array.Reverse(charArray);
+      return new string(charArray);
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
     /// Convert the first character of the input string to lowercase.
     /// </summary>
     public static string LowerFirst(string input)
