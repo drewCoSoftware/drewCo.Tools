@@ -12,8 +12,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Xml;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace drewCo.Tools
 {
@@ -25,6 +23,21 @@ namespace drewCo.Tools
   public partial class ReflectionTools
   {
 
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Tells us if the given type has a property with name + type.
+    /// </summary>
+    public static bool HasProperty(Type dataType, string propName, Type propType)
+    {
+      var props = GetProperties(dataType);
+      var match = from x in props
+                  where x.Name == propName && x.PropertyType == propType
+                  select x;
+
+      bool res = match.Count() == 1;
+      return res;
+    }
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
