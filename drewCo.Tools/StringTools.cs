@@ -34,6 +34,24 @@ namespace drewCo.Tools
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <summary>
+    /// Get the first word from the given input.
+    /// </summary>
+    public static string GetFirstWord(string input)
+    {
+      if (input == null) { throw new ArgumentNullException(nameof(input)); }
+
+      string res = input;
+      int firstSpace = input.IndexOf(' ');
+      if (firstSpace != -1)
+      {
+        res = input.Substring(0, firstSpace);
+      }
+
+      return res;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
     /// An easy, non-stupid way to reverse a string.
     /// </summary>
     /// <remarks>
