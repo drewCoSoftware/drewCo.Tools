@@ -1,5 +1,5 @@
 ﻿// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// Copyright ©2012-2022 Andrew A. Ritz, all rights reserved.
+// Copyright ©2012-2025 Andrew A. Ritz, all rights reserved.
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Xml;
+using System.Runtime.CompilerServices;
 
 namespace drewCo.Tools
 {
@@ -22,6 +23,28 @@ namespace drewCo.Tools
   /// </summary>
   public partial class ReflectionTools
   {
+
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Returns the name of the current function.  This is more portable than the 'nameof' operator as the call can be cut / paste
+    /// anywhere and the name will update automatically.  There are some caveats however, see remarks for more information.
+    /// </summary>
+    /// <returns>The name of the current method, or '&lt;null&gt;' if it is not available.</returns>
+    /// <remarks>
+    /// Because of possible inlining and compiler optimization, this function may not have reliable results.
+    /// Use the 'nameof' operator if you need exact (but not-portable) results.
+    /// Inspired by:
+    /// https://stackoverflow.com/questions/2652460/how-to-get-the-name-of-the-current-method-from-code
+    /// </remarks>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static string CurrentFunctionName()
+    {
+      var st = new StackTrace();
+      var sf = st.GetFrame(1);
+
+      return sf?.GetMethod()?.Name ?? "<null>";
+    }
 
 
     // --------------------------------------------------------------------------------------------------------------------------
