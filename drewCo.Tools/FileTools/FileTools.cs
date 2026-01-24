@@ -50,6 +50,26 @@ namespace drewCo.Tools
   {
 
     // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Normalize the path separators in 'dir' so they match the OS.
+    /// </summary>
+    public static string NormalizePathSeparators(string path)
+    {
+      if (Path.DirectorySeparatorChar == '\\')
+      {
+        return path.Replace('/', '\\');
+      }
+      else if (Path.DirectorySeparatorChar == '/')
+      {
+        return path.Replace('\\', '/');
+      }
+      else
+      {
+        throw new ArgumentOutOfRangeException($"Unsupported directory separator character: '{Path.DirectorySeparatorChar}'!");
+      }
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
     public static void DeleteFilesOlderThan(string inDirectory, string pattern, TimeSpan maxAge)
     {
       DeleteFilesOlderThan(inDirectory, pattern, DateTimeOffset.UtcNow, maxAge, true);

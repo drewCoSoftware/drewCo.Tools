@@ -70,7 +70,10 @@ namespace drewCo.Tools.Logging
   // ============================================================================================================================
   public class LoggerOptions
   {
-    public HashSet<string> LogLevels { get; private set; } = default!;
+    public HashSet<string> LogLevels { get; set; } = default!;
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public LoggerOptions() { }
 
     // --------------------------------------------------------------------------------------------------------------------------
     /// <param name="logLevels_">The log levels that should be included.  This can be omitted to use all log levels.</param>

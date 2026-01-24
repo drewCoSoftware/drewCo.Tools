@@ -31,6 +31,44 @@ namespace drewCo.Tools
   public static class DateTools
   {
 
+    // ------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Align the given DateTimeOffset to the current hour.
+    /// </summary>
+    public static DateTimeOffset AlignToHour(DateTimeOffset input)
+    {
+      var res = new DateTimeOffset(input.Year, input.Month, input.Day, input.Hour, 0, 0, input.Offset);
+      return res;
+    }
+
+    // ------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Align the given DateTimeOffset to the current day.
+    /// </summary>
+    public static DateTimeOffset AlignToDay(DateTimeOffset input)
+    {
+      var res = new DateTimeOffset(input.Year, input.Month, input.Day, 0, 0, 0, input.Offset);
+      return res;
+    }
+
+    // ------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Align the given DateTimeOffset to the current day of week.
+    /// </summary>
+    public static DateTimeOffset AlignToDayOfWeek(DateTimeOffset input, DayOfWeek day)
+    {
+      int dayDiff = (7 + (input.DayOfWeek - day)) % 7;
+
+      input = input - TimeSpan.FromDays(dayDiff);
+
+      // Align to start of day.
+      var res = AlignToDay(input);
+      return res;
+    }
+
+
+
+
     // --------------------------------------------------------------------------------------------------------------------------
     public static DateTimeOffset IncrementInterval(DateTimeOffset current, ETimeInterval interval)
     {
