@@ -58,16 +58,21 @@ public class ConsoleLogger : LoggerBase, ILogger, IDisposable
   // --------------------------------------------------------------------------------------------------------------------------
   private bool IsAnsiSupportEnabled()
   {
-    var handle = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (GetConsoleMode(handle, out int mode))
+    // This prevents linux explosions.
+    if (Environment.OSVersion.Platform == PlatformID.Win32NT)
     {
-      SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-      return true;
+      var handle = GetStdHandle(STD_OUTPUT_HANDLE);
+      if (GetConsoleMode(handle, out int mode))
+      {
+        SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+        return true;
+      }
+      else
+      {
+        return false;
+      }
     }
-    else
-    {
-      return false;
-    }
+    return false;
   }
 
   public const int CURRENT_LINE = -1;
@@ -112,7 +117,8 @@ public class ConsoleLogger : LoggerBase, ILogger, IDisposable
     {
       line = Console.CursorTop;
     }
-    if (line > Console.BufferHeight) {
+    if (line > Console.BufferHeight)
+    {
       line = Console.BufferHeight - 1;
     }
 
