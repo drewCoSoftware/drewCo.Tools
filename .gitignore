@@ -9,3 +9,5 @@ lib/
 **/.nupkg
 **/.nuspec
 nuget-build/
+dist/
+dist-linux/

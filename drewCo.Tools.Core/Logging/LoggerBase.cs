@@ -24,6 +24,7 @@ public abstract class LoggerBase
   public LoggerBase(LoggerOptions options_)
   {
     Options = options_ ?? new LoggerOptions();
+    Options.LogLevels = Options.LogLevels ?? new HashSet<string>();
 
     UseLevels = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
     foreach (string level in Options.LogLevels.Distinct())

@@ -3,13 +3,13 @@
     <TargetFrameworks>net6.0</TargetFrameworks>
     <RootNamespace>drewCo.Tools</RootNamespace>
     <AssemblyName>drewCo.Tools</AssemblyName>
-    <AssemblyVersion>1.4.2.1</AssemblyVersion>
-    <Version>1.4.2.1</Version>
+    <AssemblyVersion>1.4.2.3</AssemblyVersion>
+    <Version>1.4.2.3</Version>
     <Authors>Andrew A. Ritz</Authors>
     <Company>drewCo Software</Company>
     <Description>A useful set of utility code.</Description>
     <Copyright>Copyright &#169;Andrew A. Ritz  2012-2025</Copyright>
-    <FileVersion>1.4.2.1</FileVersion>
+    <FileVersion>1.4.2.3</FileVersion>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
