@@ -10,6 +10,12 @@ namespace ConsoleLoggerTestbed
     {
       Console.WriteLine("Hello, World!");
 
+      var cl = new ConsoleLogger();
+      cl.ShowCursor(false);
+
+      ProgressBarDemo(cl);
+
+
       // Having some way to print to the same line over and over.
       // This is for headers + banners + status messages.
 
@@ -25,8 +31,6 @@ namespace ConsoleLoggerTestbed
       // Another way would be to have a special logging level that acts as 'commands' for the temp
       // stuff.....  Yeah, probably some kind of override of console logger to handle the message.....
 
-      var cl = new ConsoleLogger();
-      cl.ShowCursor(false);
 
       cl.WriteTemp("Hello");
       cl.NewLine();
@@ -44,14 +48,35 @@ namespace ConsoleLoggerTestbed
       int curLine = cl.GetTop();
       int nextLine = curLine + 1;
 
-      for (int i = 0;i < MAX;i++) {
+      for (int i = 0; i < MAX; i++)
+      {
         cl.WriteTemp("Line 1: " + (i + 1), curLine);
         Thread.Sleep(100);
         cl.WriteTemp("Line 2: " + (i + 1) * 10, nextLine);
         Thread.Sleep(100);
       }
 
+
       // ColoredMessages();
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    private static void ProgressBarDemo(ConsoleLogger cl)
+    {
+      cl.Info();
+      cl.Info("Progress Bar Demo");
+
+      // NOTE: Additional placement options for progress bars, etc. should be set on ConsoleHelper.
+      var ch = new ConsoleHelper();
+      const int MAX_PROGRESS = 200;
+      for (int i = 0; i < MAX_PROGRESS; i++)
+      {
+        string useMsg = "message " + new string('x', i / 10);
+        ch.ProgressMsg(useMsg, i + 1, MAX_PROGRESS);
+        Thread.Sleep(10);
+      }
+
+      cl.Info();
     }
 
     // --------------------------------------------------------------------------------------------------------------------------

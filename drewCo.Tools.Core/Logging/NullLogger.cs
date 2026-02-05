@@ -18,9 +18,11 @@ namespace drewCo.Tools.Logging
     public void WriteLine(string level, object message) { }
     public void Verbose(object message) { }
     public void Info(object message) { }
+    public void Info() { }
     public void Warning(object message) { }
     public string? Exception(Exception? ex, string? introMessage = "An unhandled exception was encountered!") { return null; }
     public void Error(object message) { }
     public void Debug(object message) { }
+    public void NewLine() { }
   }
 }
