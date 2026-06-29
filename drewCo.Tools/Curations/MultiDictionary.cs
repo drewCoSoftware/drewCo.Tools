@@ -15,6 +15,10 @@ namespace drewCo.Curations
   /// <summary>
   /// Like a normal dictionary, but with a natural key instead of a single one.
   /// </summary>
+  /// <remarks>
+  /// Internal implementation of this class isn't that great in terms of memory usage, efficiency, and probably garbage collection too.
+  /// At least we have test cases to capture its spec.
+  /// </remarks>
   public class MultiDictionary<TKey1, TKey2, TValue> : IEnumerable<TValue>
   {
     private Dictionary<TKey1, List<Dictionary<TKey2, TValue>>> Data = null;
@@ -130,8 +134,9 @@ namespace drewCo.Curations
       Data[key1].Add(child);
 
       // Shove the value in anyway.
-      Values.Add(value);
-      Keys.Add(new Tuple<TKey1, TKey2>(key1, key2));
+      // NOTE: This is making a copy of the values... maybe not the best way?
+      _Values.Add(value);
+      _Keys.Add(new Tuple<TKey1, TKey2>(key1, key2));
     }
 
 
@@ -148,11 +153,45 @@ namespace drewCo.Curations
       }
       set
       {
-        foreach (var item in Data[key1])
+        if (!this.ContainsKey(key1, key2))
         {
-          if (item.ContainsKey(key2)) { item[key2] = value; }
+          this.Add(key1, key2, value);
         }
-        throw new KeyNotFoundException(string.Format("The key '{0}:{1}' could not be found!", key1, key2));
+        else
+        {
+          foreach (var item in Data[key1])
+          {
+            if (item.ContainsKey(key2)) 
+            { item[key2] = value;
+            return; 
+            }
+          }
+
+          // We should not get here under any circumstances....
+          throw new KeyNotFoundException(string.Format("The key '{0}:{1}' could not be found!", key1, key2));
+        }
+        //if (!Data.TryGetValue(key1, out var items))
+        //{
+        //  items = new List<Dictionary<TKey2, TValue>>();
+        //  Data.Add(key1, items);
+        //}
+
+        //bool hasIndex2 = false;
+        //foreach (var item in items)
+        //{
+        //  if (item.ContainsKey(key2))
+        //  {
+        //    item[key2] = value;
+        //    hasIndex2 = true;
+        //    break;
+        //  }
+        //}
+        //if (!hasIndex2)
+        //{
+        //  items.Add(new Dictionary<TKey2, TValue>(Key2Comparer));
+        //}
+
+        //// throw new KeyNotFoundException(string.Format("The key '{0}:{1}' could not be found!", key1, key2));
       }
     }
 
