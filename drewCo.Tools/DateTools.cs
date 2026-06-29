@@ -85,12 +85,15 @@ namespace drewCo.Tools
     }
 
     // --------------------------------------------------------------------------------------------------------------------------
-    public static DateTimeOffset AlignDateToInterval(DateTimeOffset start, ETimeInterval interval, int day = 1)
+    /// <summary>
+    /// Align the supplied date to the first dat of the given interval.
+    /// </summary>
+    public static DateTimeOffset AlignDateToInterval(DateTimeOffset start, ETimeInterval interval, DateTimeOffset offset)
     {
       switch (interval)
       {
         case ETimeInterval.Monthly:
-          start = new DateTimeOffset(start.Year, start.Month, day, 0, 0, 0, TimeSpan.Zero);
+          start = new DateTimeOffset(start.Year, start.Month, 1, 0, 0, 0, TimeSpan.Zero);
           return start;
 
         default:

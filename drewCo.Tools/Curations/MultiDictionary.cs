@@ -1,5 +1,5 @@
 ﻿// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// Copyright (c)2010-2021 Andrew A. Ritz, all rights reserved. 
+// Copyright (c)2010-2026 Andrew A. Ritz, all rights reserved. 
 //
 // MultiDictionary.cs
 // Code to provide Dictionary like objects that use a natural keys instead of single keys.
@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Collections;
 
 namespace drewCo.Curations
@@ -18,7 +17,21 @@ namespace drewCo.Curations
   /// </summary>
   public class MultiDictionary<TKey1, TKey2, TValue> : IEnumerable<TValue>
   {
-    private Dictionary<TKey1, List<Dictionary<TKey2, TValue>>> Data = new Dictionary<TKey1, List<Dictionary<TKey2, TValue>>>();
+    private Dictionary<TKey1, List<Dictionary<TKey2, TValue>>> Data = null;
+
+    private IEqualityComparer<TKey1> Key1Comparer = null;
+    private IEqualityComparer<TKey2> Key2Comparer = null;
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public MultiDictionary() : this(null, null) { }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    public MultiDictionary(IEqualityComparer<TKey1> comparer1 = null, IEqualityComparer<TKey2> comparer2 = null)
+    {
+      Key1Comparer = comparer1;
+      Key2Comparer = comparer2;
+      Data = new Dictionary<TKey1, List<Dictionary<TKey2, TValue>>>(Key1Comparer);
+    }
 
     #region Properties
 
@@ -109,7 +122,7 @@ namespace drewCo.Curations
         Data.Add(key1, new List<Dictionary<TKey2, TValue>>());
       }
 
-      Dictionary<TKey2, TValue> child = new Dictionary<TKey2, TValue>()
+      Dictionary<TKey2, TValue> child = new Dictionary<TKey2, TValue>(Key2Comparer)
       {
         {key2, value}
       };
