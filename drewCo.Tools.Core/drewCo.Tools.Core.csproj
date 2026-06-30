@@ -8,7 +8,7 @@
     <Authors>Andrew A. Ritz</Authors>
     <Company>drewCo Software</Company>
     <Description>A useful set of utility code.</Description>
-    <Copyright>Copyright &#169;Andrew A. Ritz  2012-2025</Copyright>
+    <Copyright>Copyright ©Andrew A. Ritz  2012-2025</Copyright>
     <FileVersion>1.5.1.0</FileVersion>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
@@ -75,7 +75,6 @@
   <ItemGroup>
     <Folder Include="Attributes" />
     <Folder Include="CSV" />
-    <Folder Include="Curations" />
     <Folder Include="MathTools\Geometry" />
     <Folder Include="MathTools" />
     <Folder Include="ReflectionTools" />

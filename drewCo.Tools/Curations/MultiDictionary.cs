@@ -170,28 +170,7 @@ namespace drewCo.Curations
           // We should not get here under any circumstances....
           throw new KeyNotFoundException(string.Format("The key '{0}:{1}' could not be found!", key1, key2));
         }
-        //if (!Data.TryGetValue(key1, out var items))
-        //{
-        //  items = new List<Dictionary<TKey2, TValue>>();
-        //  Data.Add(key1, items);
-        //}
 
-        //bool hasIndex2 = false;
-        //foreach (var item in items)
-        //{
-        //  if (item.ContainsKey(key2))
-        //  {
-        //    item[key2] = value;
-        //    hasIndex2 = true;
-        //    break;
-        //  }
-        //}
-        //if (!hasIndex2)
-        //{
-        //  items.Add(new Dictionary<TKey2, TValue>(Key2Comparer));
-        //}
-
-        //// throw new KeyNotFoundException(string.Format("The key '{0}:{1}' could not be found!", key1, key2));
       }
     }
 
