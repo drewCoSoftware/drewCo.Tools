@@ -6,17 +6,15 @@
 /// </summary>
 public class EZQ<T>
 {
-  private int Capacity = 0;
-  private int _Count = 0;
   private int Start = 0;
   private int End = 0;
-
   private T[] _Items = null!;
 
-  public bool IsEmpty { get { return _Count == 0; } }
-  public bool IsFull { get { return _Count == Capacity; } }
+  public bool IsEmpty { get { return Count == 0; } }
+  public bool IsFull { get { return Count == Capacity; } }
 
-  public int Count { get { return _Count; } }
+  public int Capacity { get; private set; } = 0;
+  public int Count { get; private set; } = 0;
 
   // ------------------------------------------------------------------------------------------------------
   public EZQ(int capacity_)
@@ -28,10 +26,10 @@ public class EZQ<T>
   // ------------------------------------------------------------------------------------------------------
   public void Push(T item)
   {
-    if (_Count == Capacity) { throw new QueueOverflowException(); }
+    if (Count == Capacity) { throw new QueueOverflowException(); }
     _Items[End] = item;
     End = (End + 1) % Capacity;
-    _Count++;
+    Count++;
   }
 
   // ------------------------------------------------------------------------------------------------------
@@ -41,7 +39,7 @@ public class EZQ<T>
   public void Pop()
   {
     Start = (Start + 1) % Capacity;
-    _Count--;
+    Count--;
   }
 
 
