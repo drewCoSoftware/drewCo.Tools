@@ -26,7 +26,16 @@ public class ConsoleHelper
     UpdateInterval = updateInterval;
     LastWrite = -UpdateInterval;
 
-    Width = Console.BufferWidth;
+    if (Console.IsOutputRedirected)
+    {
+      // Disable auto updates....
+      Width = 0;
+      UpdateInterval = long.MaxValue;
+    }
+    else
+    {
+      Width = Console.BufferWidth;
+    }
     if (Width > 0)
     {
       CanWrite = true;

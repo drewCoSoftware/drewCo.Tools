@@ -8,13 +8,13 @@ namespace drewCo.Tools.Core.Testers;
 // ==============================================================================================================================
 public class TestLogger : ConsoleLogger
 {
-    public string LastMessage = null;
+  public string LastMessage = null;
 
-    // --------------------------------------------------------------------------------------------------------------------
-    public override void WriteToLog(string level, string message)
-    {
-        LastMessage = message;
-    }
+  // --------------------------------------------------------------------------------------------------------------------
+  public override void WriteToLog(string level, string message)
+  {
+    LastMessage = message;
+  }
 }
 
 // ==============================================================================================================================
@@ -24,78 +24,95 @@ public class TestLogger : ConsoleLogger
 public class LoggerTesters
 {
 
-    // --------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// This test case was provided to solve a bug where overwrite mode with the file logger didn't work if there wasn't an existing
-    /// log file.
-    /// </summary>
-    [Test]
-    public void CanUseOverwriteModeWithFileLogger()
-    {
-        string logsDir = $"{nameof(CanUseOverwriteModeWithFileLogger)}_logs";
-        FileTools.DeleteExistingDirectory(logsDir);
-        // FileTools.CreateDirectory(logsDir);
+  // --------------------------------------------------------------------------------------------------------------------
+  /// <summary>
+  /// This test case was provided for situations where the ConsoleHelper couldn't work properly if the output was redirected.
+  /// This scenario was first detected when trying to run some test code.
+  /// </summary>
+  [Test]
+  public void CanUseConsoleHelperWithRedirectedOutput()
+  {
+    // All we have to do is not break!
+    Assert.IsTrue(Console.IsOutputRedirected, "stdout should be redirected!");
 
-        var fLogger = new FileLogger(new FileLoggerOptions(new[] { ELogLevel.EXCEPTION.ToString() }, logsDir, "runlog.log", EFileLoggerMode.Overwrite));
-        fLogger.Dispose();
+    var ch = new ConsoleHelper();
+    ch.ToLine("abc");
+    ch.ProgressMsg("doing it...", 0, 100);
 
-        Assert.That(File.Exists(fLogger.FilePath), Is.True);    
-    }
+  }
 
-    // --------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// This test case was provided to solve a bug where default logger options effectively
-    /// disabled all messages.
-    /// </summary>
-    [Test]
-    public void DefaultLoggerOptionsIncludeAllLevels()
-    {
-        var logger = new TestLogger();
-        Assert.IsTrue(logger.HasLogLevel("whatever"));
+  // --------------------------------------------------------------------------------------------------------------------
+  /// <summary>
+  /// This test case was provided to solve a bug where overwrite mode with the file logger didn't work if there wasn't an existing
+  /// log file.
+  /// </summary>
+  [Test]
+  public void CanUseOverwriteModeWithFileLogger()
+  {
+    string logsDir = $"{nameof(CanUseOverwriteModeWithFileLogger)}_logs";
+    FileTools.DeleteExistingDirectory(logsDir);
+    // FileTools.CreateDirectory(logsDir);
 
-        Assert.IsNull(logger.LastMessage);
+    var fLogger = new FileLogger(new FileLoggerOptions(new[] { ELogLevel.EXCEPTION.ToString() }, logsDir, "runlog.log", EFileLoggerMode.Overwrite));
+    fLogger.Dispose();
 
-        const string TEST_STRING = "some message....";
-        logger.WriteLine("awugnpawnug", TEST_STRING);
+    Assert.That(File.Exists(fLogger.FilePath), Is.True);
+  }
 
-        Assert.That(logger.LastMessage, Is.EqualTo(TEST_STRING + Environment.NewLine));
-    }
+  // --------------------------------------------------------------------------------------------------------------------
+  /// <summary>
+  /// This test case was provided to solve a bug where default logger options effectively
+  /// disabled all messages.
+  /// </summary>
+  [Test]
+  public void DefaultLoggerOptionsIncludeAllLevels()
+  {
+    var logger = new TestLogger();
+    Assert.IsTrue(logger.HasLogLevel("whatever"));
 
-    // --------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// This test was provided to make sure that we can get the contents of a log file when we need it.
-    /// This is mainly used in cases where we need to read-back or post the current state of the log to
-    /// some external service.
-    /// </summary>
-    [Test]
-    public void CanGetCurrentLogDataFromFile()
-    {
+    Assert.IsNull(logger.LastMessage);
 
-        string testPath = $"log-{nameof(CanGetCurrentLogDataFromFile)}.txt";
-        FileTools.DeleteExistingFile(testPath);
-        Assert.IsFalse(File.Exists(testPath));
+    const string TEST_STRING = "some message....";
+    logger.WriteLine("awugnpawnug", TEST_STRING);
 
-        var ops = new FileLoggerOptions(null, "./", testPath, null, EFileLoggerMode.Append);
-        var l = new FileLogger(ops);
+    Assert.That(logger.LastMessage, Is.EqualTo(TEST_STRING + Environment.NewLine));
+  }
 
-        const string TEST_MSG_1 = "abc";
-        const string TEST_MSG_2 = "def";
-        const string TEST_MSG_3 = "ghi";
+  // --------------------------------------------------------------------------------------------------------------------------
+  /// <summary>
+  /// This test was provided to make sure that we can get the contents of a log file when we need it.
+  /// This is mainly used in cases where we need to read-back or post the current state of the log to
+  /// some external service.
+  /// </summary>
+  [Test]
+  public void CanGetCurrentLogDataFromFile()
+  {
 
-        l.Info(TEST_MSG_1);
-        l.Info(TEST_MSG_2);
+    string testPath = $"log-{nameof(CanGetCurrentLogDataFromFile)}.txt";
+    FileTools.DeleteExistingFile(testPath);
+    Assert.IsFalse(File.Exists(testPath));
 
-        string curContent = l.GetLogFileContent();
-        Assert.IsNotNull(curContent);
-        Assert.AreEqual(curContent, TEST_MSG_1 + Environment.NewLine + TEST_MSG_2 + Environment.NewLine);
+    var ops = new FileLoggerOptions(null, "./", testPath, null, EFileLoggerMode.Append);
+    var l = new FileLogger(ops);
 
-        l.Info(TEST_MSG_3);
-        l.Dispose();
+    const string TEST_MSG_1 = "abc";
+    const string TEST_MSG_2 = "def";
+    const string TEST_MSG_3 = "ghi";
 
-        string fileContent = File.ReadAllText(testPath);
+    l.Info(TEST_MSG_1);
+    l.Info(TEST_MSG_2);
 
-        Assert.AreNotEqual(fileContent, curContent);
+    string curContent = l.GetLogFileContent();
+    Assert.IsNotNull(curContent);
+    Assert.AreEqual(curContent, TEST_MSG_1 + Environment.NewLine + TEST_MSG_2 + Environment.NewLine);
 
-    }
+    l.Info(TEST_MSG_3);
+    l.Dispose();
+
+    string fileContent = File.ReadAllText(testPath);
+
+    Assert.AreNotEqual(fileContent, curContent);
+
+  }
 
 }

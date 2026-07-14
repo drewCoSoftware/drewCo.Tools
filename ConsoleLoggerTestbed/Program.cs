@@ -1,4 +1,5 @@
 ﻿using drewCo.Tools.Logging;
+using System.Diagnostics;
 
 namespace ConsoleLoggerTestbed
 {
@@ -10,10 +11,16 @@ namespace ConsoleLoggerTestbed
     {
       Console.WriteLine("Hello, World!");
 
+      // Apparently we aren't able to actually redirect the output, so we will punt on this for now.
+      //RedirectedOutputDemo();
+
+
       var cl = new ConsoleLogger();
       cl.ShowCursor(false);
-
       ProgressBarDemo(cl);
+
+
+
 
 
       // Having some way to print to the same line over and over.
@@ -59,6 +66,21 @@ namespace ConsoleLoggerTestbed
 
       // ColoredMessages();
     }
+
+    //// --------------------------------------------------------------------------------------------------------------------------
+    ///// <summary>
+    ///// This shows that if the console is redirected, it won't blow up ConsoleHelper.
+    ///// </summary>
+    //private static void RedirectedOutputDemo()
+    //{
+
+    //  using (var sw = new StringWriter())
+    //  {
+    //    Console.SetOut(sw);
+    //    var h = new ConsoleHelper();
+    //  }
+
+    //}
 
     // --------------------------------------------------------------------------------------------------------------------------
     private static void ProgressBarDemo(ConsoleLogger cl)
