@@ -94,7 +94,7 @@ namespace drewCo.Tools
     /// </summary>
     public static string StripNewlines(string input, bool replaceWithSpace = false)
     {
-      string replaceWith = replaceWithSpace ? " " : string.Empty;;
+      string replaceWith = replaceWithSpace ? " " : string.Empty; ;
 
       string res = input.Replace("\r\n", replaceWith).Replace("\r", replaceWith).Replace("\n", replaceWith);
       return res;
@@ -727,10 +727,24 @@ namespace drewCo.Tools
     /// Add quotes to the input string.
     /// </summary>
     /// <param name="input"></param>
+    /// <param name="asNeeded">If true, the input string will only be quoted if it isn't already</param>
     /// <returns></returns>
-    public static string Quote(string input)
+    public static string Quote(string input, bool asNeeded = false)
     {
+      if (asNeeded && IsQuoted(input)) { return input; }
+
       string res = "\"" + input + "\"";
+      return res;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Tells if the given string is quoted or not.
+    /// </summary>
+    public static bool IsQuoted(string input)
+    {
+      string test = input.Trim();
+      bool res = test.StartsWith("\"") && test.EndsWith("\"");
       return res;
     }
 
